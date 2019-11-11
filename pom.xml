@@ -5,7 +5,7 @@
   <groupId>dev.tsvinc</groupId>
   <artifactId>music-sorter</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.0.2</version>
   <name>music-sorter</name>
   <url>https://tsvinc.dev</url>
 
@@ -18,8 +18,8 @@
   <distributionManagement>
     <repository>
       <id>github</id>
-      <name>GitHub tsvinc Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/tsvinc/music-sorter</url>
+      <name>GitHub tsimbalyuk-sergiy Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/tsimbalyuk-sergiy/music-sorter</url>
     </repository>
   </distributionManagement>
 
