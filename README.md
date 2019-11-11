@@ -32,7 +32,7 @@ e.g.:
          └── ■ file.mp3
 ```
 
-##Native binary
+## Native binary
 To build native binary update paths in variables:
 ```
 GRAAL
@@ -40,7 +40,7 @@ UPX
 ```
 or you can comment out upx part
 
-##music-sorter.properties example
+### music-sorter.properties example
 ```
 source=/some/folder/in
 target=/some/folder/out
