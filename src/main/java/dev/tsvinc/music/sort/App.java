@@ -1,7 +1,9 @@
 package dev.tsvinc.music.sort;
 
-import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import org.pmw.tinylog.Configurator;
+import org.pmw.tinylog.Level;
+import org.pmw.tinylog.Logger;
+import org.pmw.tinylog.writers.FileWriter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,14 +26,13 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.pmw.tinylog.Configurator;
-import org.pmw.tinylog.Level;
-import org.pmw.tinylog.Logger;
-import org.pmw.tinylog.writers.FileWriter;
+
+import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class App {
 
-  private static final String HOME_DIR = System.getProperty("user.dir");
+  private static final String HOME_DIR = System.getProperty("user.home");
   private static String configPath;
   private static String appConfigDirPath;
   public static final String ERROR_CREATING_DIRECTORY = "Error creating directory: {}";

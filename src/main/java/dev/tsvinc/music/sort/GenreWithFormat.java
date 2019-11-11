@@ -11,8 +11,7 @@ public class GenreWithFormat {
     this.format = format;
   }
 
-  public GenreWithFormat() {
-  }
+  public GenreWithFormat() {}
 
   public static GenreWithFormatBuilder builder() {
     return new GenreWithFormatBuilder();
@@ -78,8 +77,7 @@ public class GenreWithFormat {
     private String genre;
     private String format;
 
-    GenreWithFormatBuilder() {
-    }
+    GenreWithFormatBuilder() {}
 
     public GenreWithFormat.GenreWithFormatBuilder genre(String genre) {
       this.genre = genre;
@@ -96,7 +94,9 @@ public class GenreWithFormat {
     }
 
     public String toString() {
-      return "GenreWithFormat.GenreWithFormatBuilder(genre=" + this.genre + ", format="
+      return "GenreWithFormat.GenreWithFormatBuilder(genre="
+          + this.genre
+          + ", format="
           + this.format
           + ")";
     }

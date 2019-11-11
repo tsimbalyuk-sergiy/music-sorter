@@ -43,10 +43,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"org.jaudiotagger.tag.datatype.ByteArraySizeTerminated",
-  "methods":[{"name":"<init>","parameterTypes":["org.jaudiotagger.tag.datatype.ByteArraySizeTerminated"] }]
-},
-{
   "name":"org.jaudiotagger.tag.datatype.NumberHashMap",
   "methods":[{"name":"<init>","parameterTypes":["org.jaudiotagger.tag.datatype.NumberHashMap"] }]
 },
@@ -57,14 +53,6 @@
 {
   "name":"org.jaudiotagger.tag.datatype.StringHashMap",
   "methods":[{"name":"<init>","parameterTypes":["org.jaudiotagger.tag.datatype.StringHashMap"] }]
-},
-{
-  "name":"org.jaudiotagger.tag.datatype.StringNullTerminated",
-  "methods":[{"name":"<init>","parameterTypes":["org.jaudiotagger.tag.datatype.StringNullTerminated"] }]
-},
-{
-  "name":"org.jaudiotagger.tag.datatype.StringSizeTerminated",
-  "methods":[{"name":"<init>","parameterTypes":["org.jaudiotagger.tag.datatype.StringSizeTerminated"] }]
 },
 {
   "name":"org.jaudiotagger.tag.datatype.TCONString",
@@ -79,31 +67,10 @@
   "methods":[{"name":"<init>","parameterTypes":["org.jaudiotagger.tag.datatype.TextEncodedStringSizeTerminated"] }]
 },
 {
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyAPIC",
-  "methods":[
-    {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyAPIC"] }
-  ]
-},
-{
   "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyCOMM",
   "methods":[
     {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
     {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyCOMM"] }
-  ]
-},
-{
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyMCDI",
-  "methods":[
-    {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyMCDI"] }
-  ]
-},
-{
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyPRIV",
-  "methods":[
-    {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyPRIV"] }
   ]
 },
 {
@@ -114,13 +81,6 @@
   ]
 },
 {
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTCOM",
-  "methods":[
-    {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyTCOM"] }
-  ]
-},
-{
   "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTCON",
   "methods":[
     {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
@@ -128,15 +88,8 @@
   ]
 },
 {
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTDAT",
-  "methods":[{"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }]
-},
-{
   "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTDRC",
-  "methods":[
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyTDAT"] }, 
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyTYER"] }
-  ]
+  "methods":[{"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyTYER"] }]
 },
 {
   "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTENC",
@@ -157,20 +110,6 @@
   "methods":[
     {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
     {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyTLAN"] }
-  ]
-},
-{
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTLEN",
-  "methods":[
-    {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyTLEN"] }
-  ]
-},
-{
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTMED",
-  "methods":[
-    {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyTMED"] }
   ]
 },
 {
@@ -195,13 +134,6 @@
   ]
 },
 {
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTPUB",
-  "methods":[
-    {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyTPUB"] }
-  ]
-},
-{
   "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTRCK",
   "methods":[
     {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
@@ -209,39 +141,15 @@
   ]
 },
 {
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTSRC",
-  "methods":[
-    {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyTSRC"] }
-  ]
-},
-{
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTSSE",
-  "methods":[
-    {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyTSSE"] }
-  ]
-},
-{
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX",
-  "methods":[
-    {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX"] }
-  ]
-},
-{
   "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyTYER",
   "methods":[{"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }]
 },
 {
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyUnsupported",
-  "methods":[{"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }]
+  "name":"sun.misc.Cleaner",
+  "methods":[{"name":"clean","parameterTypes":[] }]
 },
 {
-  "name":"org.jaudiotagger.tag.id3.framebody.FrameBodyWXXX",
-  "methods":[
-    {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
-    {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyWXXX"] }
-  ]
+  "name":"sun.nio.ch.DirectBuffer",
+  "methods":[{"name":"cleaner","parameterTypes":[] }]
 }
 ]
