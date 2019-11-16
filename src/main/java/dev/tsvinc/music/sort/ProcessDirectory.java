@@ -97,6 +97,7 @@ public class ProcessDirectory {
     Pattern hipHop = Pattern.compile("hip.*hop");
     Pattern altRock = Pattern.compile("(alt.*rock)");
     Pattern psychedelic = Pattern.compile("(?!psy.*rock)(psy.*delic)");
+    Pattern loFi = Pattern.compile("(Lo-Fi)");
     Pattern gangsta = Pattern.compile("(gangs|gangz)(ta)");
     Pattern electronic = Pattern.compile("(electro)");
     if (hipHop.matcher(genre.toLowerCase()).find()) {
@@ -109,6 +110,8 @@ public class ProcessDirectory {
       genre = "Gangsta Rap";
     } else if (electronic.matcher(genre.toLowerCase()).find()) {
       genre = "Electronic";
+    } else if (loFi.matcher(genre.toLowerCase()).find()) {
+      genre = "Lo-Fi";
     }
     if (genre.contains("\u0000")) {
       genre = genre.replace("\u0000", "");
