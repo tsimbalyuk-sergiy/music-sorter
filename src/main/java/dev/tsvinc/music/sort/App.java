@@ -3,6 +3,7 @@ package dev.tsvinc.music.sort;
 import org.pmw.tinylog.Configurator;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
+import org.pmw.tinylog.writers.ConsoleWriter;
 import org.pmw.tinylog.writers.FileWriter;
 
 import java.io.File;
@@ -41,19 +42,20 @@ public class App {
   private static final String TARGET_FOLDER = "target";
   private static String sourceFolderValue = null;
   private static String targetFolderValue = null;
-  private static final String DATE_STAMP_SIMPLE = "yyyyMMdd";
+  /*private static final String DATE_STAMP_SIMPLE = "yyyyMMdd";*/
 
   static {
     configPath = HOME_DIR + File.separator + ".config";
     appConfigDirPath = configPath + File.separator + "music-sorter";
 
     appPropertiesLocation = getAppPropertiesLocation();
-    final LocalDateTime now = LocalDateTime.now();
+    /*final LocalDateTime now = LocalDateTime.now();
     final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_STAMP_SIMPLE);
     final String format = now.format(formatter);
-    String logFile = "music-sort_" + format + ".log";
+    String logFile = "music-sort_" + format + ".log";*/
     Configurator.defaultConfig()
-        .writer(new FileWriter(logFile, true, true))
+        /*.writer(new FileWriter(logFile, true, true))*/
+        .writer(new ConsoleWriter())
         .level(Level.INFO)
         .locale(Locale.US)
         .formatPattern(
@@ -109,7 +111,7 @@ public class App {
           src -> {
             Path dest = destination.toPath().resolve(src.getFileName());
             try {
-              Files.move(src, dest, REPLACE_EXISTING, ATOMIC_MOVE);
+              Files.move(src, dest, REPLACE_EXISTING);
             } catch (IOException e) {
               Logger.error("Failed to move file: {}", e.getMessage(), e);
             }
