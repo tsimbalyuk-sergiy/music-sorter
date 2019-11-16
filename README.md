@@ -9,7 +9,7 @@ At first start app will create sample configuration file in directory:
 
 `$HOME/.config/music-sorter/music-sorter.properties`
 
-###WARNING
+### WARNING
 Application will overwrite existing files
 
 All folders with be moved to corresponding directories based on file extensions and metadata genre
