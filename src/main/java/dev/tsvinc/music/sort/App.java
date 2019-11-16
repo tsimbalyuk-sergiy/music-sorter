@@ -64,7 +64,7 @@ public class App {
     folderList.forEach(
         release -> {
           File releasePath = new File(release);
-          log.info("Working on: {} :: {}", release, releasePath);
+          log.info("Working on: {} :: {}", releasePath.getName(), release);
           moveRelease(release);
         });
     cleanUpParentDirectory(sourceFolderValue);
