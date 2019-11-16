@@ -9,6 +9,9 @@ At first start app will create sample configuration file in directory:
 
 `$HOME/.config/music-sorter/music-sorter.properties`
 
+###WARNING
+Application will overwrite existing files
+
 All folders with be moved to corresponding directories based on file extensions and metadata genre
 
 e.g.:
@@ -45,3 +48,8 @@ or you can comment out upx part
 source=/some/folder/in
 target=/some/folder/out
 ```
+
+###TODO
+
+- clean up parent directory
+- check sfv/md5 (if enabled)
