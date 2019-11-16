@@ -92,7 +92,7 @@ public class ProcessDirectory {
   }
 
   public static String sanitizeGenre(String genre) {
-    genre = genre.replaceAll("[^A-Za-z0-9\\-\\s]+", "");
+    genre = genre.replaceAll("[^A-Za-z0-9\\-\\s&]+", "");
     genre = genreToOneStyle(genre);
     Pattern hipHop = Pattern.compile("hip.*hop");
     Pattern altRock = Pattern.compile("(alt.*rock)");
