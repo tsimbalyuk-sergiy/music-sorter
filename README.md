@@ -49,7 +49,7 @@ source=/some/folder/in
 target=/some/folder/out
 ```
 
-###TODO
+### TODO
 
-- clean up parent directory
+- ~~clean up parent directory~~
 - check sfv/md5 (if enabled)

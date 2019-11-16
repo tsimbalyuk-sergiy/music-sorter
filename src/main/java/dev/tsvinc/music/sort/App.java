@@ -72,6 +72,7 @@ public class App {
           Logger.info("Working on: {} :: {}", release, releasePath);
           moveRelease(release);
         });
+    cleanUpParentDirectory(sourceFolderValue);
   }
 
   private static void moveRelease(String sourceDirectory) {
@@ -109,6 +110,39 @@ public class App {
     } catch (IOException e) {
       Logger.error("Failed to move directory: {}", sourceDirectory, e.getMessage(), e);
     }
+  }
+
+  private static void cleanUpParentDirectory(String sourceDirectory) {
+    while (!directoryIsEmpty(Paths.get(sourceDirectory))) {
+      try (Stream<Path> stream = Files.walk(Paths.get(sourceDirectory), Integer.MAX_VALUE)) {
+        stream
+            .filter(path -> path.toFile().isDirectory())
+            .filter(App::directoryIsEmpty)
+            .collect(Collectors.toList())
+            .forEach(
+                dir -> {
+                  try {
+                    Files.delete(dir);
+                  } catch (IOException ioe) {
+                    Logger.error("Error deleting folder: {} {}\n{}", dir, ioe.getMessage(), ioe);
+                  }
+                });
+
+      } catch (IOException e) {
+        Logger.error("Error while walking directory: {}", sourceDirectory, e.getMessage(), e);
+      }
+    }
+  }
+
+  private static boolean directoryIsEmpty(final Path directory) {
+    boolean result = false;
+    try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory)) {
+      result = !dirStream.iterator().hasNext();
+    } catch (IOException e) {
+      Logger.error(
+          "Error checking if directory is empty: {}, {}, {}", directory, e.getMessage(), e);
+    }
+    return result;
   }
 
   private static void createDirectory(File destination) {
