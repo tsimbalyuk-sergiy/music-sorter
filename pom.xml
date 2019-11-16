@@ -25,16 +25,16 @@
 
   <repositories>
     <repository>
-      <id>github.com</id>
-      <url>https://maven.pkg.github.com/tsimbalyuk-sergiy/music-sorter</url>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
     </repository>
   </repositories>
 
   <dependencies>
     <dependency>
-      <groupId>dev.tsvinc</groupId>
+      <groupId>org.bitbucket.ijabz</groupId>
       <artifactId>jaudiotagger</artifactId>
-      <version>2.2.6</version>
+      <version>v2.2.5</version>
     </dependency>
     <dependency>
       <groupId>org.tinylog</groupId>
