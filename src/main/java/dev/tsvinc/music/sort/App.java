@@ -4,7 +4,6 @@ import org.pmw.tinylog.Configurator;
 import org.pmw.tinylog.Level;
 import org.pmw.tinylog.Logger;
 import org.pmw.tinylog.writers.ConsoleWriter;
-import org.pmw.tinylog.writers.FileWriter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,8 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +25,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class App {
@@ -42,19 +38,12 @@ public class App {
   private static final String TARGET_FOLDER = "target";
   private static String sourceFolderValue = null;
   private static String targetFolderValue = null;
-  /*private static final String DATE_STAMP_SIMPLE = "yyyyMMdd";*/
 
   static {
     configPath = HOME_DIR + File.separator + ".config";
     appConfigDirPath = configPath + File.separator + "music-sorter";
-
     appPropertiesLocation = getAppPropertiesLocation();
-    /*final LocalDateTime now = LocalDateTime.now();
-    final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_STAMP_SIMPLE);
-    final String format = now.format(formatter);
-    String logFile = "music-sort_" + format + ".log";*/
     Configurator.defaultConfig()
-        /*.writer(new FileWriter(logFile, true, true))*/
         .writer(new ConsoleWriter())
         .level(Level.INFO)
         .locale(Locale.US)
