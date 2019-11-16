@@ -9,7 +9,8 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.reference.GenreTypes;
-import org.pmw.tinylog.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.util.regex.Pattern;
 
 public class ProcessDirectory {
 
+  private static final Logger log = LoggerFactory.getLogger(ProcessDirectory.class);
   public static final String MP_3_FORMAT = "mp3";
   public static final String FLAC_FORMAT = "flac";
 
@@ -57,7 +59,7 @@ public class ProcessDirectory {
           | ReadOnlyFileException
           | TagException
           | InvalidAudioFrameException e) {
-        Logger.error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e);
+        log.error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e);
       }
     }
     String mostRepeatedGenre = findMostRepeatedGenre(genreList);
@@ -138,8 +140,8 @@ public class ProcessDirectory {
     try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(folderName), glob)) {
       stream.forEach(o -> result.add(folderName + File.separator + o.getFileName()));
     } catch (IOException e) {
-      Logger.error(
-          "Error listing directory: {} with filter: {}", folderName, FLAC, e.getMessage(), e);
+      log.error(
+          "Error listing directory: {} with filter: {}, {}", folderName, FLAC, e.getMessage(), e);
     }
   }
 

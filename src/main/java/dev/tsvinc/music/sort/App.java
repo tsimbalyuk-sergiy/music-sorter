@@ -1,9 +1,8 @@
 package dev.tsvinc.music.sort;
 
-import org.pmw.tinylog.Configurator;
-import org.pmw.tinylog.Level;
-import org.pmw.tinylog.Logger;
-import org.pmw.tinylog.writers.ConsoleWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,7 +18,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,11 +26,12 @@ import java.util.stream.Stream;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class App {
+  private static final Logger log = LoggerFactory.getLogger(App.class);
 
   private static final String HOME_DIR = System.getProperty("user.home");
   private static String configPath;
   private static String appConfigDirPath;
-  public static final String ERROR_CREATING_DIRECTORY = "Error creating directory: {}";
+  public static final String ERROR_CREATING_DIRECTORY = "Error creating directory: {}, {}";
   private static String appPropertiesLocation;
   private static final String SOURCE_FOLDER = "source";
   private static final String TARGET_FOLDER = "target";
@@ -40,36 +39,32 @@ public class App {
   private static String targetFolderValue = null;
 
   static {
+    SLF4JBridgeHandler.removeHandlersForRootLogger();
+    SLF4JBridgeHandler.install();
+
     configPath = HOME_DIR + File.separator + ".config";
     appConfigDirPath = configPath + File.separator + "music-sorter";
     appPropertiesLocation = getAppPropertiesLocation();
-    Configurator.defaultConfig()
-        .writer(new ConsoleWriter())
-        .level(Level.INFO)
-        .locale(Locale.US)
-        .formatPattern(
-            "{level}: {class}.{method}:{line} - {message}") /*https://tinylog.org/configuration*/
-        .activate();
   }
 
   public static void main(String[] args) {
     if (!initProperties()) {
-      Logger.error("Error loading properties");
+      log.error("Error loading properties");
       System.exit(0);
     }
 
     Set<String> folderList = albumsListing(sourceFolderValue);
 
     if (folderList.isEmpty()) {
-      Logger.info("No data to work with. Exiting.");
+      log.info("No data to work with. Exiting.");
       System.exit(1);
     }
 
-    Logger.info("folders list created. size: {}", folderList.size());
+    log.info("folders list created. size: {}", folderList.size());
     folderList.forEach(
         release -> {
           File releasePath = new File(release);
-          Logger.info("Working on: {} :: {}", release, releasePath);
+          log.info("Working on: {} :: {}", release, releasePath);
           moveRelease(release);
         });
     cleanUpParentDirectory(sourceFolderValue);
@@ -103,12 +98,12 @@ public class App {
             try {
               Files.move(src, dest, REPLACE_EXISTING);
             } catch (IOException e) {
-              Logger.error("Failed to move file: {}", e.getMessage(), e);
+              log.error("Failed to move file: {}", e.getMessage(), e);
             }
           });
       Files.deleteIfExists(source.toPath());
     } catch (IOException e) {
-      Logger.error("Failed to move directory: {}", sourceDirectory, e.getMessage(), e);
+      log.error("Failed to move directory: {}, {}", sourceDirectory, e.getMessage(), e);
     }
   }
 
@@ -124,12 +119,12 @@ public class App {
                   try {
                     Files.delete(dir);
                   } catch (IOException ioe) {
-                    Logger.error("Error deleting folder: {} {}\n{}", dir, ioe.getMessage(), ioe);
+                    log.error("Error deleting folder: {} {}\n{}", dir, ioe.getMessage(), ioe);
                   }
                 });
 
       } catch (IOException e) {
-        Logger.error("Error while walking directory: {}", sourceDirectory, e.getMessage(), e);
+        log.error("Error while walking directory: {}, {}", sourceDirectory, e.getMessage(), e);
       }
     }
   }
@@ -139,8 +134,7 @@ public class App {
     try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory)) {
       result = !dirStream.iterator().hasNext();
     } catch (IOException e) {
-      Logger.error(
-          "Error checking if directory is empty: {}, {}, {}", directory, e.getMessage(), e);
+      log.error("Error checking if directory is empty: {}, {}, {}", directory, e.getMessage(), e);
     }
     return result;
   }
@@ -149,7 +143,7 @@ public class App {
     try {
       Files.createDirectories(destination.toPath());
     } catch (IOException e) {
-      Logger.error("Failed to create directory: {}", e.getMessage(), e);
+      log.error("Failed to create directory: {}", e.getMessage(), e);
     }
   }
 
@@ -164,7 +158,7 @@ public class App {
           .collect(Collectors.toSet())
           .forEach(o -> dirs.add(o.getParent().toString()));
     } catch (IOException e) {
-      Logger.error("Error while walking directory: {}", sourceDirectory, e.getMessage(), e);
+      log.error("Error while walking directory: {}, {}", sourceDirectory, e.getMessage(), e);
     }
     return dirs;
   }
@@ -177,14 +171,14 @@ public class App {
       try {
         Files.createDirectory(Paths.get(configPath));
       } catch (IOException e) {
-        Logger.error(ERROR_CREATING_DIRECTORY, configPath, e.getMessage(), e);
+        log.error(ERROR_CREATING_DIRECTORY, configPath, e.getMessage(), e);
       }
     }
     if (!appConfigPathExists)
       try {
         Files.createDirectory(Paths.get(appConfigDirPath));
       } catch (IOException e) {
-        Logger.error(ERROR_CREATING_DIRECTORY, appConfigDirPath, e.getMessage(), e);
+        log.error(ERROR_CREATING_DIRECTORY, appConfigDirPath, e.getMessage(), e);
       }
 
     if (!Paths.get(appPropertiesLocation).toFile().exists()) {
@@ -194,7 +188,7 @@ public class App {
         Files.createFile(Paths.get(appPropertiesLocation));
         Files.write(Paths.get(appPropertiesLocation), list, utf8, StandardOpenOption.APPEND);
       } catch (IOException e) {
-        Logger.error("Error writing to config file: {}", appPropertiesLocation, e.getMessage(), e);
+        log.error("Error writing to config file: {}, {}", appPropertiesLocation, e.getMessage(), e);
       }
     }
     try (InputStream input = new FileInputStream(appPropertiesLocation)) {
@@ -209,7 +203,7 @@ public class App {
         done = true;
       }
     } catch (IOException ex) {
-      Logger.error("Error loading properties: {}", ex.getMessage(), ex);
+      log.error("Error loading properties: {}", ex.getMessage(), ex);
     }
     return done;
   }
