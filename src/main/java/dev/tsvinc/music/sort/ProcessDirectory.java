@@ -29,32 +29,37 @@ public class ProcessDirectory {
   private static final Logger log = LoggerFactory.getLogger(ProcessDirectory.class);
   public static final String MP_3_FORMAT = "mp3";
   public static final String FLAC_FORMAT = "flac";
+  public static final String UNKNOWN = "UNKNOWN";
 
   private ProcessDirectory() {}
 
   public static final String MP3 = "*.mp3";
   public static final String FLAC = "*.flac";
 
-  public static GenreWithFormat getGenreTag(String path) {
-    ListingWithFormat fileListForEachDir = createFileListForEachDir(path);
-    List<String> genreList = new ArrayList<>();
-    for (String string : fileListForEachDir.getFileList()) {
-      File musicFile = new File(string);
+  public static GenreWithFormat getGenreTag(final String path) {
+    final ListingWithFormat fileListForEachDir = createFileListForEachDir(path);
+    final List<String> genreList = new ArrayList<>();
+    for (final String string : fileListForEachDir.getFileList()) {
+      final File musicFile = new File(string);
       try {
-        AudioFile audioFile = AudioFileIO.read(musicFile);
-        Tag tag = audioFile.getTag();
-        String genre = tag.getFirst(FieldKey.GENRE);
-        /*check if genre is in numeric format e.g. (043)*/
-        if (genre.matches(".*[0-9].*")) {
-          /*if so -- extract numbers and get genre value for it*/
-          String genreNumericalConvert = extractNumber(genre);
-          String finalGenre =
-              GenreTypes.getInstanceOf().getValueForId(Integer.parseInt(genreNumericalConvert));
-          genreList.add(finalGenre);
+        final AudioFile audioFile = AudioFileIO.read(musicFile);
+        final Tag tag = audioFile.getTag();
+        if (tag != null && !tag.isEmpty()) {
+          final String genre = tag.getFirst(FieldKey.GENRE);
+          /*check if genre is in numeric format e.g. (043)*/
+          if (genre.matches(".*[0-9].*")) {
+            /*if so -- extract numbers and get genre value for it*/
+            final String genreNumericalConvert = extractNumber(genre);
+            final String finalGenre =
+                GenreTypes.getInstanceOf().getValueForId(Integer.parseInt(genreNumericalConvert));
+            genreList.add(finalGenre);
+          } else {
+            genreList.add(genre);
+          }
         } else {
-          genreList.add(genre);
+          genreList.add(UNKNOWN);
         }
-      } catch (IOException
+      } catch (final IOException
           | CannotReadException
           | ReadOnlyFileException
           | TagException
@@ -62,19 +67,19 @@ public class ProcessDirectory {
         log.error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e);
       }
     }
-    String mostRepeatedGenre = findMostRepeatedGenre(genreList);
+    final String mostRepeatedGenre = findMostRepeatedGenre(genreList);
     return GenreWithFormat.builder()
         .genre(mostRepeatedGenre)
         .format(fileListForEachDir.getFormat())
         .build();
   }
 
-  public static String genreToOneStyle(String genre) {
-    String[] words = genre.split("\\s");
-    List<String> o = new ArrayList<>();
-    for (String word : words) {
-      char[] chars = word.toCharArray();
-      char[] charsOut = new char[genre.length()];
+  public static String genreToOneStyle(final String genre) {
+    final String[] words = genre.split("\\s");
+    final List<String> o = new ArrayList<>();
+    for (final String word : words) {
+      final char[] chars = word.toCharArray();
+      final char[] charsOut = new char[genre.length()];
       for (int i = 0, charsLength = chars.length; i < charsLength; i++) {
         if (i == 0) {
           charsOut[i] = Character.toUpperCase(chars[i]);
@@ -84,7 +89,7 @@ public class ProcessDirectory {
       }
       o.add(new String(charsOut));
     }
-    String output;
+    final String output;
     if (o.size() > 1) {
       output = String.join(" ", o);
     } else {
@@ -96,12 +101,13 @@ public class ProcessDirectory {
   public static String sanitizeGenre(String genre) {
     genre = genre.replaceAll("[^A-Za-z0-9\\-\\s&]+", "");
     genre = genreToOneStyle(genre);
-    Pattern hipHop = Pattern.compile("hip.*hop");
-    Pattern altRock = Pattern.compile("(alt.*rock)");
-    Pattern psychedelic = Pattern.compile("(?!psy.*rock)(psy.*delic)");
-    Pattern loFi = Pattern.compile("(Lo-Fi)");
-    Pattern gangsta = Pattern.compile("(gangs|gangz)(ta)");
-    Pattern electronic = Pattern.compile("(electro)");
+    final Pattern hipHop = Pattern.compile("hip.*hop");
+    final Pattern altRock = Pattern.compile("(alt.*rock)");
+    final Pattern psychedelic = Pattern.compile("(?!psy.*rock)(psy.*delic)");
+    final Pattern loFi = Pattern.compile("(lo-fi)");
+    final Pattern gangsta = Pattern.compile("(gangs|gangz)(ta)");
+    final Pattern electronic = Pattern.compile("(electro)");
+    final Pattern disco = Pattern.compile("(disco)");
     if (hipHop.matcher(genre.toLowerCase()).find()) {
       genre = "Hip-Hop";
     } else if (altRock.matcher(genre.toLowerCase()).find()) {
@@ -114,6 +120,8 @@ public class ProcessDirectory {
       genre = "Electronic";
     } else if (loFi.matcher(genre.toLowerCase()).find()) {
       genre = "Lo-Fi";
+    } else if (disco.matcher(genre.toLowerCase()).find()) {
+      genre = "Disco";
     }
     if (genre.contains("\u0000")) {
       genre = genre.replace("\u0000", "");
@@ -121,10 +129,10 @@ public class ProcessDirectory {
     return genre;
   }
   /*need*/
-  private static ListingWithFormat createFileListForEachDir(String folderName) {
+  private static ListingWithFormat createFileListForEachDir(final String folderName) {
     /*creating filter for musical files*/
-    List<String> resultMp3 = new ArrayList<>();
-    List<String> resultFlac = new ArrayList<>();
+    final List<String> resultMp3 = new ArrayList<>();
+    final List<String> resultFlac = new ArrayList<>();
     ListingWithFormat result = new ListingWithFormat();
     listFiles(folderName, resultMp3, MP3);
     listFiles(folderName, resultFlac, FLAC);
@@ -136,39 +144,41 @@ public class ProcessDirectory {
     return result;
   }
 
-  private static void listFiles(String folderName, List<String> result, String glob) {
-    try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(folderName), glob)) {
+  private static void listFiles(
+      final String folderName, final List<String> result, final String glob) {
+    try (final DirectoryStream<Path> stream =
+        Files.newDirectoryStream(Paths.get(folderName), glob)) {
       stream.forEach(o -> result.add(folderName + File.separator + o.getFileName()));
-    } catch (IOException e) {
+    } catch (final IOException e) {
       log.error(
           "Error listing directory: {} with filter: {}, {}", folderName, FLAC, e.getMessage(), e);
     }
   }
 
-  public static String findMostRepeatedGenre(List<String> list) {
-    Map<String, Integer> stringsCount = new HashMap<>();
-    for (String string : list) {
+  public static String findMostRepeatedGenre(final List<String> list) {
+    final Map<String, Integer> stringsCount = new HashMap<>();
+    for (final String string : list) {
       Integer counter = stringsCount.get(string);
       if (counter == null) counter = 0;
       counter++;
       stringsCount.put(string, counter);
     }
     Map.Entry<String, Integer> mostRepeated = null;
-    for (Map.Entry<String, Integer> e : stringsCount.entrySet()) {
+    for (final Map.Entry<String, Integer> e : stringsCount.entrySet()) {
       if (mostRepeated == null || mostRepeated.getValue() < e.getValue()) {
         mostRepeated = e;
       }
     }
     if (mostRepeated != null) return mostRepeated.getKey();
-    else return null;
+    else return "";
   }
 
   public static String extractNumber(final String str) {
     if (str == null || str.isEmpty()) return "";
-    StringBuilder sb = new StringBuilder();
+    final StringBuilder sb = new StringBuilder();
     boolean found = false;
-    char[] charArray = str.toCharArray();
-    for (char c : charArray) {
+    final char[] charArray = str.toCharArray();
+    for (final char c : charArray) {
       if (Character.isDigit(c)) {
         sb.append(c);
         found = true;

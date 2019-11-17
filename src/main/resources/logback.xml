@@ -8,7 +8,6 @@
     </encoder>
   </appender>
 
-  <logger name="org.jaudiotagger" level="ERROR"/>
   <root level="info">
     <appender-ref ref="STDOUT"/>
   </root>

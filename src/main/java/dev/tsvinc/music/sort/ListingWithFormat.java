@@ -9,12 +9,12 @@ public class ListingWithFormat {
 
   public ListingWithFormat() {}
 
-  public ListingWithFormat(String format, List<String> fileList) {
+  public ListingWithFormat(final String format, final List<String> fileList) {
     this.format = format;
     this.fileList = fileList;
   }
 
-  public ListingWithFormat(List<String> fileList) {
+  public ListingWithFormat(final List<String> fileList) {
     this.fileList = fileList;
   }
 
@@ -30,11 +30,11 @@ public class ListingWithFormat {
     return this.fileList;
   }
 
-  public void setFormat(String format) {
+  public void setFormat(final String format) {
     this.format = format;
   }
 
-  public void setFileList(List<String> fileList) {
+  public void setFileList(final List<String> fileList) {
     this.fileList = fileList;
   }
 
@@ -88,12 +88,12 @@ public class ListingWithFormat {
 
     ListingWithFormatBuilder() {}
 
-    public ListingWithFormat.ListingWithFormatBuilder format(String format) {
+    public ListingWithFormat.ListingWithFormatBuilder format(final String format) {
       this.format = format;
       return this;
     }
 
-    public ListingWithFormat.ListingWithFormatBuilder fileList(List<String> fileList) {
+    public ListingWithFormat.ListingWithFormatBuilder fileList(final List<String> fileList) {
       this.fileList = fileList;
       return this;
     }
