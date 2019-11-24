@@ -1,12 +1,14 @@
 package dev.tsvinc.music.sort;
 
 import java.util.Objects;
+import java.util.StringJoiner;
 
+@SuppressWarnings("unused")
 public class GenreWithFormat {
   private String genre;
   private String format;
 
-  public GenreWithFormat(String genre, String format) {
+  public GenreWithFormat(final String genre, final String format) {
     this.genre = genre;
     this.format = format;
   }
@@ -25,26 +27,31 @@ public class GenreWithFormat {
     return this.format;
   }
 
-  public void setGenre(String genre) {
+  public void setGenre(final String genre) {
     this.genre = genre;
   }
 
-  public void setFormat(String format) {
+  public void setFormat(final String format) {
     this.format = format;
   }
 
+  @Override
   public String toString() {
-    return "GenreWithFormat(genre=" + this.getGenre() + ", format=" + this.getFormat() + ")";
+    return new StringJoiner(", ", GenreWithFormat.class.getSimpleName() + "[", "]")
+        .add("genre='" + genre + "'")
+        .add("format='" + format + "'")
+        .toString();
   }
 
+  @Override
   public boolean equals(final Object o) {
-    if (o == this) {
+    if (Objects.equals(o, this)) {
       return true;
     }
     if (!(o instanceof GenreWithFormat)) {
       return false;
     }
-    final GenreWithFormat other = (GenreWithFormat) o;
+    final var other = (GenreWithFormat) o;
     if (!other.canEqual(this)) {
       return false;
     }
@@ -62,13 +69,14 @@ public class GenreWithFormat {
     return other instanceof GenreWithFormat;
   }
 
+  @Override
   public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
+    final var PRIME = 59;
+    var result = 1;
     final Object oGenre = this.getGenre();
-    result = result * PRIME + (oGenre == null ? 43 : oGenre.hashCode());
+    result = result * PRIME + (null == oGenre ? 43 : oGenre.hashCode());
     final Object oFormat = this.getFormat();
-    result = result * PRIME + (oFormat == null ? 43 : oFormat.hashCode());
+    result = result * PRIME + (null == oFormat ? 43 : oFormat.hashCode());
     return result;
   }
 
@@ -79,12 +87,12 @@ public class GenreWithFormat {
 
     GenreWithFormatBuilder() {}
 
-    public GenreWithFormat.GenreWithFormatBuilder genre(String genre) {
+    public GenreWithFormat.GenreWithFormatBuilder genre(final String genre) {
       this.genre = genre;
       return this;
     }
 
-    public GenreWithFormat.GenreWithFormatBuilder format(String format) {
+    public GenreWithFormat.GenreWithFormatBuilder format(final String format) {
       this.format = format;
       return this;
     }
@@ -93,12 +101,12 @@ public class GenreWithFormat {
       return new GenreWithFormat(genre, format);
     }
 
+    @Override
     public String toString() {
-      return "GenreWithFormat.GenreWithFormatBuilder(genre="
-          + this.genre
-          + ", format="
-          + this.format
-          + ")";
+      return new StringJoiner(", ", GenreWithFormatBuilder.class.getSimpleName() + "[", "]")
+          .add("genre='" + genre + "'")
+          .add("format='" + format + "'")
+          .toString();
     }
   }
 }

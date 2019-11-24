@@ -5,12 +5,12 @@
   <groupId>dev.tsvinc</groupId>
   <artifactId>music-sorter</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.6</version>
+  <version>0.0.7</version>
   <name>music-sorter</name>
   <url>https://tsvinc.dev</url>
 
   <properties>
-    <jdk.version>1.8</jdk.version>
+    <jdk.version>11</jdk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -31,10 +31,15 @@
   </repositories>
 
   <dependencies>
-    <dependency>
+    <!--<dependency>
       <groupId>org.bitbucket.ijabz</groupId>
       <artifactId>jaudiotagger</artifactId>
       <version>v2.2.5</version>
+    </dependency>-->
+    <dependency>
+      <groupId>com.github.tsimbalyuk-sergiy</groupId>
+      <artifactId>jaudiotagger</artifactId>
+      <version>master-1344ac1cb2-1</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
