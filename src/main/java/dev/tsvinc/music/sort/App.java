@@ -1,9 +1,5 @@
 package dev.tsvinc.music.sort;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.bridge.SLF4JBridgeHandler;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,27 +13,32 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class App {
-  private static final Logger log = LoggerFactory.getLogger(App.class);
+  private static final Logger log = Logger.getLogger(App.class.getName());
 
   private static final String HOME_DIR = System.getProperty("user.home");
   private static final String CONFIG_PATH;
   private static final String APP_CONFIG_DIR_PATH;
-  private static final String ERROR_CREATING_DIRECTORY = "Error creating directory: {}, {}";
+  private static final String ERROR_CREATING_DIRECTORY = "Error creating directory: ";
   private static final String APP_PROPERTIES_LOCATION;
   private static final String SOURCE_FOLDER = "source";
   private static final String TARGET_FOLDER = "target";
+  public static final String NEW_LINE = "\n";
   private static String sourceFolderValue;
   private static String targetFolderValue;
 
   static {
-    SLF4JBridgeHandler.removeHandlersForRootLogger();
-    SLF4JBridgeHandler.install();
-
+    System.setProperty(
+        "java.util.logging.SimpleFormatter.format",
+        "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS.%1$tL %4$-7s [%3$s] %5$s %6$s%n");
+    Logger.getLogger("org.jaudiotagger").setLevel(Level.SEVERE);
+    Logger.getLogger("dev.tsvinc").setLevel(Level.ALL);
     CONFIG_PATH = HOME_DIR + File.separator + ".config";
     APP_CONFIG_DIR_PATH = CONFIG_PATH + File.separator + "music-sorter";
     APP_PROPERTIES_LOCATION = getAppPropertiesLocation();
@@ -45,7 +46,7 @@ public class App {
 
   public static void main(final String[] args) {
     if (!initProperties()) {
-      log.error("Error loading properties");
+      log.severe("Error loading properties");
       System.exit(0);
     }
 
@@ -56,11 +57,13 @@ public class App {
       System.exit(1);
     }
 
-    log.info("folders list created. size: {}", folderList.size());
+    final var msg = "folders list created. size: " + folderList.size();
+    log.info(msg);
     folderList.forEach(
         release -> {
           final var releasePath = new File(release);
-          log.info("Working on: {} :: {}", releasePath.getName(), release);
+          final var workingOnRls = "Working on: " + releasePath.getName() + " :: " + release;
+          log.info(workingOnRls);
           moveRelease(release);
         });
     cleanUpParentDirectory(sourceFolderValue);
@@ -93,12 +96,18 @@ public class App {
             try {
               Files.move(src, dest, REPLACE_EXISTING);
             } catch (final IOException e) {
-              log.error("Failed to move file: {}", e.getMessage(), e);
+              log.severe("Failed to move file: " + e.getMessage() + NEW_LINE + e);
             }
           });
       Files.deleteIfExists(source.toPath());
     } catch (final IOException e) {
-      log.error("Failed to move directory: {}, {}", sourceDirectory, e.getMessage(), e);
+      log.severe(
+          "Failed to move directory: "
+              + sourceDirectory
+              + NEW_LINE
+              + e.getMessage()
+              + NEW_LINE
+              + e);
     }
   }
 
@@ -114,12 +123,24 @@ public class App {
                   try {
                     Files.delete(dir);
                   } catch (final IOException ioe) {
-                    log.error("Error deleting folder: {} {}\n{}", dir, ioe.getMessage(), ioe);
+                    log.severe(
+                        "Error deleting folder: "
+                            + dir
+                            + NEW_LINE
+                            + ioe.getMessage()
+                            + NEW_LINE
+                            + ioe);
                   }
                 });
 
       } catch (final IOException e) {
-        log.error("Error while walking directory: {}, {}", sourceDirectory, e.getMessage(), e);
+        log.severe(
+            "Error while walking directory: "
+                + sourceDirectory
+                + NEW_LINE
+                + e.getMessage()
+                + NEW_LINE
+                + e);
       }
     }
   }
@@ -129,7 +150,13 @@ public class App {
     try (final var dirStream = Files.newDirectoryStream(directory)) {
       result = !dirStream.iterator().hasNext();
     } catch (final IOException e) {
-      log.error("Error checking if directory is empty: {}, {}, {}", directory, e.getMessage(), e);
+      log.severe(
+          "Error checking if directory is empty: "
+              + directory
+              + NEW_LINE
+              + e.getMessage()
+              + NEW_LINE
+              + e);
     }
     return result;
   }
@@ -138,7 +165,7 @@ public class App {
     try {
       Files.createDirectories(destination.toPath());
     } catch (final IOException e) {
-      log.error("Failed to create directory: {}", e.getMessage(), e);
+      log.severe("Failed to create directory: " + e.getMessage() + NEW_LINE + e);
     }
   }
 
@@ -153,7 +180,13 @@ public class App {
           .collect(Collectors.toSet())
           .forEach(o -> dirs.add(o.getParent().toString()));
     } catch (final IOException e) {
-      log.error("Error while walking directory: {}, {}", sourceDirectory, e.getMessage(), e);
+      log.severe(
+          "Error while walking directory: "
+              + sourceDirectory
+              + NEW_LINE
+              + e.getMessage()
+              + NEW_LINE
+              + e);
     }
     return dirs;
   }
@@ -165,14 +198,21 @@ public class App {
       try {
         Files.createDirectory(Paths.get(CONFIG_PATH));
       } catch (final IOException e) {
-        log.error(ERROR_CREATING_DIRECTORY, CONFIG_PATH, e.getMessage(), e);
+        log.severe(
+            ERROR_CREATING_DIRECTORY + CONFIG_PATH + NEW_LINE + e.getMessage() + NEW_LINE + e);
       }
     }
     if (!appConfigPathExists)
       try {
         Files.createDirectory(Paths.get(APP_CONFIG_DIR_PATH));
       } catch (final IOException e) {
-        log.error(ERROR_CREATING_DIRECTORY, APP_CONFIG_DIR_PATH, e.getMessage(), e);
+        log.severe(
+            ERROR_CREATING_DIRECTORY
+                + APP_CONFIG_DIR_PATH
+                + NEW_LINE
+                + e.getMessage()
+                + NEW_LINE
+                + e);
       }
 
     if (!Paths.get(APP_PROPERTIES_LOCATION).toFile().exists()) {
@@ -182,8 +222,13 @@ public class App {
         Files.createFile(Paths.get(APP_PROPERTIES_LOCATION));
         Files.write(Paths.get(APP_PROPERTIES_LOCATION), list, utf8, StandardOpenOption.APPEND);
       } catch (final IOException e) {
-        log.error(
-            "Error writing to config file: {}, {}", APP_PROPERTIES_LOCATION, e.getMessage(), e);
+        log.severe(
+            "Error writing to config file: "
+                + APP_PROPERTIES_LOCATION
+                + NEW_LINE
+                + e.getMessage()
+                + NEW_LINE
+                + e);
       }
     }
     return isDone();
@@ -203,7 +248,7 @@ public class App {
         done = true;
       }
     } catch (final IOException ex) {
-      log.error("Error loading properties: {}", ex.getMessage(), ex);
+      log.severe("Error loading properties: " + ex.getMessage() + NEW_LINE + ex);
     }
     return done;
   }

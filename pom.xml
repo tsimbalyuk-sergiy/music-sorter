@@ -31,25 +31,10 @@
   </repositories>
 
   <dependencies>
-    <!--<dependency>
-      <groupId>org.bitbucket.ijabz</groupId>
-      <artifactId>jaudiotagger</artifactId>
-      <version>v2.2.5</version>
-    </dependency>-->
     <dependency>
       <groupId>com.github.tsimbalyuk-sergiy</groupId>
       <artifactId>jaudiotagger</artifactId>
       <version>master-1344ac1cb2-1</version>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>1.2.3</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jul-to-slf4j</artifactId>
-      <version>1.7.29</version>
     </dependency>
   </dependencies>
 

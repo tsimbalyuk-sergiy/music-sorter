@@ -7,8 +7,6 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.reference.GenreTypes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,11 +16,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-public class ProcessDirectory {
+import static dev.tsvinc.music.sort.App.NEW_LINE;
 
-  private static final Logger log = LoggerFactory.getLogger(ProcessDirectory.class);
+public class ProcessDirectory {
+  private static final Logger log = Logger.getLogger(ProcessDirectory.class.getName());
+
   private static final String MP_3_FORMAT = "mp3";
   private static final String FLAC_FORMAT = "flac";
 
@@ -55,7 +56,13 @@ public class ProcessDirectory {
           | ReadOnlyFileException
           | TagException
           | InvalidAudioFrameException e) {
-        log.error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e);
+        log.severe(
+            "error reading file: "
+                + musicFile.getName()
+                + NEW_LINE
+                + e.getMessage()
+                + NEW_LINE
+                + e);
       }
     }
     final var mostRepeatedGenre = findMostRepeatedGenre(genreList);
@@ -150,8 +157,15 @@ public class ProcessDirectory {
     try (final var stream = Files.newDirectoryStream(Paths.get(folderName), glob)) {
       stream.forEach(o -> result.add(folderName + File.separator + o.getFileName()));
     } catch (final IOException e) {
-      log.error(
-          "Error listing directory: {} with filter: {}, {}", folderName, FLAC, e.getMessage(), e);
+      log.severe(
+          "Error listing directory: "
+              + folderName
+              + " with filter: "
+              + FLAC
+              + NEW_LINE
+              + e.getMessage()
+              + NEW_LINE
+              + e);
     }
   }
 
