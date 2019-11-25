@@ -7,6 +7,7 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.reference.GenreTypes;
+import org.pmw.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,21 +17,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import static dev.tsvinc.music.sort.App.NEW_LINE;
-
 public class ProcessDirectory {
-  private static final Logger log = Logger.getLogger(ProcessDirectory.class.getName());
-
-  private static final String MP_3_FORMAT = "mp3";
-  private static final String FLAC_FORMAT = "flac";
 
   private ProcessDirectory() {}
-
-  private static final String MP3 = "*.mp3";
-  private static final String FLAC = "*.flac";
 
   public static GenreWithFormat getGenreTag(final String path) {
     final var fileListForEachDir = createFileListForEachDir(path);
@@ -40,29 +31,27 @@ public class ProcessDirectory {
       try {
         final var audioFile = AudioFileIO.read(musicFile);
         final var tag = audioFile.getTag();
-        final var genre = tag.getFirst(FieldKey.GENRE);
-        /*check if genre is in numeric format e.g. (043)*/
-        if (genre.matches(".*[0-9].*")) {
-          /*if so -- extract numbers and get genre value for it*/
-          final var genreNumericalConvert = extractNumber(genre);
-          final var finalGenre =
-              GenreTypes.getInstanceOf().getValueForId(Integer.parseInt(genreNumericalConvert));
-          genreList.add(finalGenre);
+        if (null != tag && !tag.isEmpty()) {
+          final var genre = tag.getFirst(FieldKey.GENRE);
+          /*check if genre is in numeric format e.g. (043)*/
+          if (genre.matches(".*[0-9].*")) {
+            /*if so -- extract numbers and get genre value for it*/
+            final var genreNumericalConvert = extractNumber(genre);
+            final var finalGenre =
+                GenreTypes.getInstanceOf().getValueForId(Integer.parseInt(genreNumericalConvert));
+            genreList.add(finalGenre);
+          } else {
+            genreList.add(genre);
+          }
         } else {
-          genreList.add(genre);
+          genreList.add(Constants.UNKNOWN);
         }
       } catch (final IOException
           | CannotReadException
           | ReadOnlyFileException
           | TagException
           | InvalidAudioFrameException e) {
-        log.severe(
-            "error reading file: "
-                + musicFile.getName()
-                + NEW_LINE
-                + e.getMessage()
-                + NEW_LINE
-                + e);
+        Logger.error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e);
       }
     }
     final var mostRepeatedGenre = findMostRepeatedGenre(genreList);
@@ -142,12 +131,14 @@ public class ProcessDirectory {
     final List<String> resultMp3 = new ArrayList<>();
     final List<String> resultFlac = new ArrayList<>();
     var result = new ListingWithFormat();
-    listFiles(folderName, resultMp3, MP3);
-    listFiles(folderName, resultFlac, FLAC);
+    listFiles(folderName, resultMp3, Constants.MP3);
+    listFiles(folderName, resultFlac, Constants.FLAC);
     if (!resultMp3.isEmpty()) {
-      result = ListingWithFormat.builder().format(MP_3_FORMAT).fileList(resultMp3).build();
+      result =
+          ListingWithFormat.builder().format(Constants.MP_3_FORMAT).fileList(resultMp3).build();
     } else if (!resultFlac.isEmpty()) {
-      result = ListingWithFormat.builder().format(FLAC_FORMAT).fileList(resultFlac).build();
+      result =
+          ListingWithFormat.builder().format(Constants.FLAC_FORMAT).fileList(resultFlac).build();
     }
     return result;
   }
@@ -157,15 +148,12 @@ public class ProcessDirectory {
     try (final var stream = Files.newDirectoryStream(Paths.get(folderName), glob)) {
       stream.forEach(o -> result.add(folderName + File.separator + o.getFileName()));
     } catch (final IOException e) {
-      log.severe(
-          "Error listing directory: "
-              + folderName
-              + " with filter: "
-              + FLAC
-              + NEW_LINE
-              + e.getMessage()
-              + NEW_LINE
-              + e);
+      Logger.error(
+          "Error listing directory: {} with filter: {}, {}",
+          folderName,
+          Constants.FLAC,
+          e.getMessage(),
+          e);
     }
   }
 

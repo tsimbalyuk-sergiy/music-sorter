@@ -1,5 +1,9 @@
 [
 {
+  "name":"java.lang.ProcessHandle",
+  "methods":[{"name":"current","parameterTypes":[] }]
+},
+{
   "name":"java.nio.ByteBuffer"
 },
 {

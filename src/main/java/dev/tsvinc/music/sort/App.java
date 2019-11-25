@@ -1,5 +1,8 @@
 package dev.tsvinc.music.sort;
 
+import org.pmw.tinylog.Logger;
+import org.pmw.tinylog.writers.ConsoleWriter;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,59 +14,56 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class App {
-  private static final Logger log = Logger.getLogger(App.class.getName());
-
   private static final String HOME_DIR = System.getProperty("user.home");
   private static final String CONFIG_PATH;
   private static final String APP_CONFIG_DIR_PATH;
-  private static final String ERROR_CREATING_DIRECTORY = "Error creating directory: ";
   private static final String APP_PROPERTIES_LOCATION;
-  private static final String SOURCE_FOLDER = "source";
-  private static final String TARGET_FOLDER = "target";
-  public static final String NEW_LINE = "\n";
   private static String sourceFolderValue;
   private static String targetFolderValue;
 
   static {
-    System.setProperty(
-        "java.util.logging.SimpleFormatter.format",
-        "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS.%1$tL %4$-7s [%3$s] %5$s %6$s%n");
-    Logger.getLogger("org.jaudiotagger").setLevel(Level.SEVERE);
-    Logger.getLogger("dev.tsvinc").setLevel(Level.ALL);
+    java.util.logging.Logger.getLogger("org.jaudiotagger").setLevel(Level.SEVERE);
+
     CONFIG_PATH = HOME_DIR + File.separator + ".config";
     APP_CONFIG_DIR_PATH = CONFIG_PATH + File.separator + "music-sorter";
     APP_PROPERTIES_LOCATION = getAppPropertiesLocation();
+
+    org.pmw.tinylog.Configurator.defaultConfig()
+        .writer(new ConsoleWriter())
+        .level(org.pmw.tinylog.Level.INFO)
+        .locale(Locale.US)
+        .formatPattern(
+            "{level}: {class}.{method}:{line} - {message}") /*https://tinylog.org/configuration*/
+        .activate();
   }
 
   public static void main(final String[] args) {
     if (!initProperties()) {
-      log.severe("Error loading properties");
+      Logger.error("Error loading properties");
       System.exit(0);
     }
 
     final var folderList = albumsListing(sourceFolderValue);
 
     if (folderList.isEmpty()) {
-      log.info("No data to work with. Exiting.");
+      Logger.info("No data to work with. Exiting.");
       System.exit(1);
     }
 
-    final var msg = "folders list created. size: " + folderList.size();
-    log.info(msg);
+    Logger.info("folders list created. size: {}", folderList.size());
     folderList.forEach(
         release -> {
           final var releasePath = new File(release);
-          final var workingOnRls = "Working on: " + releasePath.getName() + " :: " + release;
-          log.info(workingOnRls);
+          Logger.info("Working on: {} :: {}", releasePath.getName(), release);
           moveRelease(release);
         });
     cleanUpParentDirectory(sourceFolderValue);
@@ -96,18 +96,12 @@ public class App {
             try {
               Files.move(src, dest, REPLACE_EXISTING);
             } catch (final IOException e) {
-              log.severe("Failed to move file: " + e.getMessage() + NEW_LINE + e);
+              Logger.error("Failed to move file: {}", e.getMessage(), e);
             }
           });
       Files.deleteIfExists(source.toPath());
     } catch (final IOException e) {
-      log.severe(
-          "Failed to move directory: "
-              + sourceDirectory
-              + NEW_LINE
-              + e.getMessage()
-              + NEW_LINE
-              + e);
+      Logger.error("Failed to move directory: {}, {}", sourceDirectory, e.getMessage(), e);
     }
   }
 
@@ -123,24 +117,12 @@ public class App {
                   try {
                     Files.delete(dir);
                   } catch (final IOException ioe) {
-                    log.severe(
-                        "Error deleting folder: "
-                            + dir
-                            + NEW_LINE
-                            + ioe.getMessage()
-                            + NEW_LINE
-                            + ioe);
+                    Logger.error("Error deleting folder: {} {}\n{}", dir, ioe.getMessage(), ioe);
                   }
                 });
 
       } catch (final IOException e) {
-        log.severe(
-            "Error while walking directory: "
-                + sourceDirectory
-                + NEW_LINE
-                + e.getMessage()
-                + NEW_LINE
-                + e);
+        Logger.error("Error while walking directory: {}, {}", sourceDirectory, e.getMessage(), e);
       }
     }
   }
@@ -150,13 +132,7 @@ public class App {
     try (final var dirStream = Files.newDirectoryStream(directory)) {
       result = !dirStream.iterator().hasNext();
     } catch (final IOException e) {
-      log.severe(
-          "Error checking if directory is empty: "
-              + directory
-              + NEW_LINE
-              + e.getMessage()
-              + NEW_LINE
-              + e);
+      Logger.error("Error checking if directory is empty: {}, {}, {}", directory, e.getMessage(), e);
     }
     return result;
   }
@@ -165,7 +141,7 @@ public class App {
     try {
       Files.createDirectories(destination.toPath());
     } catch (final IOException e) {
-      log.severe("Failed to create directory: " + e.getMessage() + NEW_LINE + e);
+      Logger.error("Failed to create directory: {}", e.getMessage(), e);
     }
   }
 
@@ -180,13 +156,7 @@ public class App {
           .collect(Collectors.toSet())
           .forEach(o -> dirs.add(o.getParent().toString()));
     } catch (final IOException e) {
-      log.severe(
-          "Error while walking directory: "
-              + sourceDirectory
-              + NEW_LINE
-              + e.getMessage()
-              + NEW_LINE
-              + e);
+      Logger.error("Error while walking directory: {}, {}", sourceDirectory, e.getMessage(), e);
     }
     return dirs;
   }
@@ -198,21 +168,14 @@ public class App {
       try {
         Files.createDirectory(Paths.get(CONFIG_PATH));
       } catch (final IOException e) {
-        log.severe(
-            ERROR_CREATING_DIRECTORY + CONFIG_PATH + NEW_LINE + e.getMessage() + NEW_LINE + e);
+        Logger.error(Constants.ERROR_CREATING_DIRECTORY, CONFIG_PATH, e.getMessage(), e);
       }
     }
     if (!appConfigPathExists)
       try {
         Files.createDirectory(Paths.get(APP_CONFIG_DIR_PATH));
       } catch (final IOException e) {
-        log.severe(
-            ERROR_CREATING_DIRECTORY
-                + APP_CONFIG_DIR_PATH
-                + NEW_LINE
-                + e.getMessage()
-                + NEW_LINE
-                + e);
+        Logger.error(Constants.ERROR_CREATING_DIRECTORY, APP_CONFIG_DIR_PATH, e.getMessage(), e);
       }
 
     if (!Paths.get(APP_PROPERTIES_LOCATION).toFile().exists()) {
@@ -222,13 +185,8 @@ public class App {
         Files.createFile(Paths.get(APP_PROPERTIES_LOCATION));
         Files.write(Paths.get(APP_PROPERTIES_LOCATION), list, utf8, StandardOpenOption.APPEND);
       } catch (final IOException e) {
-        log.severe(
-            "Error writing to config file: "
-                + APP_PROPERTIES_LOCATION
-                + NEW_LINE
-                + e.getMessage()
-                + NEW_LINE
-                + e);
+        Logger.error(
+            "Error writing to config file: {}, {}", APP_PROPERTIES_LOCATION, e.getMessage(), e);
       }
     }
     return isDone();
@@ -239,8 +197,8 @@ public class App {
     try (final InputStream input = new FileInputStream(APP_PROPERTIES_LOCATION)) {
       final var prop = new Properties();
       prop.load(input);
-      sourceFolderValue = prop.getProperty(SOURCE_FOLDER);
-      targetFolderValue = prop.getProperty(TARGET_FOLDER);
+      sourceFolderValue = prop.getProperty(Constants.SOURCE_FOLDER);
+      targetFolderValue = prop.getProperty(Constants.TARGET_FOLDER);
       if (null != sourceFolderValue
           && !sourceFolderValue.isEmpty()
           && null != targetFolderValue
@@ -248,7 +206,7 @@ public class App {
         done = true;
       }
     } catch (final IOException ex) {
-      log.severe("Error loading properties: " + ex.getMessage() + NEW_LINE + ex);
+      Logger.error("Error loading properties: {}", ex.getMessage(), ex);
     }
     return done;
   }
