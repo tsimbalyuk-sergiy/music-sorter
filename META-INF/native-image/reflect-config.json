@@ -216,5 +216,13 @@
     {"name":"<init>","parameterTypes":["java.nio.ByteBuffer","int"] }, 
     {"name":"<init>","parameterTypes":["org.jaudiotagger.tag.id3.framebody.FrameBodyWXXX"] }
   ]
+},
+{
+  "name":"org.tinylog.core.TinylogLoggingProvider",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.tinylog.writers.ConsoleWriter",
+  "methods":[{"name":"<init>","parameterTypes":["java.util.Map"] }]
 }
 ]

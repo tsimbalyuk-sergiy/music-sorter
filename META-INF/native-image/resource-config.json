@@ -1,3 +1,7 @@
 {
-  "resources":[]
+  "resources":[
+    {"pattern":"META-INF/services/org.tinylog.provider.LoggingProvider"}, 
+    {"pattern":"META-INF/services/org.tinylog.writers.Writer"}, 
+    {"pattern":"tinylog.properties"}
+  ]
 }
