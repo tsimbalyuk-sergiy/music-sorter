@@ -33,7 +33,7 @@ public class ProcessDirectory {
         final var tag = audioFile.getTag();
         if (null != tag && !tag.isEmpty()) {
           final var genre = tag.getFirst(FieldKey.GENRE);
-          /*check if genre is in numeric format e.g. (043)*/
+          /*check if genre is in a numeric format e.g. (043)*/
           if (genre.matches(".*[0-9].*")) {
             /*if so -- extract numbers and get genre value for it*/
             final var genreNumericalConvert = extractNumber(genre);
@@ -149,7 +149,7 @@ public class ProcessDirectory {
       stream.forEach(o -> result.add(folderName + File.separator + o.getFileName()));
     } catch (final IOException e) {
       Logger.error(
-          "Error listing directory: {} with filter: {}, {}",
+          "Error listing directory: {} with a filter: {}, {}",
           folderName,
           Constants.FLAC,
           e.getMessage(),

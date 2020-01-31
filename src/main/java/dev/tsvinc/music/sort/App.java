@@ -35,7 +35,7 @@ public class App {
 
     CONFIG_PATH = HOME_DIR + File.separator + ".config";
     APP_CONFIG_DIR_PATH = CONFIG_PATH + File.separator + "music-sorter";
-    APP_PROPERTIES_LOCATION = getAppPropertiesLocation();
+    APP_PROPERTIES_LOCATION = appPropertiesLocation();
 
     org.pmw.tinylog.Configurator.defaultConfig()
         .writer(new ConsoleWriter())
@@ -141,7 +141,7 @@ public class App {
     try {
       Files.createDirectories(destination.toPath());
     } catch (final IOException e) {
-      Logger.error("Failed to create directory: {}", e.getMessage(), e);
+      Logger.error("Failed to create a directory: {}", e.getMessage(), e);
     }
   }
 
@@ -211,7 +211,7 @@ public class App {
     return done;
   }
 
-  private static String getAppPropertiesLocation() {
+  private static String appPropertiesLocation() {
     return APP_CONFIG_DIR_PATH + File.separator + "music-sorter.properties";
   }
 }
