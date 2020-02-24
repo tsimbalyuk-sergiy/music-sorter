@@ -1,5 +1,11 @@
 package dev.tsvinc.music.sort;
 
+import static dev.tsvinc.music.sort.Constants.FLAC;
+import static dev.tsvinc.music.sort.Constants.FLAC_FORMAT;
+import static dev.tsvinc.music.sort.Constants.MP3;
+import static dev.tsvinc.music.sort.Constants.MP_3_FORMAT;
+import static dev.tsvinc.music.sort.Constants.UNKNOWN;
+
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -44,7 +50,7 @@ public class ProcessDirectory {
             genreList.add(genre);
           }
         } else {
-          genreList.add(Constants.UNKNOWN);
+          genreList.add(UNKNOWN);
         }
       } catch (final IOException
           | CannotReadException
@@ -86,7 +92,8 @@ public class ProcessDirectory {
   }
 
   public static String sanitizeGenre(String genre) {
-    genre = genre.replaceAll("[^A-Za-z0-9\\-\\s&]+", "");
+    genre =
+        genre == null || genre.isEmpty() ? UNKNOWN : genre.replaceAll("[^A-Za-z0-9\\-\\s&]+", "");
     genre = genreToOneStyle(genre);
     final var hipHop = Pattern.compile("hip.*hop");
     final var altRock = Pattern.compile("(alt.*rock)");
@@ -131,14 +138,12 @@ public class ProcessDirectory {
     final List<String> resultMp3 = new ArrayList<>();
     final List<String> resultFlac = new ArrayList<>();
     var result = new ListingWithFormat();
-    listFiles(folderName, resultMp3, Constants.MP3);
-    listFiles(folderName, resultFlac, Constants.FLAC);
+    listFiles(folderName, resultMp3, MP3);
+    listFiles(folderName, resultFlac, FLAC);
     if (!resultMp3.isEmpty()) {
-      result =
-          ListingWithFormat.builder().format(Constants.MP_3_FORMAT).fileList(resultMp3).build();
+      result = ListingWithFormat.builder().format(MP_3_FORMAT).fileList(resultMp3).build();
     } else if (!resultFlac.isEmpty()) {
-      result =
-          ListingWithFormat.builder().format(Constants.FLAC_FORMAT).fileList(resultFlac).build();
+      result = ListingWithFormat.builder().format(FLAC_FORMAT).fileList(resultFlac).build();
     }
     return result;
   }
@@ -149,11 +154,7 @@ public class ProcessDirectory {
       stream.forEach(o -> result.add(folderName + File.separator + o.getFileName()));
     } catch (final IOException e) {
       Logger.error(
-          "Error listing directory: {} with a filter: {}, {}",
-          folderName,
-          Constants.FLAC,
-          e.getMessage(),
-          e);
+          "Error listing directory: {} with a filter: {}, {}", folderName, FLAC, e.getMessage(), e);
     }
   }
 
