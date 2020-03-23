@@ -23,9 +23,6 @@ public class Release {
   @DatabaseField(canBeNull = false, columnName = "full_path")
   private String fullPath;
 
-  @DatabaseField(canBeNull = false, columnName = "genre")
-  private Genre genre;
-
   @DatabaseField(canBeNull = false, columnName = "size")
   private long releaseSize;
 

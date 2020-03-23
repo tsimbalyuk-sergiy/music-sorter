@@ -8,12 +8,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@DatabaseTable(tableName = "genre")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 public class Genre {
-  @DatabaseField(dataType = DataType.STRING, canBeNull = false)
   private String value;
 }

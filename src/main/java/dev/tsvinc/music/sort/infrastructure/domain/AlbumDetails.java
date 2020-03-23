@@ -1,5 +1,6 @@
 package dev.tsvinc.music.sort.infrastructure.domain;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
@@ -16,18 +17,15 @@ public class AlbumDetails {
   @DatabaseField(generatedId = true)
   private long id;
 
-  @DatabaseField(canBeNull = false, columnName = "artist")
-  private Artist artist;
+  @DatabaseField(canBeNull = false, columnName = "artist", dataType = DataType.STRING)
+  private String artist;
 
-  @DatabaseField(canBeNull = false, columnName = "album_artist")
-  private Artist albumArtist;
+  @DatabaseField(canBeNull = false, columnName = "album_artist", dataType = DataType.STRING)
+  private String albumArtist;
 
-  @DatabaseField(canBeNull = false, columnName = "genre")
-  private Genre genre;
+  @DatabaseField(canBeNull = false, columnName = "genre", dataType = DataType.STRING)
+  private String genre;
 
   @DatabaseField(columnName = "year")
   private int year;
-
-  @DatabaseField(columnName = "format")
-  private Format format;
 }
