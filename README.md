@@ -46,7 +46,9 @@ or you can comment out upx part
 ### music-sorter.properties example
 ```
 source=/some/folder/in
-target=/some/folder/out
+target=/some/folder/out                
+live_releases_skip=true
+live_releases_patterns=-SAT-,-DVBS-,-SBD-
 ```
 
 ### TODO

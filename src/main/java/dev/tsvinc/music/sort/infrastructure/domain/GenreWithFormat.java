@@ -1,4 +1,4 @@
-package dev.tsvinc.music.sort;
+package dev.tsvinc.music.sort.infrastructure.domain;
 
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -7,10 +7,17 @@ import java.util.StringJoiner;
 public class GenreWithFormat {
   private String genre;
   private String format;
+  private boolean invalid;
 
   public GenreWithFormat(final String genre, final String format) {
     this.genre = genre;
     this.format = format;
+  }
+
+  public GenreWithFormat(String genre, String format, boolean invalid) {
+    this.genre = genre;
+    this.format = format;
+    this.invalid = invalid;
   }
 
   public GenreWithFormat() {}
@@ -35,55 +42,47 @@ public class GenreWithFormat {
     this.format = format;
   }
 
+  public boolean isInvalid() {
+    return invalid;
+  }
+
+  public void setInvalid(boolean invalid) {
+    this.invalid = invalid;
+  }
+
   @Override
   public String toString() {
     return new StringJoiner(", ", GenreWithFormat.class.getSimpleName() + "[", "]")
         .add("genre='" + genre + "'")
         .add("format='" + format + "'")
+        .add("invalid='" + invalid + "'")
         .toString();
   }
 
   @Override
-  public boolean equals(final Object o) {
-    if (Objects.equals(o, this)) {
+  public boolean equals(Object o) {
+    if (this == o) {
       return true;
     }
-    if (!(o instanceof GenreWithFormat)) {
+    if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    final var other = (GenreWithFormat) o;
-    if (!other.canEqual(this)) {
-      return false;
-    }
-    final Object o1Genre = this.getGenre();
-    final Object o2Genre = other.getGenre();
-    if (!Objects.equals(o1Genre, o2Genre)) {
-      return false;
-    }
-    final Object o1Format = this.getFormat();
-    final Object o2Format = other.getFormat();
-    return Objects.equals(o1Format, o2Format);
-  }
-
-  protected boolean canEqual(final Object other) {
-    return other instanceof GenreWithFormat;
+    GenreWithFormat that = (GenreWithFormat) o;
+    return invalid == that.invalid
+        && Objects.equals(genre, that.genre)
+        && Objects.equals(format, that.format);
   }
 
   @Override
   public int hashCode() {
-    final var PRIME = 59;
-    var result = 1;
-    final Object oGenre = this.getGenre();
-    result = result * PRIME + (null == oGenre ? 43 : oGenre.hashCode());
-    final Object oFormat = this.getFormat();
-    result = result * PRIME + (null == oFormat ? 43 : oFormat.hashCode());
-    return result;
+    return Objects.hash(genre, format, invalid);
   }
 
   public static class GenreWithFormatBuilder {
 
     private String genre;
     private String format;
+    private boolean invalid;
 
     GenreWithFormatBuilder() {}
 
@@ -97,8 +96,13 @@ public class GenreWithFormat {
       return this;
     }
 
+    public GenreWithFormat.GenreWithFormatBuilder invalid(final boolean invalid) {
+      this.invalid = invalid;
+      return this;
+    }
+
     public GenreWithFormat build() {
-      return new GenreWithFormat(genre, format);
+      return new GenreWithFormat(genre, format, invalid);
     }
 
     @Override
@@ -106,6 +110,7 @@ public class GenreWithFormat {
       return new StringJoiner(", ", GenreWithFormatBuilder.class.getSimpleName() + "[", "]")
           .add("genre='" + genre + "'")
           .add("format='" + format + "'")
+          .add("invalid='" + invalid + "'")
           .toString();
     }
   }
