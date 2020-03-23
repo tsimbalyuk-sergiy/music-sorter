@@ -1,7 +1,11 @@
 package dev.tsvinc.music.sort;
 
-import org.pmw.tinylog.Logger;
-import org.pmw.tinylog.writers.ConsoleWriter;
+import static dev.tsvinc.music.sort.Constants.ERROR_CREATING_DIRECTORY;
+import static dev.tsvinc.music.sort.Constants.LIVE_RELEASES_PATTERNS;
+import static dev.tsvinc.music.sort.Constants.LIVE_RELEASES_SKIP;
+import static dev.tsvinc.music.sort.Constants.SOURCE_FOLDER;
+import static dev.tsvinc.music.sort.Constants.TARGET_FOLDER;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,13 +18,15 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import org.pmw.tinylog.Logger;
+import org.pmw.tinylog.writers.ConsoleWriter;
 
 public class App {
   private static final String HOME_DIR = System.getProperty("user.home");
@@ -29,6 +35,12 @@ public class App {
   private static final String APP_PROPERTIES_LOCATION;
   private static String sourceFolderValue;
   private static String targetFolderValue;
+  private static boolean skipLiveReleases = false;
+  private static List<String> liveReleasesPatterns;
+  private static final Predicate<Path> IS_MUSIC_FILE =
+      path ->
+          path.getFileName().toString().contains(".mp3")
+              || path.getFileName().toString().contains(".flac");
 
   static {
     java.util.logging.Logger.getLogger("org.jaudiotagger").setLevel(Level.SEVERE);
@@ -66,7 +78,11 @@ public class App {
           Logger.info("Working on: {} :: {}", releasePath.getName(), release);
           moveRelease(release);
         });
-    cleanUpParentDirectory(sourceFolderValue);
+    Logger.info("Finished. Cleaning empty directories ...");
+    if (folderList.isEmpty()) {
+      cleanUpParentDirectory(sourceFolderValue);
+      System.exit(0);
+    }
   }
 
   private static void moveRelease(final String sourceDirectory) {
@@ -132,7 +148,8 @@ public class App {
     try (final var dirStream = Files.newDirectoryStream(directory)) {
       result = !dirStream.iterator().hasNext();
     } catch (final IOException e) {
-      Logger.error("Error checking if directory is empty: {}, {}, {}", directory, e.getMessage(), e);
+      Logger.error(
+          "Error checking if directory is empty: {}, {}, {}", directory, e.getMessage(), e);
     }
     return result;
   }
@@ -147,18 +164,26 @@ public class App {
 
   private static Set<String> albumsListing(final String sourceDirectory) {
     final Set<String> dirs = new HashSet<>();
+    Set<String> cleanedDirectories = new HashSet<>();
     try (final var stream = Files.walk(Paths.get(sourceDirectory), Integer.MAX_VALUE)) {
       stream
-          .filter(
-              path ->
-                  path.getFileName().toString().contains(".mp3")
-                      || path.getFileName().toString().contains(".flac"))
+          .filter(IS_MUSIC_FILE)
           .collect(Collectors.toSet())
           .forEach(o -> dirs.add(o.getParent().toString()));
+      if (skipLiveReleases) {
+        cleanedDirectories =
+            dirs.stream().filter(App::isNotLiveRelease).collect(Collectors.toSet());
+      } else {
+        cleanedDirectories = dirs;
+      }
     } catch (final IOException e) {
       Logger.error("Error while walking directory: {}, {}", sourceDirectory, e.getMessage(), e);
     }
-    return dirs;
+    return cleanedDirectories;
+  }
+
+  private static boolean isNotLiveRelease(String folderName) {
+    return liveReleasesPatterns.parallelStream().noneMatch(folderName::contains);
   }
 
   private static boolean initProperties() {
@@ -168,14 +193,14 @@ public class App {
       try {
         Files.createDirectory(Paths.get(CONFIG_PATH));
       } catch (final IOException e) {
-        Logger.error(Constants.ERROR_CREATING_DIRECTORY, CONFIG_PATH, e.getMessage(), e);
+        Logger.error(ERROR_CREATING_DIRECTORY, CONFIG_PATH, e.getMessage(), e);
       }
     }
     if (!appConfigPathExists)
       try {
         Files.createDirectory(Paths.get(APP_CONFIG_DIR_PATH));
       } catch (final IOException e) {
-        Logger.error(Constants.ERROR_CREATING_DIRECTORY, APP_CONFIG_DIR_PATH, e.getMessage(), e);
+        Logger.error(ERROR_CREATING_DIRECTORY, APP_CONFIG_DIR_PATH, e.getMessage(), e);
       }
 
     if (!Paths.get(APP_PROPERTIES_LOCATION).toFile().exists()) {
@@ -197,13 +222,22 @@ public class App {
     try (final InputStream input = new FileInputStream(APP_PROPERTIES_LOCATION)) {
       final var prop = new Properties();
       prop.load(input);
-      sourceFolderValue = prop.getProperty(Constants.SOURCE_FOLDER);
-      targetFolderValue = prop.getProperty(Constants.TARGET_FOLDER);
+      sourceFolderValue = prop.getProperty(SOURCE_FOLDER);
+      targetFolderValue = prop.getProperty(TARGET_FOLDER);
       if (null != sourceFolderValue
           && !sourceFolderValue.isEmpty()
           && null != targetFolderValue
           && !targetFolderValue.isEmpty()) {
         done = true;
+      }
+      skipLiveReleases =
+          prop.containsKey(LIVE_RELEASES_SKIP)
+              && Boolean.parseBoolean(prop.getProperty(LIVE_RELEASES_SKIP));
+      if (skipLiveReleases && prop.containsKey(LIVE_RELEASES_PATTERNS)) {
+        liveReleasesPatterns =
+            Arrays.asList(prop.get(LIVE_RELEASES_PATTERNS).toString().split(","));
+      } else {
+        Logger.error("\"live_releases_patterns\" option is empty.");
       }
     } catch (final IOException ex) {
       Logger.error("Error loading properties: {}", ex.getMessage(), ex);

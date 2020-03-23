@@ -1,5 +1,6 @@
-package dev.tsvinc.music.sort;
+package dev.tsvinc.music.sort.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -29,7 +30,7 @@ public class ListingWithFormat {
   }
 
   public List<String> getFileList() {
-    return List.copyOf(this.fileList);
+    return !fileList.isEmpty() ? List.copyOf(this.fileList) : new ArrayList<>();
   }
 
   public void setFormat(final String format) {

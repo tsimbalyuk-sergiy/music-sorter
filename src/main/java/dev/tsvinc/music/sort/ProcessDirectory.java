@@ -6,15 +6,8 @@ import static dev.tsvinc.music.sort.Constants.MP3;
 import static dev.tsvinc.music.sort.Constants.MP_3_FORMAT;
 import static dev.tsvinc.music.sort.Constants.UNKNOWN;
 
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.TagException;
-import org.jaudiotagger.tag.reference.GenreTypes;
-import org.pmw.tinylog.Logger;
-
+import dev.tsvinc.music.sort.infrastructure.domain.GenreWithFormat;
+import dev.tsvinc.music.sort.model.ListingWithFormat;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,6 +17,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.TagException;
+import org.jaudiotagger.tag.reference.GenreTypes;
+import org.pmw.tinylog.Logger;
 
 public class ProcessDirectory {
 
@@ -32,39 +33,49 @@ public class ProcessDirectory {
   public static GenreWithFormat getGenreTag(final String path) {
     final var fileListForEachDir = createFileListForEachDir(path);
     final List<String> genreList = new ArrayList<>();
-    for (final var string : fileListForEachDir.getFileList()) {
-      final var musicFile = new File(string);
-      try {
-        final var audioFile = AudioFileIO.read(musicFile);
-        final var tag = audioFile.getTag();
-        if (null != tag && !tag.isEmpty()) {
-          final var genre = tag.getFirst(FieldKey.GENRE);
-          /*check if genre is in a numeric format e.g. (043)*/
-          if (genre.matches(".*[0-9].*")) {
-            /*if so -- extract numbers and get genre value for it*/
-            final var genreNumericalConvert = extractNumber(genre);
-            final var finalGenre =
-                GenreTypes.getInstanceOf().getValueForId(Integer.parseInt(genreNumericalConvert));
-            genreList.add(finalGenre);
-          } else {
-            genreList.add(genre);
-          }
-        } else {
-          genreList.add(UNKNOWN);
+    if (!fileListForEachDir.getFileList().isEmpty()) {
+      for (final var string : fileListForEachDir.getFileList()) {
+        final var musicFile = new File(string);
+        try {
+          checkGenre(genreList, musicFile);
+        } catch (final IOException
+            | CannotReadException
+            | ReadOnlyFileException
+            | TagException
+            | InvalidAudioFrameException e) {
+          Logger.error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e);
         }
-      } catch (final IOException
-          | CannotReadException
-          | ReadOnlyFileException
-          | TagException
-          | InvalidAudioFrameException e) {
-        Logger.error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e);
       }
+      final var mostRepeatedGenre = findMostRepeatedGenre(genreList);
+      return GenreWithFormat.builder()
+          .genre(mostRepeatedGenre)
+          .format(fileListForEachDir.getFormat())
+          .build();
+    } else {
+      return GenreWithFormat.builder().invalid(true).build();
     }
-    final var mostRepeatedGenre = findMostRepeatedGenre(genreList);
-    return GenreWithFormat.builder()
-        .genre(mostRepeatedGenre)
-        .format(fileListForEachDir.getFormat())
-        .build();
+  }
+
+  private static void checkGenre(List<String> genreList, File musicFile)
+      throws CannotReadException, IOException, TagException, ReadOnlyFileException,
+          InvalidAudioFrameException {
+    final var audioFile = AudioFileIO.read(musicFile);
+    final var tag = audioFile.getTag();
+    if (null != tag && !tag.isEmpty()) {
+      final var genre = tag.getFirst(FieldKey.GENRE);
+      /*check if genre is in a numeric format e.g. (043)*/
+      if (genre.matches(".*[0-9].*")) {
+        /*if so -- extract numbers and get genre value for it*/
+        final var genreNumericalConvert = extractNumber(genre);
+        final var finalGenre =
+            GenreTypes.getInstanceOf().getValueForId(Integer.parseInt(genreNumericalConvert));
+        genreList.add(finalGenre);
+      } else {
+        genreList.add(genre);
+      }
+    } else {
+      genreList.add(UNKNOWN);
+    }
   }
 
   public static String genreToOneStyle(final String genre) {
@@ -95,38 +106,25 @@ public class ProcessDirectory {
     genre =
         genre == null || genre.isEmpty() ? UNKNOWN : genre.replaceAll("[^A-Za-z0-9\\-\\s&]+", "");
     genre = genreToOneStyle(genre);
-    final var hipHop = Pattern.compile("hip.*hop");
-    final var altRock = Pattern.compile("(alt.*rock)");
-    final var psychedelic = Pattern.compile("(?!psy.*rock)(psy.*delic)");
-    final var loFi = Pattern.compile("(Lo-Fi)");
-    final var gangsta = Pattern.compile("(gangs|gangz)(ta)");
-    final var electronic = Pattern.compile("(electro)");
-    genre = getString(genre, hipHop, altRock, psychedelic, loFi, gangsta, electronic);
+    genre = checkGenreForPredictedMatches(genre);
     if (genre.contains("\u0000")) {
       genre = genre.replace("\u0000", "");
     }
     return genre;
   }
 
-  private static String getString(
-      String genre,
-      final Pattern hipHop,
-      final Pattern altRock,
-      final Pattern psychedelic,
-      final Pattern loFi,
-      final Pattern gangsta,
-      final Pattern electronic) {
-    if (hipHop.matcher(genre.toLowerCase()).find()) {
+  private static String checkGenreForPredictedMatches(String genre) {
+    if (Pattern.compile("hip.*hop").matcher(genre.toLowerCase()).find()) {
       genre = "Hip-Hop";
-    } else if (altRock.matcher(genre.toLowerCase()).find()) {
+    } else if (Pattern.compile("(alt.*rock)").matcher(genre.toLowerCase()).find()) {
       genre = "Alternative Rock";
-    } else if (psychedelic.matcher(genre.toLowerCase()).find()) {
+    } else if (Pattern.compile("(?!psy.*rock)(psy.*delic)").matcher(genre.toLowerCase()).find()) {
       genre = "Psychedelic";
-    } else if (gangsta.matcher(genre.toLowerCase()).find()) {
+    } else if (Pattern.compile("(gangs|gangz)(ta)").matcher(genre.toLowerCase()).find()) {
       genre = "Gangsta Rap";
-    } else if (electronic.matcher(genre.toLowerCase()).find()) {
+    } else if (Pattern.compile("(electro)").matcher(genre.toLowerCase()).find()) {
       genre = "Electronic";
-    } else if (loFi.matcher(genre.toLowerCase()).find()) {
+    } else if (Pattern.compile("(Lo-Fi)").matcher(genre.toLowerCase()).find()) {
       genre = "Lo-Fi";
     }
     return genre;
