@@ -9,7 +9,6 @@ import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import dev.tsvinc.music.sort.infrastructure.domain.AlbumDetails;
 import dev.tsvinc.music.sort.infrastructure.domain.Format;
-import dev.tsvinc.music.sort.infrastructure.domain.Genre;
 import dev.tsvinc.music.sort.infrastructure.domain.Release;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,7 +27,6 @@ class ReleaseDaoImplTest {
   private static JdbcPooledConnectionSource connectionSource;
 
   private static Dao<Release, Long> releases;
-  private static Dao<AlbumDetails, Long> albumDetails;
 
   @BeforeAll
   public static void setup() throws SQLException {
@@ -38,20 +36,16 @@ class ReleaseDaoImplTest {
     TableUtils.createTableIfNotExists(connectionSource, Release.class);
 
     releases = DaoManager.createDao(connectionSource, Release.class);
-    albumDetails = DaoManager.createDao(connectionSource, AlbumDetails.class);
 
     GenericRawResults<String[]> results =
         releases.queryRaw("SELECT name FROM sqlite_master WHERE type = 'table'");
     for (String[] result : results) {
       System.out.println("One table is: " + result[0]);
     }
-    results = releases.queryRaw("SELECT * FROM releases");
-    results.forEach(strings -> System.out.println("@@@>>> " + strings));
   }
 
   @Test
   void findByName() throws SQLException {
-    final var genre = Genre.builder().value("some").build();
     Release release =
         Release.builder()
             .releaseName(NEW_RELEASE)
