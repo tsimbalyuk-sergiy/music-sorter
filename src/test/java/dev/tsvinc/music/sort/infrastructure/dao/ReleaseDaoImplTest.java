@@ -45,6 +45,8 @@ class ReleaseDaoImplTest {
     for (String[] result : results) {
       System.out.println("One table is: " + result[0]);
     }
+    results = releases.queryRaw("SELECT * FROM releases");
+    results.forEach(strings -> System.out.println("@@@>>> " + strings));
   }
 
   @Test
@@ -71,11 +73,13 @@ class ReleaseDaoImplTest {
     releases.create(release);
 
     Release result = releases.queryForId(release.getId());
+    System.out.println(">>> " + result.toString());
     assertEquals(NEW_RELEASE, result.getReleaseName());
 
     release.setReleaseName("my other release");
     releases.update(release);
-    releases.queryForAll().forEach(rls -> System.out.println(">>> " + rls.toString()));
+    final Release updatedRelease = releases.queryForId(release.getId());
+    assertEquals("my other release", updatedRelease.getReleaseName());
     releases.delete(release);
   }
 
