@@ -1,6 +1,6 @@
 package dev.tsvinc.music.sort.infrastructure.domain;
 
-public enum  Format {
+public enum Format {
   FLAC("flac"),
   MP3("mp3");
   private String value;

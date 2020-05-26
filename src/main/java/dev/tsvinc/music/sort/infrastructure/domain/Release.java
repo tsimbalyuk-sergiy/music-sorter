@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class Release {
-  
+
   @DatabaseField(generatedId = true)
   private long id;
 

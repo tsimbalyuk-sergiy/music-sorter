@@ -20,7 +20,8 @@ public class GenreWithFormat {
     this.invalid = invalid;
   }
 
-  public GenreWithFormat() {}
+  public GenreWithFormat() {
+  }
 
   public static GenreWithFormatBuilder builder() {
     return new GenreWithFormatBuilder();
@@ -84,7 +85,8 @@ public class GenreWithFormat {
     private String format;
     private boolean invalid;
 
-    GenreWithFormatBuilder() {}
+    GenreWithFormatBuilder() {
+    }
 
     public GenreWithFormat.GenreWithFormatBuilder genre(final String genre) {
       this.genre = genre;

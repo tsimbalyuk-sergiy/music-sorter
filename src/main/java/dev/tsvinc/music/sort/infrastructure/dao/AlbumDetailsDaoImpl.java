@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTableConfig;
 import dev.tsvinc.music.sort.infrastructure.domain.AlbumDetails;
+
 import java.sql.SQLException;
 
 public class AlbumDetailsDaoImpl extends BaseDaoImpl<AlbumDetails, Long>

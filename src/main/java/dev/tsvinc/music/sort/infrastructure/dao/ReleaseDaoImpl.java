@@ -18,7 +18,8 @@ public class ReleaseDaoImpl extends BaseDaoImpl<Release, Long> implements Releas
     super(connectionSource, dataClass);
   }
 
-  protected ReleaseDaoImpl(ConnectionSource connectionSource, DatabaseTableConfig<Release> tableConfig)
+  protected ReleaseDaoImpl(ConnectionSource connectionSource,
+      DatabaseTableConfig<Release> tableConfig)
       throws SQLException {
     super(connectionSource, tableConfig);
   }
