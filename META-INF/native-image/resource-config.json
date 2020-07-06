@@ -1,6 +1,7 @@
 {
   "resources":[
-    {"pattern":"META-INF/services/org.slf4j.spi.SLF4JServiceProvider"}, 
-    {"pattern":"logback.xml"}
+    {"pattern":"META-INF/services/org.tinylog.provider.LoggingProvider"}, 
+    {"pattern":"META-INF/services/org.tinylog.writers.Writer"}, 
+    {"pattern":"tinylog.properties"}
   ]
 }

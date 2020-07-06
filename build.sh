@@ -24,7 +24,6 @@ ${GRAAL}/bin/native-image -H:+ReportExceptionStackTraces \
               -H:ReflectionConfigurationFiles=../META-INF/native-image/reflect-config.json \
               -H:IncludeResources=../META-INF/native-image/resource-config.json \
               -H:Log=registerResource \
-              -H:+ReportUnsupportedElementsAtRuntime \
               -H:+ReportExceptionStackTraces \
               -H:-AllowVMInspection \
               -jar music-sorter.jar

@@ -1,9 +1,13 @@
-package dev.tsvinc.music.sort;
+package dev.tsvinc.music.sort.domain;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 
+@SuppressWarnings("unused")
 public class ListingWithFormat {
+
   private String format;
   private List<String> fileList;
 
@@ -27,7 +31,7 @@ public class ListingWithFormat {
   }
 
   public List<String> getFileList() {
-    return this.fileList;
+    return (null != fileList && !fileList.isEmpty()) ? this.fileList : Collections.emptyList();
   }
 
   public void setFormat(final String format) {
@@ -38,46 +42,48 @@ public class ListingWithFormat {
     this.fileList = fileList;
   }
 
+  @Override
   public String toString() {
-    return "ListingWithFormat(format="
-        + this.getFormat()
-        + ", fileList="
-        + this.getFileList()
-        + ")";
+    return new StringJoiner(", ", ListingWithFormat.class.getSimpleName() + "[", "]")
+        .add("format='" + format + "'")
+        .add("fileList=" + fileList)
+        .toString();
   }
 
+  @Override
   public boolean equals(final Object o) {
-    if (o == this) {
+    if (Objects.equals(o, this)) {
       return true;
     }
     if (!(o instanceof ListingWithFormat)) {
       return false;
     }
-    final ListingWithFormat other = (ListingWithFormat) o;
+    final var other = (ListingWithFormat) o;
     if (!other.canEqual(this)) {
       return false;
     }
-    final Object o1Format = this.getFormat();
-    final Object o2Format = other.getFormat();
+    final var o1Format = this.getFormat();
+    final var o2Format = other.getFormat();
     if (!Objects.equals(o1Format, o2Format)) {
       return false;
     }
-    final Object o1FileList = this.getFileList();
-    final Object o2FileList = other.getFileList();
+    final var o1FileList = this.getFileList();
+    final var o2FileList = other.getFileList();
     return Objects.equals(o1FileList, o2FileList);
   }
 
-  protected boolean canEqual(final Object other) {
-    return other instanceof ListingWithFormat;
+  protected boolean canEqual(final ListingWithFormat other) {
+    return null != other;
   }
 
+  @Override
   public int hashCode() {
-    final int PRIME = 59;
-    int result = 1;
-    final Object oFormat = this.getFormat();
-    result = result * PRIME + (oFormat == null ? 43 : oFormat.hashCode());
-    final Object oFileList = this.getFileList();
-    result = result * PRIME + (oFileList == null ? 43 : oFileList.hashCode());
+    final var PRIME = 59;
+    var result = 1;
+    final var oFormat = this.getFormat();
+    result = result * PRIME + (null == oFormat ? 43 : oFormat.hashCode());
+    final var oFileList = this.getFileList();
+    result = result * PRIME + (null == oFileList ? 43 : oFileList.hashCode());
     return result;
   }
 
@@ -102,12 +108,12 @@ public class ListingWithFormat {
       return new ListingWithFormat(format, fileList);
     }
 
+    @Override
     public String toString() {
-      return "ListingWithFormat.ListingWithFormatBuilder(format="
-          + this.format
-          + ", fileList="
-          + this.fileList
-          + ")";
+      return new StringJoiner(", ", ListingWithFormatBuilder.class.getSimpleName() + "[", "]")
+          .add("format='" + format + "'")
+          .add("fileList=" + fileList)
+          .toString();
     }
   }
 }
