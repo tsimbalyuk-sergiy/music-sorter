@@ -1,11 +1,13 @@
-package dev.tsvinc.music.sort;
+package dev.tsvinc.music.sort.domain;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 @SuppressWarnings("unused")
 public class ListingWithFormat {
+
   private String format;
   private List<String> fileList;
 
@@ -29,7 +31,7 @@ public class ListingWithFormat {
   }
 
   public List<String> getFileList() {
-    return List.copyOf(this.fileList);
+    return (null != fileList && !fileList.isEmpty()) ? this.fileList : Collections.emptyList();
   }
 
   public void setFormat(final String format) {
