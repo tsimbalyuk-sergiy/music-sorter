@@ -1,5 +1,6 @@
 package dev.tsvinc.music.sort.service;
 
+import static dev.tsvinc.music.sort.util.Constants.*;
 import static dev.tsvinc.music.sort.util.Constants.FLAC;
 import static dev.tsvinc.music.sort.util.Constants.FLAC_FORMAT;
 import static dev.tsvinc.music.sort.util.Constants.MP3;
@@ -11,6 +12,7 @@ import static org.pmw.tinylog.Logger.info;
 
 import dev.tsvinc.music.sort.domain.AppProperties;
 import dev.tsvinc.music.sort.domain.ListingWithFormat;
+import dev.tsvinc.music.sort.infrastructure.domain.Release;
 import io.vavr.control.Try;
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +20,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -30,9 +35,12 @@ import org.pmw.tinylog.Logger;
 
 public class FileServiceImpl implements FileService {
 
-  @Inject private PropertiesService propertiesService;
-  @Inject private CleanUpService cleanUpService;
-  @Inject private AudioFileService audioFileService;
+  @Inject
+  private PropertiesService propertiesService;
+  @Inject
+  private CleanUpService cleanUpService;
+  @Inject
+  private AudioFileService audioFileService;
 //  @Inject private DbService dbService;
 
   private static boolean isNotLiveRelease(String folderName, AppProperties properties) {
@@ -112,9 +120,26 @@ public class FileServiceImpl implements FileService {
 
   private void moveRelease(final String sourceDirectory, AppProperties properties) {
     final var source = new File(sourceDirectory);
-    final var genreTag = audioFileService.getMetadata(sourceDirectory);
+    final var metadata = audioFileService.getMetadata(sourceDirectory);
+    boolean containsCheckSum = false;
+    if(hasCheckSum(source).containsKey(CHECKSUM)){
+      containsCheckSum = true;
+      verifyCheckSum(source); //TODO
+    }
 
-    final var outWithFormat = properties.getTargetFolder() + File.separator + genreTag.getFormat();
+    /*private String releaseName;
+  private long releaseSize;
+  private boolean hasNfo;
+  private boolean hasChecksum;
+  private boolean checksumValid;*/
+
+    Release.builder()
+        .artist(metadata.getArtist())
+        .releaseName(source.getName())
+        .hasChecksum(containsCheckSum)
+        .build();
+
+    final var outWithFormat = properties.getTargetFolder() + File.separator + metadata.getFormat();
     final var outWithFormatDir = new File(outWithFormat);
     if (!outWithFormatDir.exists()) {
       createDirectory(outWithFormatDir);
@@ -122,9 +147,9 @@ public class FileServiceImpl implements FileService {
     String outWithGenreAndFormat;
     if (properties.isSortByArtist()) {
       outWithGenreAndFormat =
-          Path.of(outWithFormat, genreTag.getGenre(), genreTag.getArtist().trim()).toString();
+          Path.of(outWithFormat, metadata.getGenre(), metadata.getArtist().trim()).toString();
     } else {
-      outWithGenreAndFormat = Path.of(outWithFormat, genreTag.getGenre()).toString();
+      outWithGenreAndFormat = Path.of(outWithFormat, metadata.getGenre()).toString();
     }
     final var genreDir = new File(outWithGenreAndFormat);
     final var finalDestination = outWithGenreAndFormat + File.separator;
@@ -138,12 +163,27 @@ public class FileServiceImpl implements FileService {
     moveDirectory(sourceDirectory, source, destination);
   }
 
+  private void verifyCheckSum(File source) {
+    //TODO
+  }
+
+  private Map<?, ?> hasCheckSum(File source) {
+    final List<Path> sfv = Try.withResources(() -> Files.list(source.toPath()))
+        .of(pathStream -> pathStream.filter(path -> path.getFileName().endsWith(CHECKSUM)).collect(Collectors.toList()))
+        .onFailure(throwable -> info("No Checksum file for {}", source.toString())).getOrElse(Collections.emptyList());
+    if (sfv.isEmpty()) {
+      return new HashMap<String, Path>();
+    } else {
+      return Map.of(CHECKSUM, sfv.get(0));
+    }
+  }
+
   private Set<String> listAlbums() {
     return Try.withResources(
-            () ->
-                Files.walk(
-                    Paths.get(propertiesService.getProperties().getSourceFolder()),
-                    Integer.MAX_VALUE))
+        () ->
+            Files.walk(
+                Paths.get(propertiesService.getProperties().getSourceFolder()),
+                Integer.MAX_VALUE))
         .of(
             stream -> {
               final Set<String> dirs = new HashSet<>();

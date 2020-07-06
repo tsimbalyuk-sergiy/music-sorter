@@ -8,6 +8,8 @@ import java.util.Optional;
 import javax.inject.Inject;
 import org.dizitart.no2.objects.ObjectRepository;
 import org.dizitart.no2.objects.filters.ObjectFilters;
+import org.dizitart.no2.util.Iterables;
+import org.pmw.tinylog.Logger;
 
 public class ReleaseDaoImpl implements ReleaseDao {
 
@@ -32,17 +34,19 @@ public class ReleaseDaoImpl implements ReleaseDao {
 
   @Override
   public Release update(Release release) {
+    Logger.info("TBD");
     return null;
   }
 
   @Override
   public boolean delete(Release release) {
+    Logger.info("TBD");
     return false;
   }
 
   @Override
-  public Release save(Release release) {
-    return null;
+  public Number save(Release release) {
+    return Iterables.firstOrDefault(getNitriteRepository().insert(release)).getIdValue();
   }
 
   private ObjectRepository<Release> getNitriteRepository() {

@@ -16,5 +16,5 @@ public interface ReleaseDao {
 
   boolean delete(Release release);
 
-  Release save(Release release);
+  Number save(Release release);
 }

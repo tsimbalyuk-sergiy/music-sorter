@@ -25,16 +25,15 @@ public class Release {
 
   @Id
   private NitriteId id;
-  private String releaseName;
-  private String fullPath;
-  private long releaseSize;
   private Format format;
+  private String genre;
+  private String artist;
+  private int year;
   private int numberOfAudioFiles;
+
+  private String releaseName;
+  private long releaseSize;
   private boolean hasNfo;
   private boolean hasChecksum;
   private boolean checksumValid;
-  private String artist;
-  private String albumArtist;
-  private String genre;
-  private int year;
 }
