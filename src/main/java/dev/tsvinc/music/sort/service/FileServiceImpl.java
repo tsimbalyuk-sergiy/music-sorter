@@ -1,9 +1,9 @@
 package dev.tsvinc.music.sort.service;
 
-import static dev.tsvinc.music.sort.Constants.FLAC;
-import static dev.tsvinc.music.sort.Constants.FLAC_FORMAT;
-import static dev.tsvinc.music.sort.Constants.MP3;
-import static dev.tsvinc.music.sort.Constants.MP_3_FORMAT;
+import static dev.tsvinc.music.sort.util.Constants.FLAC;
+import static dev.tsvinc.music.sort.util.Constants.FLAC_FORMAT;
+import static dev.tsvinc.music.sort.util.Constants.MP3;
+import static dev.tsvinc.music.sort.util.Constants.MP_3_FORMAT;
 import static dev.tsvinc.music.sort.util.Predicates.IS_MUSIC_FILE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.pmw.tinylog.Logger.error;
@@ -33,6 +33,7 @@ public class FileServiceImpl implements FileService {
   @Inject private PropertiesService propertiesService;
   @Inject private CleanUpService cleanUpService;
   @Inject private AudioFileService audioFileService;
+//  @Inject private DbService dbService;
 
   private static boolean isNotLiveRelease(String folderName, AppProperties properties) {
     return properties.getLiveReleasesPatterns().parallelStream().noneMatch(folderName::contains);

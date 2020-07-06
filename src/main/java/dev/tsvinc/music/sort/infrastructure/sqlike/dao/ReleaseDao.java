@@ -1,7 +1,7 @@
-package dev.tsvinc.music.sort.infrastructure.dao;
+package dev.tsvinc.music.sort.infrastructure.sqlike.dao;
 
 import com.j256.ormlite.dao.Dao;
-import dev.tsvinc.music.sort.infrastructure.domain.Release;
+import dev.tsvinc.music.sort.infrastructure.sqlike.domain.Release;
 
 import java.sql.SQLException;
 import java.util.List;

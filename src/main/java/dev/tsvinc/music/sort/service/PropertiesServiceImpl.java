@@ -1,12 +1,18 @@
 package dev.tsvinc.music.sort.service;
 
-import static dev.tsvinc.music.sort.Constants.ERROR_CREATING_DIRECTORY;
-import static dev.tsvinc.music.sort.Constants.LIVE_RELEASES_PATTERNS;
-import static dev.tsvinc.music.sort.Constants.LIVE_RELEASES_PATTERNS_DEFAULT;
-import static dev.tsvinc.music.sort.Constants.LIVE_RELEASES_SKIP;
-import static dev.tsvinc.music.sort.Constants.SORT_BY_ARTIST;
-import static dev.tsvinc.music.sort.Constants.SOURCE_FOLDER;
-import static dev.tsvinc.music.sort.Constants.TARGET_FOLDER;
+import static dev.tsvinc.music.sort.util.Constants.DB_DEFAULT_FILE_NAME;
+import static dev.tsvinc.music.sort.util.Constants.DB_DEFAULT_PASSWORD;
+import static dev.tsvinc.music.sort.util.Constants.DB_DEFAULT_USERNAME;
+import static dev.tsvinc.music.sort.util.Constants.DB_LOCATION;
+import static dev.tsvinc.music.sort.util.Constants.DB_PASSWORD;
+import static dev.tsvinc.music.sort.util.Constants.DB_USERNAME;
+import static dev.tsvinc.music.sort.util.Constants.ERROR_CREATING_DIRECTORY;
+import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_PATTERNS;
+import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_PATTERNS_DEFAULT;
+import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_SKIP;
+import static dev.tsvinc.music.sort.util.Constants.SORT_BY_ARTIST;
+import static dev.tsvinc.music.sort.util.Constants.SOURCE_FOLDER;
+import static dev.tsvinc.music.sort.util.Constants.TARGET_FOLDER;
 import static org.pmw.tinylog.Logger.error;
 import static org.pmw.tinylog.Logger.info;
 
@@ -25,16 +31,20 @@ import java.util.List;
 import java.util.Properties;
 
 public class PropertiesServiceImpl implements PropertiesService {
+
   private static final String CONFIG_PATH =
       System.getProperty("user.home") + File.separator + ".config";
   private static final String APP_CONFIG_DIR_PATH = CONFIG_PATH + File.separator + "music-sorter";
   private final String appPropertiesLocation = appPropertiesLocation();
   private boolean skipLiveReleases = false;
   private boolean sortByArtist = false;
+  private String dbLocation;
   private List<String> liveReleasesPatterns;
 
   private String sourceFolderValue;
   private String targetFolderValue;
+  private String dbUsername;
+  private String dbPassword;
 
   @Override
   public boolean initProperties() {
@@ -67,6 +77,9 @@ public class PropertiesServiceImpl implements PropertiesService {
           .liveReleasesPatterns(liveReleasesPatterns)
           .skipLiveReleases(skipLiveReleases)
           .sortByArtist(sortByArtist)
+          .dbLocation(dbLocation)
+          .dbUsername(dbUsername)
+          .dbPassword(dbPassword)
           .build();
     }
     return null;
@@ -74,15 +87,15 @@ public class PropertiesServiceImpl implements PropertiesService {
 
   private void createPropertiesExample() {
     Try.of(
-            () -> {
-              Files.createFile(Paths.get(appPropertiesLocation));
-              Files.write(
-                  Paths.get(appPropertiesLocation),
-                  Arrays.asList("source=", "target="),
-                  StandardCharsets.UTF_8,
-                  StandardOpenOption.APPEND);
-              return null;
-            })
+        () -> {
+          Files.createFile(Paths.get(appPropertiesLocation));
+          Files.write(
+              Paths.get(appPropertiesLocation),
+              Arrays.asList("source=", "target="),
+              StandardCharsets.UTF_8,
+              StandardOpenOption.APPEND);
+          return null;
+        })
         .onFailure(
             e ->
                 error(
@@ -109,6 +122,7 @@ public class PropertiesServiceImpl implements PropertiesService {
           && !targetFolderValue.isEmpty()) {
         done = true;
       }
+      /*GENERAL SORTING RULES*/
       skipLiveReleases =
           prop.containsKey(LIVE_RELEASES_SKIP)
               && Boolean.parseBoolean(prop.getProperty(LIVE_RELEASES_SKIP));
@@ -123,6 +137,15 @@ public class PropertiesServiceImpl implements PropertiesService {
         info("\"live_releases_patterns\" option is empty. using defaults: ");
         info("{}", LIVE_RELEASES_PATTERNS_DEFAULT);
       }
+
+      /*DB*/
+      dbLocation = prop
+          .containsKey(DB_LOCATION) ? String.valueOf(prop.getProperty(DB_LOCATION))
+          : APP_CONFIG_DIR_PATH + File.separator + DB_DEFAULT_FILE_NAME;
+      dbUsername = prop.containsKey(DB_USERNAME) ? prop.getProperty(DB_USERNAME)
+          : DB_DEFAULT_USERNAME;
+      dbPassword = prop.containsKey(DB_PASSWORD) ? prop.getProperty(DB_PASSWORD)
+          : DB_DEFAULT_PASSWORD;
     } catch (final IOException ex) {
       error("Error loading properties: {}", ex.getMessage(), ex);
     }

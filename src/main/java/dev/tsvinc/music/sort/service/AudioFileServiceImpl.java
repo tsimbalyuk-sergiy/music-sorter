@@ -1,6 +1,6 @@
 package dev.tsvinc.music.sort.service;
 
-import static dev.tsvinc.music.sort.Constants.UNKNOWN;
+import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
 
 import dev.tsvinc.music.sort.domain.GenreWithFormat;
 import ealvatag.audio.AudioFileIO;

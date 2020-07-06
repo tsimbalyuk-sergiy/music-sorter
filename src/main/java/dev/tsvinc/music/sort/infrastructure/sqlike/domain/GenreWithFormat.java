@@ -1,4 +1,4 @@
-package dev.tsvinc.music.sort.infrastructure.domain;
+package dev.tsvinc.music.sort.infrastructure.sqlike.domain;
 
 import java.util.Objects;
 import java.util.StringJoiner;

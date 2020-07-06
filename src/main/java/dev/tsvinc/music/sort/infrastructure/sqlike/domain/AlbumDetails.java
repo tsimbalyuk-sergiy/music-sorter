@@ -1,4 +1,4 @@
-package dev.tsvinc.music.sort.infrastructure.domain;
+package dev.tsvinc.music.sort.infrastructure.sqlike.domain;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;

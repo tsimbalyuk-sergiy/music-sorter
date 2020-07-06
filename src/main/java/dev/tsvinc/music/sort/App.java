@@ -1,7 +1,7 @@
 package dev.tsvinc.music.sort;
 
 import com.google.inject.Guice;
-import dev.tsvinc.music.sort.service.AppplicationModules;
+import dev.tsvinc.music.sort.service.ApplicationModules;
 import dev.tsvinc.music.sort.service.FileService;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -27,7 +27,7 @@ public class App {
 
   public static void main(final String[] args) {
     App app = new App();
-    Guice.createInjector(new AppplicationModules()).injectMembers(app);
+    Guice.createInjector(new ApplicationModules()).injectMembers(app);
 
     app.fileService.processDirectories();
   }

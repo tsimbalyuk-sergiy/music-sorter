@@ -1,9 +1,9 @@
-package dev.tsvinc.music.sort.infrastructure.domain;
+package dev.tsvinc.music.sort.infrastructure.nosql.domain;
 
 public enum Format {
   FLAC("flac"),
   MP3("mp3");
-  private String value;
+  private final String value;
 
   Format(String value) {
     this.value = value;

@@ -1,4 +1,4 @@
-package dev.tsvinc.music.sort.infrastructure.dao;
+package dev.tsvinc.music.sort.infrastructure.sqlike.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -7,9 +7,9 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import dev.tsvinc.music.sort.infrastructure.domain.AlbumDetails;
-import dev.tsvinc.music.sort.infrastructure.domain.Format;
-import dev.tsvinc.music.sort.infrastructure.domain.Release;
+import dev.tsvinc.music.sort.infrastructure.sqlike.domain.AlbumDetails;
+import dev.tsvinc.music.sort.infrastructure.sqlike.domain.Format;
+import dev.tsvinc.music.sort.infrastructure.sqlike.domain.Release;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
