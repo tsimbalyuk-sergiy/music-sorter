@@ -4,6 +4,10 @@
   "methods":[{"name":"current","parameterTypes":[] }]
 },
 {
+  "name":"java.lang.Throwable",
+  "methods":[{"name":"getSuppressed","parameterTypes":[] }]
+},
+{
   "name":"java.nio.ByteBuffer"
 },
 {

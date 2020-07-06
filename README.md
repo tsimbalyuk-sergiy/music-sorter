@@ -54,4 +54,5 @@ live_releases_patterns=-SAT-,-DVBS-,-SBD-
 ### TODO
 
 - ~~clean up parent directory~~
+- if folder doesnt cotain any MP3/FLAC files - move it to some specific dir?
 - check sfv/md5 (if enabled)
