@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.pmw.tinylog.Logger;
 
 @TestInstance(Lifecycle.PER_CLASS)
 class ReleaseDaoImplTest {
@@ -40,7 +41,7 @@ class ReleaseDaoImplTest {
     GenericRawResults<String[]> results =
         releases.queryRaw("SELECT name FROM sqlite_master WHERE type = 'table'");
     for (String[] result : results) {
-      System.out.println("One table is: " + result[0]);
+      Logger.info("One table is: " + result[0]);
     }
   }
 
@@ -67,7 +68,7 @@ class ReleaseDaoImplTest {
     releases.create(release);
 
     Release result = releases.queryForId(release.getId());
-    System.out.println(">>> " + result.toString());
+    Logger.info(">>> " + result.toString());
     assertEquals(NEW_RELEASE, result.getReleaseName());
 
     release.setReleaseName("my other release");
@@ -84,6 +85,6 @@ class ReleaseDaoImplTest {
     connectionSource.close();
 
     boolean delete = Files.deleteIfExists(Paths.get("music-sorter.db"));
-    System.out.println("Deleted db file: " + delete);
+    Logger.info("Deleted db file: " + delete);
   }
 }
