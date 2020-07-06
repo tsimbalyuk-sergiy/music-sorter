@@ -16,7 +16,6 @@ public class ApplicationModules extends AbstractModule {
     bind(CleanUpService.class).to(CleanUpServiceImpl.class).in(Singleton.class);
     bind(AudioFileService.class).to(AudioFileServiceImpl.class).in(Singleton.class);
     bind(ReleaseDao.class).to(ReleaseDaoImpl.class).in(Singleton.class);
-    bind(NitriteInstance.class).to(NitriteInstanceImp.class)
-        .in(Singleton.class);
+    bind(NitriteInstance.class).to(NitriteInstanceImp.class).in(Singleton.class);
   }
 }

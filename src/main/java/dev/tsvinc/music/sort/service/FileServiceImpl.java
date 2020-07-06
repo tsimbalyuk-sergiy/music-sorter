@@ -15,6 +15,7 @@ import dev.tsvinc.music.sort.domain.ListingWithFormat;
 import dev.tsvinc.music.sort.infrastructure.domain.Release;
 import io.vavr.control.Try;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -34,13 +36,10 @@ import org.pmw.tinylog.Logger;
 
 public class FileServiceImpl implements FileService {
 
-  @Inject
-  private PropertiesService propertiesService;
-  @Inject
-  private CleanUpService cleanUpService;
-  @Inject
-  private AudioFileService audioFileService;
-//  @Inject private DbService dbService;
+  @Inject private PropertiesService propertiesService;
+  @Inject private CleanUpService cleanUpService;
+  @Inject private AudioFileService audioFileService;
+  //  @Inject private DbService dbService;
 
   private static boolean isNotLiveRelease(String folderName, AppProperties properties) {
     return properties.getLiveReleasesPatterns().parallelStream().noneMatch(folderName::contains);
@@ -123,14 +122,14 @@ public class FileServiceImpl implements FileService {
     boolean containsCheckSum = false;
     if (hasCheckSum(source).containsKey(CHECKSUM)) {
       containsCheckSum = true;
-      verifyCheckSum(source); //TODO
+      verifyCheckSum(source); // TODO
     }
 
     /*private String releaseName;
-  private long releaseSize;
-  private boolean hasNfo;
-  private boolean hasChecksum;
-  private boolean checksumValid;*/
+    private long releaseSize;
+    private boolean hasNfo;
+    private boolean hasChecksum;
+    private boolean checksumValid;*/
 
     Release.builder()
         .artist(metadata.getArtist())
@@ -163,13 +162,38 @@ public class FileServiceImpl implements FileService {
   }
 
   private void verifyCheckSum(File source) {
-    //TODO
+    final List<Path> paths =
+        Try.withResources(() -> Files.list(source.toPath()))
+            .of(pathStream -> pathStream.collect(Collectors.toList()))
+            .get();
+
+    final Optional<Path> sfv =
+        paths.parallelStream().filter(path -> path.endsWith("sfv")).findFirst();
+
+    final List<String> strings =
+        Try.of(() -> Files.readAllLines(sfv.orElseThrow(FileNotFoundException::new)))
+            .onFailure(t -> error("Error reading lines: {}, {}", sfv.toString(), t.getMessage(), t))
+            .get();
+    final Map<String, String> collect =
+        strings.parallelStream()
+            .map(s -> s.split(" "))
+            .collect(Collectors.toMap(res -> res[0], res -> res.length > 1 ? res[1] : ""));
+
+    for (Path path : paths) {
+      // TODO calc crc, get by key from map, compare calculated crc and crc from sfv file
+    }
   }
 
   private Map<?, ?> hasCheckSum(File source) {
-    final List<Path> sfv = Try.withResources(() -> Files.list(source.toPath()))
-        .of(pathStream -> pathStream.filter(path -> path.getFileName().endsWith(CHECKSUM)).collect(Collectors.toList()))
-        .onFailure(throwable -> info("No Checksum file for {}", source.toString())).getOrElse(Collections.emptyList());
+    final List<Path> sfv =
+        Try.withResources(() -> Files.list(source.toPath()))
+            .of(
+                pathStream ->
+                    pathStream
+                        .filter(path -> path.getFileName().endsWith("sfv"))
+                        .collect(Collectors.toList()))
+            .onFailure(throwable -> info("No Checksum file for {}", source.toString()))
+            .getOrElse(Collections.emptyList());
     if (sfv.isEmpty()) {
       return Collections.emptyMap();
     } else {
@@ -179,10 +203,10 @@ public class FileServiceImpl implements FileService {
 
   private Set<String> listAlbums() {
     return Try.withResources(
-        () ->
-            Files.walk(
-                Paths.get(propertiesService.getProperties().getSourceFolder()),
-                Integer.MAX_VALUE))
+            () ->
+                Files.walk(
+                    Paths.get(propertiesService.getProperties().getSourceFolder()),
+                    Integer.MAX_VALUE))
         .of(
             stream -> {
               final Set<String> dirs = new HashSet<>();

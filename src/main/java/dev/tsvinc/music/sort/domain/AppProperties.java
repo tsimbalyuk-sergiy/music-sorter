@@ -20,7 +20,10 @@ public class AppProperties {
       String targetFolder,
       boolean sortByArtist,
       boolean skipLiveReleases,
-      List<String> liveReleasesPatterns, String dbLocation, String dbUsername, String dbPassword) {
+      List<String> liveReleasesPatterns,
+      String dbLocation,
+      String dbUsername,
+      String dbPassword) {
     this.sourceFolder = sourceFolder;
     this.targetFolder = targetFolder;
     this.sortByArtist = sortByArtist;
@@ -31,8 +34,7 @@ public class AppProperties {
     this.dbPassword = dbPassword;
   }
 
-  public AppProperties() {
-  }
+  public AppProperties() {}
 
   public static AppPropertiesBuilder builder() {
     return new AppPropertiesBuilder();
@@ -111,21 +113,27 @@ public class AppProperties {
       return false;
     }
     AppProperties that = (AppProperties) o;
-    return sortByArtist == that.sortByArtist &&
-        skipLiveReleases == that.skipLiveReleases &&
-        Objects.equals(sourceFolder, that.sourceFolder) &&
-        Objects.equals(targetFolder, that.targetFolder) &&
-        Objects.equals(liveReleasesPatterns, that.liveReleasesPatterns) &&
-        Objects.equals(dbLocation, that.dbLocation) &&
-        Objects.equals(dbUsername, that.dbUsername) &&
-        Objects.equals(dbPassword, that.dbPassword);
+    return sortByArtist == that.sortByArtist
+        && skipLiveReleases == that.skipLiveReleases
+        && Objects.equals(sourceFolder, that.sourceFolder)
+        && Objects.equals(targetFolder, that.targetFolder)
+        && Objects.equals(liveReleasesPatterns, that.liveReleasesPatterns)
+        && Objects.equals(dbLocation, that.dbLocation)
+        && Objects.equals(dbUsername, that.dbUsername)
+        && Objects.equals(dbPassword, that.dbPassword);
   }
 
   @Override
   public int hashCode() {
-    return Objects
-        .hash(sourceFolder, targetFolder, sortByArtist, skipLiveReleases, liveReleasesPatterns,
-            dbLocation, dbUsername, dbPassword);
+    return Objects.hash(
+        sourceFolder,
+        targetFolder,
+        sortByArtist,
+        skipLiveReleases,
+        liveReleasesPatterns,
+        dbLocation,
+        dbUsername,
+        dbPassword);
   }
 
   @Override
@@ -153,8 +161,7 @@ public class AppProperties {
     private String dbUsername;
     private String dbPassword;
 
-    AppPropertiesBuilder() {
-    }
+    AppPropertiesBuilder() {}
 
     public AppProperties.AppPropertiesBuilder sourceFolder(String sourceFolder) {
       this.sourceFolder = sourceFolder;
@@ -176,8 +183,7 @@ public class AppProperties {
       return this;
     }
 
-    public AppProperties.AppPropertiesBuilder dbLocation(
-        String dbLocation) {
+    public AppProperties.AppPropertiesBuilder dbLocation(String dbLocation) {
       this.dbLocation = dbLocation;
       return this;
     }
@@ -188,22 +194,26 @@ public class AppProperties {
       return this;
     }
 
-    public AppProperties.AppPropertiesBuilder dbUsername(
-        String dbUsername) {
+    public AppProperties.AppPropertiesBuilder dbUsername(String dbUsername) {
       this.dbUsername = dbUsername;
       return this;
     }
 
-    public AppProperties.AppPropertiesBuilder dbPassword(
-        String dbPassword) {
+    public AppProperties.AppPropertiesBuilder dbPassword(String dbPassword) {
       this.dbPassword = dbPassword;
       return this;
     }
 
     public AppProperties build() {
       return new AppProperties(
-          sourceFolder, targetFolder, sortByArtist, skipLiveReleases, liveReleasesPatterns,
-          dbLocation, dbUsername, dbPassword);
+          sourceFolder,
+          targetFolder,
+          sortByArtist,
+          skipLiveReleases,
+          liveReleasesPatterns,
+          dbLocation,
+          dbUsername,
+          dbPassword);
     }
   }
 }

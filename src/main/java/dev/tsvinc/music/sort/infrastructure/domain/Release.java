@@ -18,13 +18,12 @@ import org.dizitart.no2.objects.Indices;
 @Builder
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Indices({
-    @Index(value = "release_name", type = IndexType.Unique),
-    @Index(value = "checksum_valid", type = IndexType.NonUnique)
+  @Index(value = "release_name", type = IndexType.Unique),
+  @Index(value = "checksum_valid", type = IndexType.NonUnique)
 })
 public class Release {
 
-  @Id
-  private NitriteId id;
+  @Id private NitriteId id;
   private Format format;
   private String genre;
   private String artist;

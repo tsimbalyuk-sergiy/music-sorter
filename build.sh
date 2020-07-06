@@ -14,19 +14,19 @@ cd ./build/
 
 echo GRAAL native-image
 ${GRAAL}/bin/native-image -H:+ReportExceptionStackTraces \
-              --no-server \
-              --no-fallback \
-              --language:llvm \
-              --allow-incomplete-classpath \
-              --class-path music-sorter.jar \
-              --report-unsupported-elements-at-runtime \
-              -H:+TraceClassInitialization \
-              -H:ReflectionConfigurationFiles=../META-INF/native-image/reflect-config.json \
-              -H:IncludeResources=../META-INF/native-image/resource-config.json \
-              -H:Log=registerResource \
-              -H:+ReportExceptionStackTraces \
-              -H:-AllowVMInspection \
-              -jar music-sorter.jar
+  --no-server \
+  --no-fallback \
+  --language:llvm \
+  --allow-incomplete-classpath \
+  --class-path music-sorter.jar \
+  --report-unsupported-elements-at-runtime \
+  -H:+TraceClassInitialization \
+  -H:ReflectionConfigurationFiles=../META-INF/native-image/reflect-config.json \
+  -H:IncludeResources=../META-INF/native-image/resource-config.json \
+  -H:Log=registerResource \
+  -H:+ReportExceptionStackTraces \
+  -H:-AllowVMInspection \
+  -jar music-sorter.jar
 
 echo UPX
 ${UPX} ./music-sorter -omusic-sorter-compressed

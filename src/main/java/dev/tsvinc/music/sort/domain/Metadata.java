@@ -9,14 +9,14 @@ public class Metadata {
   private int audioFilesCount;
   private boolean invalid;
 
-  public Metadata(String genre, String format, String artist, int audioFilesCount, int year, boolean invalid) {
+  public Metadata(
+      String genre, String format, String artist, int audioFilesCount, int year, boolean invalid) {
     this.genre = genre;
     this.format = format;
     this.artist = artist;
     this.year = year;
     this.audioFilesCount = audioFilesCount;
     this.invalid = invalid;
-
   }
 
   public Metadata(final String genre, final String format) {
@@ -24,8 +24,7 @@ public class Metadata {
     this.format = format;
   }
 
-  public Metadata() {
-  }
+  public Metadata() {}
 
   public static GenreWithFormatBuilder builder() {
     return new GenreWithFormatBuilder();
@@ -88,8 +87,7 @@ public class Metadata {
     private int audioFilesCount;
     private boolean invalid;
 
-    GenreWithFormatBuilder() {
-    }
+    GenreWithFormatBuilder() {}
 
     public Metadata.GenreWithFormatBuilder genre(final String genre) {
       this.genre = genre;

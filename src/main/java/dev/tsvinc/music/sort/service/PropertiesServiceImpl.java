@@ -87,15 +87,15 @@ public class PropertiesServiceImpl implements PropertiesService {
 
   private void createPropertiesExample() {
     Try.of(
-        () -> {
-          Files.createFile(Paths.get(appPropertiesLocation));
-          Files.write(
-              Paths.get(appPropertiesLocation),
-              Arrays.asList("source=", "target="),
-              StandardCharsets.UTF_8,
-              StandardOpenOption.APPEND);
-          return null;
-        })
+            () -> {
+              Files.createFile(Paths.get(appPropertiesLocation));
+              Files.write(
+                  Paths.get(appPropertiesLocation),
+                  Arrays.asList("source=", "target="),
+                  StandardCharsets.UTF_8,
+                  StandardOpenOption.APPEND);
+              return null;
+            })
         .onFailure(
             e ->
                 error(
@@ -139,13 +139,14 @@ public class PropertiesServiceImpl implements PropertiesService {
       }
 
       /*DB*/
-      dbLocation = prop
-          .containsKey(DB_LOCATION) ? String.valueOf(prop.getProperty(DB_LOCATION))
-          : APP_CONFIG_DIR_PATH + File.separator + DB_DEFAULT_FILE_NAME;
-      dbUsername = prop.containsKey(DB_USERNAME) ? prop.getProperty(DB_USERNAME)
-          : DB_DEFAULT_USERNAME;
-      dbPassword = prop.containsKey(DB_PASSWORD) ? prop.getProperty(DB_PASSWORD)
-          : DB_DEFAULT_PASSWORD;
+      dbLocation =
+          prop.containsKey(DB_LOCATION)
+              ? String.valueOf(prop.getProperty(DB_LOCATION))
+              : APP_CONFIG_DIR_PATH + File.separator + DB_DEFAULT_FILE_NAME;
+      dbUsername =
+          prop.containsKey(DB_USERNAME) ? prop.getProperty(DB_USERNAME) : DB_DEFAULT_USERNAME;
+      dbPassword =
+          prop.containsKey(DB_PASSWORD) ? prop.getProperty(DB_PASSWORD) : DB_DEFAULT_PASSWORD;
     } catch (final IOException ex) {
       error("Error loading properties: {}", ex.getMessage(), ex);
     }

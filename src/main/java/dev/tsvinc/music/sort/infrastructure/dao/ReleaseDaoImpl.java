@@ -13,12 +13,12 @@ import org.pmw.tinylog.Logger;
 
 public class ReleaseDaoImpl implements ReleaseDao {
 
-  @Inject
-  private NitriteInstanceImp nitrite;
+  @Inject private NitriteInstanceImp nitrite;
 
   @Override
   public Optional<Release> findByReleaseName(String name) {
-    return Optional.ofNullable(getNitriteRepository().find(eq("release_name", name)).firstOrDefault());
+    return Optional.ofNullable(
+        getNitriteRepository().find(eq("release_name", name)).firstOrDefault());
   }
 
   @Override
@@ -31,16 +31,15 @@ public class ReleaseDaoImpl implements ReleaseDao {
     return null;
   }
 
-
   @Override
   public Release update(Release release) {
-    Logger.info("TBD");
+    Logger.info("update TBD");
     return null;
   }
 
   @Override
   public boolean delete(Release release) {
-    Logger.info("TBD");
+    Logger.info("delete TBD");
     return false;
   }
 
