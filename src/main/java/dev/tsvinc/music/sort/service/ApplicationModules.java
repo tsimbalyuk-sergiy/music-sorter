@@ -2,10 +2,10 @@ package dev.tsvinc.music.sort.service;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
-import dev.tsvinc.music.sort.infrastructure.nosql.dao.NitriteInstance;
-import dev.tsvinc.music.sort.infrastructure.nosql.dao.NitriteInstanceImp;
-import dev.tsvinc.music.sort.infrastructure.nosql.dao.ReleaseDao;
-import dev.tsvinc.music.sort.infrastructure.nosql.dao.ReleaseDaoImpl;
+import dev.tsvinc.music.sort.infrastructure.dao.NitriteInstance;
+import dev.tsvinc.music.sort.infrastructure.dao.NitriteInstanceImp;
+import dev.tsvinc.music.sort.infrastructure.dao.ReleaseDao;
+import dev.tsvinc.music.sort.infrastructure.dao.ReleaseDaoImpl;
 
 public class ApplicationModules extends AbstractModule {
 

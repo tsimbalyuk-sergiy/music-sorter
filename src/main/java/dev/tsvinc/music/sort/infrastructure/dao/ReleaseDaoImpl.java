@@ -1,8 +1,8 @@
-package dev.tsvinc.music.sort.infrastructure.nosql.dao;
+package dev.tsvinc.music.sort.infrastructure.dao;
 
 import static org.dizitart.no2.objects.filters.ObjectFilters.eq;
 
-import dev.tsvinc.music.sort.infrastructure.sqlike.domain.Release;
+import dev.tsvinc.music.sort.infrastructure.domain.Release;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;

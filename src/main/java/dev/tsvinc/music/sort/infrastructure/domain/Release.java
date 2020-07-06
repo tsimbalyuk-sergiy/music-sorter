@@ -1,4 +1,4 @@
-package dev.tsvinc.music.sort.infrastructure.nosql.domain;
+package dev.tsvinc.music.sort.infrastructure.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

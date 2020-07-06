@@ -1,4 +1,4 @@
-package dev.tsvinc.music.sort.infrastructure.nosql.domain;
+package dev.tsvinc.music.sort.infrastructure.domain;
 
 public enum Format {
   FLAC("flac"),

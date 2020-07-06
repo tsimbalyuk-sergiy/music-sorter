@@ -1,4 +1,4 @@
-package dev.tsvinc.music.sort.infrastructure.nosql.dao;
+package dev.tsvinc.music.sort.infrastructure.dao;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
