@@ -1,6 +1,6 @@
 package dev.tsvinc.music.sort.service;
 
-import static dev.tsvinc.music.sort.util.Constants.*;
+import static dev.tsvinc.music.sort.util.Constants.CHECKSUM;
 import static dev.tsvinc.music.sort.util.Constants.FLAC;
 import static dev.tsvinc.music.sort.util.Constants.FLAC_FORMAT;
 import static dev.tsvinc.music.sort.util.Constants.MP3;
@@ -21,7 +21,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +121,7 @@ public class FileServiceImpl implements FileService {
     final var source = new File(sourceDirectory);
     final var metadata = audioFileService.getMetadata(sourceDirectory);
     boolean containsCheckSum = false;
-    if(hasCheckSum(source).containsKey(CHECKSUM)){
+    if (hasCheckSum(source).containsKey(CHECKSUM)) {
       containsCheckSum = true;
       verifyCheckSum(source); //TODO
     }
@@ -172,7 +171,7 @@ public class FileServiceImpl implements FileService {
         .of(pathStream -> pathStream.filter(path -> path.getFileName().endsWith(CHECKSUM)).collect(Collectors.toList()))
         .onFailure(throwable -> info("No Checksum file for {}", source.toString())).getOrElse(Collections.emptyList());
     if (sfv.isEmpty()) {
-      return new HashMap<String, Path>();
+      return Collections.emptyMap();
     } else {
       return Map.of(CHECKSUM, sfv.get(0));
     }
