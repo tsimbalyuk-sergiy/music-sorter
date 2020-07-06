@@ -84,6 +84,11 @@
       <artifactId>ormlite-jdbc</artifactId>
       <version>5.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.dizitart</groupId>
+      <artifactId>nitrite</artifactId>
+      <version>3.4.2</version>
+    </dependency>
   </dependencies>
 
   <build>
