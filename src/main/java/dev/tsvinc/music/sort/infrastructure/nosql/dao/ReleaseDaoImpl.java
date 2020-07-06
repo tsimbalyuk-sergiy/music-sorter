@@ -1,25 +1,34 @@
 package dev.tsvinc.music.sort.infrastructure.nosql.dao;
 
-import dev.tsvinc.music.sort.infrastructure.domain.Release;
+import static org.dizitart.no2.objects.filters.ObjectFilters.eq;
+
+import dev.tsvinc.music.sort.infrastructure.sqlike.domain.Release;
 import java.util.List;
+import java.util.Optional;
+import javax.inject.Inject;
+import org.dizitart.no2.objects.ObjectRepository;
+import org.dizitart.no2.objects.filters.ObjectFilters;
 
 public class ReleaseDaoImpl implements ReleaseDao {
 
+  @Inject
+  private NitriteInstanceImp nitrite;
+
   @Override
-  public List<Release> findByReleaseName(
-      String name) {
-    return null;
+  public Optional<Release> findByReleaseName(String name) {
+    return Optional.ofNullable(getNitriteRepository().find(eq("release_name", name)).firstOrDefault());
   }
 
   @Override
   public List<Release> findAll() {
-    return null;
+    return getNitriteRepository().find(ObjectFilters.ALL).toList();
   }
 
   @Override
   public Release findOne(String releaseName) {
     return null;
   }
+
 
   @Override
   public Release update(Release release) {
@@ -34,5 +43,9 @@ public class ReleaseDaoImpl implements ReleaseDao {
   @Override
   public Release save(Release release) {
     return null;
+  }
+
+  private ObjectRepository<Release> getNitriteRepository() {
+    return nitrite.instance().getRepository(Release.class);
   }
 }

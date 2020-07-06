@@ -1,4 +1,4 @@
-package dev.tsvinc.music.sort.infrastructure.domain;
+package dev.tsvinc.music.sort.infrastructure.sqlike.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

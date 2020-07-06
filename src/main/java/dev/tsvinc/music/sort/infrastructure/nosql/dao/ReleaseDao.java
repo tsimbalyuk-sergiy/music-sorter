@@ -1,10 +1,11 @@
 package dev.tsvinc.music.sort.infrastructure.nosql.dao;
 
-import dev.tsvinc.music.sort.infrastructure.domain.Release;
+import dev.tsvinc.music.sort.infrastructure.sqlike.domain.Release;
 import java.util.List;
+import java.util.Optional;
 
 public interface ReleaseDao {
-  List<Release> findByReleaseName(String name);
+  Optional<Release> findByReleaseName(String name);
 
   List<Release> findAll();
 
