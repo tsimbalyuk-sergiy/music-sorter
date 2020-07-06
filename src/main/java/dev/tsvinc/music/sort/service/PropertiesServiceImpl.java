@@ -17,6 +17,7 @@ import static org.pmw.tinylog.Logger.error;
 import static org.pmw.tinylog.Logger.info;
 
 import dev.tsvinc.music.sort.domain.AppProperties;
+import dev.tsvinc.music.sort.domain.DbProperties;
 import io.vavr.control.Try;
 import java.io.File;
 import java.io.FileInputStream;
@@ -77,9 +78,12 @@ public class PropertiesServiceImpl implements PropertiesService {
           .liveReleasesPatterns(liveReleasesPatterns)
           .skipLiveReleases(skipLiveReleases)
           .sortByArtist(sortByArtist)
-          .dbLocation(dbLocation)
-          .dbUsername(dbUsername)
-          .dbPassword(dbPassword)
+          .dbProperties(
+              DbProperties.builder()
+                  .dbLocation(dbLocation)
+                  .dbUsername(dbUsername)
+                  .dbPassword(dbPassword)
+                  .build())
           .build();
     }
     return null;

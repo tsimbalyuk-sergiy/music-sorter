@@ -28,9 +28,9 @@ public class NitriteInstanceImp implements NitriteInstance {
         .registerModule(new JavaTimeModule())
         .registerModule(new Jdk8Module())
         .compressed()
-        .filePath(propertiesService.getProperties().getDbLocation())
+        .filePath(propertiesService.getProperties().getDbProperties().getDbLocation())
         .openOrCreate(
-            propertiesService.getProperties().getDbUsername(),
-            propertiesService.getProperties().getDbPassword());
+            propertiesService.getProperties().getDbProperties().getDbUsername(),
+            propertiesService.getProperties().getDbProperties().getDbPassword());
   }
 }
