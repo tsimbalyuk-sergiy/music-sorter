@@ -1,4 +1,4 @@
-package dev.tsvinc.music.sort.infrastructure.nosql.domain;
+package dev.tsvinc.music.sort.infrastructure.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -18,23 +18,21 @@ import org.dizitart.no2.objects.Indices;
 @Builder
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Indices({
-    @Index(value = "release_name", type = IndexType.Unique),
-    @Index(value = "checksum_valid", type = IndexType.NonUnique)
+  @Index(value = "release_name", type = IndexType.Unique),
+  @Index(value = "checksum_valid", type = IndexType.NonUnique)
 })
 public class Release {
 
-  @Id
-  private NitriteId id;
-  private String releaseName;
-  private String fullPath;
-  private long releaseSize;
+  @Id private NitriteId id;
   private Format format;
+  private String genre;
+  private String artist;
+  private int year;
   private int numberOfAudioFiles;
+
+  private String releaseName;
+  private long releaseSize;
   private boolean hasNfo;
   private boolean hasChecksum;
   private boolean checksumValid;
-  private String artist;
-  private String albumArtist;
-  private String genre;
-  private int year;
 }

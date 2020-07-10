@@ -1,4 +1,4 @@
-package dev.tsvinc.music.sort.infrastructure.nosql.dao;
+package dev.tsvinc.music.sort.infrastructure.dao;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -12,13 +12,13 @@ import org.dizitart.no2.mapper.JacksonMapper;
 
 public class NitriteInstanceImp implements NitriteInstance {
 
-  @Inject
-  private PropertiesService propertiesService;
+  @Inject private PropertiesService propertiesService;
 
   @Override
   public Nitrite instance() {
     final JacksonMapper jacksonMapper = new JacksonMapper();
-    jacksonMapper.getObjectMapper()
+    jacksonMapper
+        .getObjectMapper()
         .setSerializationInclusion(Include.NON_NULL)
         .setSerializationInclusion(Include.NON_EMPTY)
         .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
@@ -28,8 +28,9 @@ public class NitriteInstanceImp implements NitriteInstance {
         .registerModule(new JavaTimeModule())
         .registerModule(new Jdk8Module())
         .compressed()
-        .filePath(propertiesService.getProperties().getDbLocation())
-        .openOrCreate(propertiesService.getProperties().getDbUsername(),
-            propertiesService.getProperties().getDbPassword());
+        .filePath(propertiesService.getProperties().getDbProperties().getDbLocation())
+        .openOrCreate(
+            propertiesService.getProperties().getDbProperties().getDbUsername(),
+            propertiesService.getProperties().getDbProperties().getDbPassword());
   }
 }

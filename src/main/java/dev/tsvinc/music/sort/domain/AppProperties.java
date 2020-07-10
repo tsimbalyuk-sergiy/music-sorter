@@ -2,7 +2,6 @@ package dev.tsvinc.music.sort.domain;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.StringJoiner;
 
 public class AppProperties {
 
@@ -11,28 +10,24 @@ public class AppProperties {
   private boolean sortByArtist;
   private boolean skipLiveReleases;
   private List<String> liveReleasesPatterns;
-  private String dbLocation;
-  private String dbUsername;
-  private String dbPassword;
+  private DbProperties dbProperties;
 
   public AppProperties(
       String sourceFolder,
       String targetFolder,
       boolean sortByArtist,
       boolean skipLiveReleases,
-      List<String> liveReleasesPatterns, String dbLocation, String dbUsername, String dbPassword) {
+      List<String> liveReleasesPatterns,
+      DbProperties dbProperties) {
     this.sourceFolder = sourceFolder;
     this.targetFolder = targetFolder;
     this.sortByArtist = sortByArtist;
     this.skipLiveReleases = skipLiveReleases;
     this.liveReleasesPatterns = liveReleasesPatterns;
-    this.dbLocation = dbLocation;
-    this.dbUsername = dbUsername;
-    this.dbPassword = dbPassword;
+    this.dbProperties = dbProperties;
   }
 
-  public AppProperties() {
-  }
+  public AppProperties() {}
 
   public static AppPropertiesBuilder builder() {
     return new AppPropertiesBuilder();
@@ -78,28 +73,12 @@ public class AppProperties {
     this.liveReleasesPatterns = liveReleasesPatterns;
   }
 
-  public String getDbLocation() {
-    return dbLocation;
+  public DbProperties getDbProperties() {
+    return dbProperties;
   }
 
-  public void setDbLocation(String dbLocation) {
-    this.dbLocation = dbLocation;
-  }
-
-  public String getDbUsername() {
-    return dbUsername;
-  }
-
-  public void setDbUsername(String dbUsername) {
-    this.dbUsername = dbUsername;
-  }
-
-  public String getDbPassword() {
-    return dbPassword;
-  }
-
-  public void setDbPassword(String dbPassword) {
-    this.dbPassword = dbPassword;
+  public void setDbProperties(DbProperties dbProperties) {
+    this.dbProperties = dbProperties;
   }
 
   @Override
@@ -111,35 +90,35 @@ public class AppProperties {
       return false;
     }
     AppProperties that = (AppProperties) o;
-    return sortByArtist == that.sortByArtist &&
-        skipLiveReleases == that.skipLiveReleases &&
-        Objects.equals(sourceFolder, that.sourceFolder) &&
-        Objects.equals(targetFolder, that.targetFolder) &&
-        Objects.equals(liveReleasesPatterns, that.liveReleasesPatterns) &&
-        Objects.equals(dbLocation, that.dbLocation) &&
-        Objects.equals(dbUsername, that.dbUsername) &&
-        Objects.equals(dbPassword, that.dbPassword);
+    return sortByArtist == that.sortByArtist
+        && skipLiveReleases == that.skipLiveReleases
+        && Objects.equals(sourceFolder, that.sourceFolder)
+        && Objects.equals(targetFolder, that.targetFolder)
+        && Objects.equals(liveReleasesPatterns, that.liveReleasesPatterns)
+        && Objects.equals(dbProperties, that.dbProperties);
   }
 
   @Override
   public int hashCode() {
-    return Objects
-        .hash(sourceFolder, targetFolder, sortByArtist, skipLiveReleases, liveReleasesPatterns,
-            dbLocation, dbUsername, dbPassword);
+    return Objects.hash(
+        sourceFolder,
+        targetFolder,
+        sortByArtist,
+        skipLiveReleases,
+        liveReleasesPatterns,
+        dbProperties);
   }
 
   @Override
   public String toString() {
-    return new StringJoiner(", ", AppProperties.class.getSimpleName() + "[", "]")
-        .add("sourceFolder='" + sourceFolder + "'")
-        .add("targetFolder='" + targetFolder + "'")
-        .add("sortByArtist=" + sortByArtist)
-        .add("skipLiveReleases=" + skipLiveReleases)
-        .add("liveReleasesPatterns=" + liveReleasesPatterns)
-        .add("dbLocation='" + dbLocation + "'")
-        .add("dbUsername='" + dbUsername + "'")
-        .add("dbPassword='" + dbPassword + "'")
-        .toString();
+    return "AppProperties{" +
+        "sourceFolder='" + sourceFolder + '\'' +
+        ", targetFolder='" + targetFolder + '\'' +
+        ", sortByArtist=" + sortByArtist +
+        ", skipLiveReleases=" + skipLiveReleases +
+        ", liveReleasesPatterns=" + liveReleasesPatterns +
+        ", dbProperties=" + dbProperties +
+        '}';
   }
 
   public static class AppPropertiesBuilder {
@@ -149,12 +128,9 @@ public class AppProperties {
     private boolean sortByArtist;
     private boolean skipLiveReleases;
     private List<String> liveReleasesPatterns;
-    private String dbLocation;
-    private String dbUsername;
-    private String dbPassword;
+    private DbProperties dbProperties;
 
-    AppPropertiesBuilder() {
-    }
+    AppPropertiesBuilder() {}
 
     public AppProperties.AppPropertiesBuilder sourceFolder(String sourceFolder) {
       this.sourceFolder = sourceFolder;
@@ -176,9 +152,8 @@ public class AppProperties {
       return this;
     }
 
-    public AppProperties.AppPropertiesBuilder dbLocation(
-        String dbLocation) {
-      this.dbLocation = dbLocation;
+    public AppProperties.AppPropertiesBuilder dbProperties(DbProperties dbProperties) {
+      this.dbProperties = dbProperties;
       return this;
     }
 
@@ -188,22 +163,14 @@ public class AppProperties {
       return this;
     }
 
-    public AppProperties.AppPropertiesBuilder dbUsername(
-        String dbUsername) {
-      this.dbUsername = dbUsername;
-      return this;
-    }
-
-    public AppProperties.AppPropertiesBuilder dbPassword(
-        String dbPassword) {
-      this.dbPassword = dbPassword;
-      return this;
-    }
-
     public AppProperties build() {
       return new AppProperties(
-          sourceFolder, targetFolder, sortByArtist, skipLiveReleases, liveReleasesPatterns,
-          dbLocation, dbUsername, dbPassword);
+          sourceFolder,
+          targetFolder,
+          sortByArtist,
+          skipLiveReleases,
+          liveReleasesPatterns,
+          dbProperties);
     }
   }
 }

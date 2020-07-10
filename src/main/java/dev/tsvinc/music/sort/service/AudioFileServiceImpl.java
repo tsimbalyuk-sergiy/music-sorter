@@ -1,8 +1,9 @@
 package dev.tsvinc.music.sort.service;
 
 import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
+import static org.pmw.tinylog.Logger.error;
 
-import dev.tsvinc.music.sort.domain.GenreWithFormat;
+import dev.tsvinc.music.sort.domain.Metadata;
 import ealvatag.audio.AudioFileIO;
 import ealvatag.audio.exceptions.CannotReadException;
 import ealvatag.audio.exceptions.InvalidAudioFrameException;
@@ -10,6 +11,7 @@ import ealvatag.tag.FieldKey;
 import ealvatag.tag.Tag;
 import ealvatag.tag.TagException;
 import ealvatag.tag.reference.GenreTypes;
+import io.vavr.control.Try;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,14 +20,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
-import org.pmw.tinylog.Logger;
 
 public class AudioFileServiceImpl implements AudioFileService {
 
   @Inject FileService fileService;
 
-  private static void checkGenre(
-      List<String> genreList, File musicFile, List<String> artistList, boolean checkArtist)
+  static void checkGenre(
+      List<String> genreList,
+      File musicFile,
+      List<String> artistList,
+      List<String> years,
+      boolean checkArtist)
       throws CannotReadException, IOException, TagException, InvalidAudioFrameException {
     final var audioFile = AudioFileIO.read(musicFile);
     final Tag tag = audioFile.getTag().orNull();
@@ -44,6 +49,7 @@ public class AudioFileServiceImpl implements AudioFileService {
       if (checkArtist) {
         artistList.add(tag.getFirst(FieldKey.ARTIST));
       }
+      years.add(tag.getFirst(FieldKey.YEAR));
     } else {
       genreList.add(UNKNOWN);
     }
@@ -147,42 +153,66 @@ public class AudioFileServiceImpl implements AudioFileService {
     return sb.toString();
   }
 
-  public GenreWithFormat getMetadata(final String path) {
-    final var fileListForEachDir = fileService.createFileListForEachDir(path);
+  public Metadata getMetadata(final String path) {
+    final var listing = fileService.createFileListForEachDir(path);
     final List<String> genreList = new ArrayList<>();
     String artist = "";
     if (new File(path).getName().matches("((VA)|(va))(-|_-).*")) {
       artist = "va";
     }
-    final List<String> artistList = new ArrayList<>();
-    if (!fileListForEachDir.getFileList().isEmpty()) {
-      for (final var string : fileListForEachDir.getFileList()) {
-        final var musicFile = new File(string);
-        try {
-          if (artist.equals("va")) {
-            checkGenre(genreList, musicFile, null, false);
-          } else {
-            checkGenre(genreList, musicFile, artistList, true);
-          }
-        } catch (final IOException
-            | CannotReadException
-            | TagException
-            | InvalidAudioFrameException e) {
-          Logger.error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e);
-        }
+    final List<String> artistList = new ArrayList<>(listing.getFileList().size());
+    final List<String> years = new ArrayList<>(listing.getFileList().size());
+    if (!listing.getFileList().isEmpty()) {
+      for (final var string : listing.getFileList()) {
+        getMetadataForFile(genreList, artist, artistList, years, string);
       }
       String mostRepeatedGenre = sanitizeString(findMostRepeatedString(genreList), true);
       String mostRepeatedArtist = artist;
       if (!artist.equals("va")) {
         mostRepeatedArtist = sanitizeString(findMostRepeatedString(artistList), false);
       }
-      return GenreWithFormat.builder()
+
+      String mostRepeatedYear = findMostRepeatedString(years);
+
+      int year = 1990;
+      if (null != mostRepeatedYear && !mostRepeatedYear.isEmpty()) {
+        mostRepeatedYear = mostRepeatedYear.replaceAll("[^\\d.]", "");
+        if (mostRepeatedYear.length() < 4) { // in case we have something like: 199x
+          mostRepeatedYear =
+              String.format("%1$-" + 4 + "s", mostRepeatedYear)
+                  .replace(' ', '0'); // for left pad use "%1$" + ...
+        }
+        year = Integer.parseInt(mostRepeatedYear);
+      }
+      return Metadata.builder()
           .genre(mostRepeatedGenre)
-          .format(fileListForEachDir.getFormat())
+          .format(listing.getFormat())
           .artist(mostRepeatedArtist)
+          .year(year)
+          .audioFilesCount(listing.getFileList().size())
           .build();
     } else {
-      return GenreWithFormat.builder().invalid(true).build();
+      return Metadata.builder().invalid(true).build();
     }
+  }
+
+  private void getMetadataForFile(
+      List<String> genreList,
+      String artist,
+      List<String> artistList,
+      List<String> years,
+      String string) {
+    final var musicFile = new File(string);
+    Try.of(
+            () -> {
+              if (artist.equals("va")) {
+                checkGenre(genreList, musicFile, null, years, false);
+              } else {
+                checkGenre(genreList, musicFile, artistList, years, true);
+              }
+              return null;
+            })
+        .onFailure(
+            e -> error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e));
   }
 }

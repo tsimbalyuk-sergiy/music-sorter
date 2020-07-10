@@ -1,10 +1,11 @@
-package dev.tsvinc.music.sort.infrastructure.nosql.dao;
+package dev.tsvinc.music.sort.infrastructure.dao;
 
-import dev.tsvinc.music.sort.infrastructure.sqlike.domain.Release;
+import dev.tsvinc.music.sort.infrastructure.domain.Release;
 import java.util.List;
 import java.util.Optional;
 
 public interface ReleaseDao {
+
   Optional<Release> findByReleaseName(String name);
 
   List<Release> findAll();
@@ -15,5 +16,5 @@ public interface ReleaseDao {
 
   boolean delete(Release release);
 
-  Release save(Release release);
+  Number save(Release release);
 }
