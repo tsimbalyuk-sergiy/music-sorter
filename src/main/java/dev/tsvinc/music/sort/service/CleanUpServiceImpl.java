@@ -7,25 +7,32 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 public class CleanUpServiceImpl implements CleanUpService {
   @Inject PropertiesService propertiesService;
 
+  private static boolean isEmptyDirectory(final Path path) {
+    return Try.withResources(() -> Files.list(path))
+        .of(stream -> stream.count() <= 0)
+        .onFailure(e -> error("Error listing directory: {}, {}", path, e.getMessage()))
+        .getOrElse(false);
+  }
+
   public void cleanUpParentDirectory() {
-    while (!directoryIsEmpty(Paths.get(propertiesService.getProperties().getSourceFolder()))) {
-      Try.withResources(
-              () ->
-                  Files.walk(
-                      Paths.get(propertiesService.getProperties().getSourceFolder()),
-                      Integer.MAX_VALUE))
-          .of(
-              stream -> {
-                stream
-                    .filter(path -> path.toFile().isDirectory())
-                    .filter(CleanUpServiceImpl::directoryIsEmpty)
-                    .collect(Collectors.toList())
+    AtomicReference<List<Path>> listOfEmptyDirectories =
+        new AtomicReference<>(
+            getListOfEmptyDirectories(
+                Paths.get(propertiesService.getProperties().getSourceFolder())));
+    while (!listOfEmptyDirectories.get().isEmpty()) {
+      Try.of(
+              () -> {
+                listOfEmptyDirectories
+                    .get()
                     .forEach(
                         dir -> {
                           try {
@@ -34,6 +41,9 @@ public class CleanUpServiceImpl implements CleanUpService {
                             error("Error deleting folder: {} {}\n{}", dir, ioe.getMessage(), ioe);
                           }
                         });
+                listOfEmptyDirectories.set(
+                    getListOfEmptyDirectories(
+                        Paths.get(propertiesService.getProperties().getSourceFolder())));
                 return null;
               })
           .onFailure(
@@ -46,22 +56,15 @@ public class CleanUpServiceImpl implements CleanUpService {
     }
   }
 
-  /**
-   * Checks given directory for being empty
-   *
-   * @param directory {@link Path} path that represents actual directory
-   * @return {@link Boolean}
-   */
-  private static boolean directoryIsEmpty(final Path directory) {
-    return Try.withResources(() -> Files.newDirectoryStream(directory))
-        .of(paths -> !paths.iterator().hasNext())
-        .onFailure(
-            e ->
-                error(
-                    "Error checking if directory is empty: {}, {}, {}",
-                    directory,
-                    e.getMessage(),
-                    e))
-        .getOrElse(false);
+  private List<Path> getListOfEmptyDirectories(Path directory) {
+    return Try.withResources(() -> Files.walk(directory, Integer.MAX_VALUE))
+        .of(
+            stream ->
+                stream
+                    .filter(Files::isDirectory)
+                    .filter(CleanUpServiceImpl::isEmptyDirectory)
+                    .collect(Collectors.toList()))
+        .onFailure(e -> error("Error walking directory: {}, {}", directory, e.getMessage(), e))
+        .getOrElse(Collections.emptyList());
   }
 }
