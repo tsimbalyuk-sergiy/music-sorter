@@ -31,28 +31,34 @@ public class CleanUpServiceImpl implements CleanUpService {
     while (!listOfEmptyDirectories.get().isEmpty()) {
       Try.of(
               () -> {
-                listOfEmptyDirectories
-                    .get()
-                    .forEach(
-                        dir -> {
-                          try {
-                            Files.delete(dir);
-                          } catch (final IOException ioe) {
-                            error("Error deleting folder: {} {}\n{}", dir, ioe.getMessage(), ioe);
-                          }
-                        });
+                CleanUpServiceImpl.deleteEachEmptyDirectory(listOfEmptyDirectories);
                 listOfEmptyDirectories.set(
                     CleanUpServiceImpl.getListOfEmptyDirectories(
                         Paths.get(this.propertiesService.getProperties().getSourceFolder())));
                 return null;
               })
-          .onFailure(
-              e ->
-                  error(
-                      "Error while walking directory: {}, {}",
-                      this.propertiesService.getProperties().getSourceFolder(),
-                      e.getMessage(),
-                      e));
+          .onFailure(this::logErrorWhileWalkingDirectory);
+    }
+  }
+
+  private void logErrorWhileWalkingDirectory(final Throwable e) {
+    error(
+        "Error while walking directory: {}, {}",
+        this.propertiesService.getProperties().getSourceFolder(),
+        e.getMessage(),
+        e);
+  }
+
+  private static void deleteEachEmptyDirectory(
+      final AtomicReference<List<Path>> listOfEmptyDirectories) {
+    listOfEmptyDirectories.get().forEach(CleanUpServiceImpl::safelyDeleteDirectory);
+  }
+
+  private static void safelyDeleteDirectory(final Path dir) {
+    try {
+      Files.delete(dir);
+    } catch (final IOException ioe) {
+      error("Error deleting folder: {} {}\n{}", dir, ioe.getMessage(), ioe);
     }
   }
 
