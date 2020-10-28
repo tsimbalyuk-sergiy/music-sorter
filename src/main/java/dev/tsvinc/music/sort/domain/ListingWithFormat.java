@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-@SuppressWarnings("unused")
 public class ListingWithFormat {
 
   private String format;
@@ -31,7 +30,9 @@ public class ListingWithFormat {
   }
 
   public List<String> getFileList() {
-    return (null != fileList && !fileList.isEmpty()) ? this.fileList : Collections.emptyList();
+    return (null != this.fileList && !this.fileList.isEmpty())
+        ? this.fileList
+        : Collections.emptyList();
   }
 
   public void setFormat(final String format) {
@@ -45,8 +46,8 @@ public class ListingWithFormat {
   @Override
   public String toString() {
     return new StringJoiner(", ", ListingWithFormat.class.getSimpleName() + "[", "]")
-        .add("format='" + format + "'")
-        .add("fileList=" + fileList)
+        .add("format='" + this.format + "'")
+        .add("fileList=" + this.fileList)
         .toString();
   }
 
@@ -59,9 +60,6 @@ public class ListingWithFormat {
       return false;
     }
     final var other = (ListingWithFormat) o;
-    if (!other.canEqual(this)) {
-      return false;
-    }
     final var o1Format = this.getFormat();
     final var o2Format = other.getFormat();
     if (!Objects.equals(o1Format, o2Format)) {
@@ -72,7 +70,7 @@ public class ListingWithFormat {
     return Objects.equals(o1FileList, o2FileList);
   }
 
-  protected boolean canEqual(final ListingWithFormat other) {
+  protected static boolean canEqual(final ListingWithFormat other) {
     return null != other;
   }
 
@@ -105,14 +103,14 @@ public class ListingWithFormat {
     }
 
     public ListingWithFormat build() {
-      return new ListingWithFormat(format, fileList);
+      return new ListingWithFormat(this.format, this.fileList);
     }
 
     @Override
     public String toString() {
       return new StringJoiner(", ", ListingWithFormatBuilder.class.getSimpleName() + "[", "]")
-          .add("format='" + format + "'")
-          .add("fileList=" + fileList)
+          .add("format='" + this.format + "'")
+          .add("fileList=" + this.fileList)
           .toString();
     }
   }

@@ -10,7 +10,12 @@ public class Metadata {
   private boolean invalid;
 
   public Metadata(
-      String genre, String format, String artist, int audioFilesCount, int year, boolean invalid) {
+      final String genre,
+      final String format,
+      final String artist,
+      final int audioFilesCount,
+      final int year,
+      final boolean invalid) {
     this.genre = genre;
     this.format = format;
     this.artist = artist;
@@ -31,50 +36,50 @@ public class Metadata {
   }
 
   public String getGenre() {
-    return genre;
+    return this.genre;
   }
 
-  public void setGenre(String genre) {
+  public void setGenre(final String genre) {
     this.genre = genre;
   }
 
   public String getFormat() {
-    return format;
+    return this.format;
   }
 
-  public void setFormat(String format) {
+  public void setFormat(final String format) {
     this.format = format;
   }
 
   public String getArtist() {
-    return artist;
+    return this.artist;
   }
 
-  public void setArtist(String artist) {
+  public void setArtist(final String artist) {
     this.artist = artist;
   }
 
   public boolean isInvalid() {
-    return invalid;
+    return this.invalid;
   }
 
-  public void setInvalid(boolean invalid) {
+  public void setInvalid(final boolean invalid) {
     this.invalid = invalid;
   }
 
   public int getYear() {
-    return year;
+    return this.year;
   }
 
-  public void setYear(int year) {
+  public void setYear(final int year) {
     this.year = year;
   }
 
   public int getAudioFilesCount() {
-    return audioFilesCount;
+    return this.audioFilesCount;
   }
 
-  public void setAudioFilesCount(int audioFilesCount) {
+  public void setAudioFilesCount(final int audioFilesCount) {
     this.audioFilesCount = audioFilesCount;
   }
 
@@ -120,7 +125,8 @@ public class Metadata {
     }
 
     public Metadata build() {
-      return new Metadata(genre, format, artist, year, audioFilesCount, invalid);
+      return new Metadata(
+          this.genre, this.format, this.artist, this.year, this.audioFilesCount, this.invalid);
     }
   }
 }

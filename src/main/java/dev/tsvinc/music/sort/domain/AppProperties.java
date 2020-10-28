@@ -13,12 +13,12 @@ public class AppProperties {
   private DbProperties dbProperties;
 
   public AppProperties(
-      String sourceFolder,
-      String targetFolder,
-      boolean sortByArtist,
-      boolean skipLiveReleases,
-      List<String> liveReleasesPatterns,
-      DbProperties dbProperties) {
+      final String sourceFolder,
+      final String targetFolder,
+      final boolean sortByArtist,
+      final boolean skipLiveReleases,
+      final List<String> liveReleasesPatterns,
+      final DbProperties dbProperties) {
     this.sourceFolder = sourceFolder;
     this.targetFolder = targetFolder;
     this.sortByArtist = sortByArtist;
@@ -37,7 +37,7 @@ public class AppProperties {
     return this.sourceFolder;
   }
 
-  public void setSourceFolder(String sourceFolder) {
+  public void setSourceFolder(final String sourceFolder) {
     this.sourceFolder = sourceFolder;
   }
 
@@ -45,7 +45,7 @@ public class AppProperties {
     return this.targetFolder;
   }
 
-  public void setTargetFolder(String targetFolder) {
+  public void setTargetFolder(final String targetFolder) {
     this.targetFolder = targetFolder;
   }
 
@@ -53,7 +53,7 @@ public class AppProperties {
     return this.sortByArtist;
   }
 
-  public void setSortByArtist(boolean sortByArtist) {
+  public void setSortByArtist(final boolean sortByArtist) {
     this.sortByArtist = sortByArtist;
   }
 
@@ -61,7 +61,7 @@ public class AppProperties {
     return this.skipLiveReleases;
   }
 
-  public void setSkipLiveReleases(boolean skipLiveReleases) {
+  public void setSkipLiveReleases(final boolean skipLiveReleases) {
     this.skipLiveReleases = skipLiveReleases;
   }
 
@@ -69,56 +69,64 @@ public class AppProperties {
     return this.liveReleasesPatterns;
   }
 
-  public void setLiveReleasesPatterns(List<String> liveReleasesPatterns) {
+  public void setLiveReleasesPatterns(final List<String> liveReleasesPatterns) {
     this.liveReleasesPatterns = liveReleasesPatterns;
   }
 
   public DbProperties getDbProperties() {
-    return dbProperties;
+    return this.dbProperties;
   }
 
-  public void setDbProperties(DbProperties dbProperties) {
+  public void setDbProperties(final DbProperties dbProperties) {
     this.dbProperties = dbProperties;
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(final Object o) {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (null == o || this.getClass() != o.getClass()) {
       return false;
     }
-    AppProperties that = (AppProperties) o;
-    return sortByArtist == that.sortByArtist
-        && skipLiveReleases == that.skipLiveReleases
-        && Objects.equals(sourceFolder, that.sourceFolder)
-        && Objects.equals(targetFolder, that.targetFolder)
-        && Objects.equals(liveReleasesPatterns, that.liveReleasesPatterns)
-        && Objects.equals(dbProperties, that.dbProperties);
+    final var that = (AppProperties) o;
+    return this.sortByArtist == that.sortByArtist
+        && this.skipLiveReleases == that.skipLiveReleases
+        && Objects.equals(this.sourceFolder, that.sourceFolder)
+        && Objects.equals(this.targetFolder, that.targetFolder)
+        && Objects.equals(this.liveReleasesPatterns, that.liveReleasesPatterns)
+        && Objects.equals(this.dbProperties, that.dbProperties);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(
-        sourceFolder,
-        targetFolder,
-        sortByArtist,
-        skipLiveReleases,
-        liveReleasesPatterns,
-        dbProperties);
+        this.sourceFolder,
+        this.targetFolder,
+        this.sortByArtist,
+        this.skipLiveReleases,
+        this.liveReleasesPatterns,
+        this.dbProperties);
   }
 
   @Override
   public String toString() {
-    return "AppProperties{" +
-        "sourceFolder='" + sourceFolder + '\'' +
-        ", targetFolder='" + targetFolder + '\'' +
-        ", sortByArtist=" + sortByArtist +
-        ", skipLiveReleases=" + skipLiveReleases +
-        ", liveReleasesPatterns=" + liveReleasesPatterns +
-        ", dbProperties=" + dbProperties +
-        '}';
+    return "AppProperties{"
+        + "sourceFolder='"
+        + this.sourceFolder
+        + '\''
+        + ", targetFolder='"
+        + this.targetFolder
+        + '\''
+        + ", sortByArtist="
+        + this.sortByArtist
+        + ", skipLiveReleases="
+        + this.skipLiveReleases
+        + ", liveReleasesPatterns="
+        + this.liveReleasesPatterns
+        + ", dbProperties="
+        + this.dbProperties
+        + '}';
   }
 
   public static class AppPropertiesBuilder {
@@ -132,45 +140,45 @@ public class AppProperties {
 
     AppPropertiesBuilder() {}
 
-    public AppProperties.AppPropertiesBuilder sourceFolder(String sourceFolder) {
+    public AppProperties.AppPropertiesBuilder sourceFolder(final String sourceFolder) {
       this.sourceFolder = sourceFolder;
       return this;
     }
 
-    public AppProperties.AppPropertiesBuilder targetFolder(String targetFolder) {
+    public AppProperties.AppPropertiesBuilder targetFolder(final String targetFolder) {
       this.targetFolder = targetFolder;
       return this;
     }
 
-    public AppProperties.AppPropertiesBuilder sortByArtist(boolean sortByArtist) {
+    public AppProperties.AppPropertiesBuilder sortByArtist(final boolean sortByArtist) {
       this.sortByArtist = sortByArtist;
       return this;
     }
 
-    public AppProperties.AppPropertiesBuilder skipLiveReleases(boolean skipLiveReleases) {
+    public AppProperties.AppPropertiesBuilder skipLiveReleases(final boolean skipLiveReleases) {
       this.skipLiveReleases = skipLiveReleases;
       return this;
     }
 
-    public AppProperties.AppPropertiesBuilder dbProperties(DbProperties dbProperties) {
+    public AppProperties.AppPropertiesBuilder dbProperties(final DbProperties dbProperties) {
       this.dbProperties = dbProperties;
       return this;
     }
 
     public AppProperties.AppPropertiesBuilder liveReleasesPatterns(
-        List<String> liveReleasesPatterns) {
+        final List<String> liveReleasesPatterns) {
       this.liveReleasesPatterns = liveReleasesPatterns;
       return this;
     }
 
     public AppProperties build() {
       return new AppProperties(
-          sourceFolder,
-          targetFolder,
-          sortByArtist,
-          skipLiveReleases,
-          liveReleasesPatterns,
-          dbProperties);
+          this.sourceFolder,
+          this.targetFolder,
+          this.sortByArtist,
+          this.skipLiveReleases,
+          this.liveReleasesPatterns,
+          this.dbProperties);
     }
   }
 }

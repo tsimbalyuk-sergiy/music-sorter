@@ -35,10 +35,11 @@ public class PropertiesServiceImpl implements PropertiesService {
 
   private static final String CONFIG_PATH =
       System.getProperty("user.home") + File.separator + ".config";
-  private static final String APP_CONFIG_DIR_PATH = CONFIG_PATH + File.separator + "music-sorter";
-  private final String appPropertiesLocation = appPropertiesLocation();
-  private boolean skipLiveReleases = false;
-  private boolean sortByArtist = false;
+  private static final String APP_CONFIG_DIR_PATH =
+      PropertiesServiceImpl.CONFIG_PATH + File.separator + "music-sorter";
+  private final String appPropertiesLocation = PropertiesServiceImpl.appPropertiesLocation();
+  private boolean skipLiveReleases;
+  private boolean sortByArtist;
   private String dbLocation;
   private List<String> liveReleasesPatterns;
 
@@ -49,40 +50,52 @@ public class PropertiesServiceImpl implements PropertiesService {
 
   @Override
   public boolean initProperties() {
-    final var configPathExists = new File(CONFIG_PATH).exists();
-    final var appConfigPathExists = new File(APP_CONFIG_DIR_PATH).exists();
+    final var configPathExists = new File(PropertiesServiceImpl.CONFIG_PATH).exists();
+    final var appConfigPathExists = new File(PropertiesServiceImpl.APP_CONFIG_DIR_PATH).exists();
     if (!configPathExists) {
-      Try.of(() -> Files.createDirectory(Paths.get(CONFIG_PATH)))
-          .onFailure(e -> error(ERROR_CREATING_DIRECTORY, CONFIG_PATH, e.getMessage(), e));
+      Try.of(() -> Files.createDirectory(Paths.get(PropertiesServiceImpl.CONFIG_PATH)))
+          .onFailure(
+              e ->
+                  error(
+                      ERROR_CREATING_DIRECTORY,
+                      PropertiesServiceImpl.CONFIG_PATH,
+                      e.getMessage(),
+                      e));
     }
     if (!appConfigPathExists) {
-      Try.of(() -> Files.createDirectory(Paths.get(APP_CONFIG_DIR_PATH)))
-          .onFailure(e -> error(ERROR_CREATING_DIRECTORY, APP_CONFIG_DIR_PATH, e.getMessage(), e));
+      Try.of(() -> Files.createDirectory(Paths.get(PropertiesServiceImpl.APP_CONFIG_DIR_PATH)))
+          .onFailure(
+              e ->
+                  error(
+                      ERROR_CREATING_DIRECTORY,
+                      PropertiesServiceImpl.APP_CONFIG_DIR_PATH,
+                      e.getMessage(),
+                      e));
     }
 
-    if (!Paths.get(appPropertiesLocation).toFile().exists()) {
-      createPropertiesExample();
+    if (!Paths.get(this.appPropertiesLocation).toFile().exists()) {
+      this.createPropertiesExample();
     }
-    return fillProperties();
+    return this.fillProperties();
   }
 
   @Override
   public AppProperties getProperties() {
-    if (!initProperties()) {
+    if (!this.initProperties()) {
       error("Error loading properties");
       System.exit(-1);
     } else {
       return AppProperties.builder()
-          .sourceFolder(sourceFolderValue)
-          .targetFolder(targetFolderValue)
-          .liveReleasesPatterns(liveReleasesPatterns)
-          .skipLiveReleases(skipLiveReleases)
-          .sortByArtist(sortByArtist)
+          .sourceFolder(this.sourceFolderValue)
+          .targetFolder(this.targetFolderValue)
+          .liveReleasesPatterns(this.liveReleasesPatterns)
+          .skipLiveReleases(this.skipLiveReleases)
+          .sortByArtist(this.sortByArtist)
           .dbProperties(
               DbProperties.builder()
-                  .dbLocation(dbLocation)
-                  .dbUsername(dbUsername)
-                  .dbPassword(dbPassword)
+                  .dbLocation(this.dbLocation)
+                  .dbUsername(this.dbUsername)
+                  .dbPassword(this.dbPassword)
                   .build())
           .build();
     }
@@ -92,9 +105,9 @@ public class PropertiesServiceImpl implements PropertiesService {
   private void createPropertiesExample() {
     Try.of(
             () -> {
-              Files.createFile(Paths.get(appPropertiesLocation));
+              Files.createFile(Paths.get(this.appPropertiesLocation));
               Files.write(
-                  Paths.get(appPropertiesLocation),
+                  Paths.get(this.appPropertiesLocation),
                   Arrays.asList("source=", "target="),
                   StandardCharsets.UTF_8,
                   StandardOpenOption.APPEND);
@@ -104,52 +117,52 @@ public class PropertiesServiceImpl implements PropertiesService {
             e ->
                 error(
                     "Error writing to config file: {}, {}",
-                    appPropertiesLocation,
+                    this.appPropertiesLocation,
                     e.getMessage(),
                     e));
   }
 
-  private String appPropertiesLocation() {
-    return APP_CONFIG_DIR_PATH + File.separator + "music-sorter.properties";
+  private static String appPropertiesLocation() {
+    return PropertiesServiceImpl.APP_CONFIG_DIR_PATH + File.separator + "music-sorter.properties";
   }
 
   private boolean fillProperties() {
     var done = false;
-    try (final InputStream input = new FileInputStream(appPropertiesLocation)) {
+    try (final InputStream input = new FileInputStream(this.appPropertiesLocation)) {
       final var prop = new Properties();
       prop.load(input);
-      sourceFolderValue = prop.getProperty(SOURCE_FOLDER);
-      targetFolderValue = prop.getProperty(TARGET_FOLDER);
-      if (null != sourceFolderValue
-          && !sourceFolderValue.isEmpty()
-          && null != targetFolderValue
-          && !targetFolderValue.isEmpty()) {
+      this.sourceFolderValue = prop.getProperty(SOURCE_FOLDER);
+      this.targetFolderValue = prop.getProperty(TARGET_FOLDER);
+      if (null != this.sourceFolderValue
+          && !this.sourceFolderValue.isEmpty()
+          && null != this.targetFolderValue
+          && !this.targetFolderValue.isEmpty()) {
         done = true;
       }
       /*GENERAL SORTING RULES*/
-      skipLiveReleases =
+      this.skipLiveReleases =
           prop.containsKey(LIVE_RELEASES_SKIP)
               && Boolean.parseBoolean(prop.getProperty(LIVE_RELEASES_SKIP));
-      sortByArtist =
+      this.sortByArtist =
           prop.containsKey(SORT_BY_ARTIST)
               && Boolean.parseBoolean(prop.getProperty(SORT_BY_ARTIST));
-      if (skipLiveReleases && prop.containsKey(LIVE_RELEASES_PATTERNS)) {
-        liveReleasesPatterns =
+      if (this.skipLiveReleases && prop.containsKey(LIVE_RELEASES_PATTERNS)) {
+        this.liveReleasesPatterns =
             Arrays.asList(prop.get(LIVE_RELEASES_PATTERNS).toString().split(","));
       } else {
-        liveReleasesPatterns = LIVE_RELEASES_PATTERNS_DEFAULT;
+        this.liveReleasesPatterns = LIVE_RELEASES_PATTERNS_DEFAULT;
         info("\"live_releases_patterns\" option is empty. using defaults: ");
         info("{}", LIVE_RELEASES_PATTERNS_DEFAULT);
       }
 
       /*DB*/
-      dbLocation =
+      this.dbLocation =
           prop.containsKey(DB_LOCATION)
               ? String.valueOf(prop.getProperty(DB_LOCATION))
-              : APP_CONFIG_DIR_PATH + File.separator + DB_DEFAULT_FILE_NAME;
-      dbUsername =
+              : PropertiesServiceImpl.APP_CONFIG_DIR_PATH + File.separator + DB_DEFAULT_FILE_NAME;
+      this.dbUsername =
           prop.containsKey(DB_USERNAME) ? prop.getProperty(DB_USERNAME) : DB_DEFAULT_USERNAME;
-      dbPassword =
+      this.dbPassword =
           prop.containsKey(DB_PASSWORD) ? prop.getProperty(DB_PASSWORD) : DB_DEFAULT_PASSWORD;
     } catch (final IOException ex) {
       error("Error loading properties: {}", ex.getMessage(), ex);

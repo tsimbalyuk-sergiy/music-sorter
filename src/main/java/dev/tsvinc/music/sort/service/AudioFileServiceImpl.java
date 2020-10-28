@@ -8,7 +8,6 @@ import ealvatag.audio.AudioFileIO;
 import ealvatag.audio.exceptions.CannotReadException;
 import ealvatag.audio.exceptions.InvalidAudioFrameException;
 import ealvatag.tag.FieldKey;
-import ealvatag.tag.Tag;
 import ealvatag.tag.TagException;
 import ealvatag.tag.reference.GenreTypes;
 import io.vavr.control.Try;
@@ -18,28 +17,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 public class AudioFileServiceImpl implements AudioFileService {
 
+  public static final Pattern SPACE_PATTERN = Pattern.compile("\\s");
+  private static final Pattern ZERO_TO_NINE_PATTERN = Pattern.compile(".*[0-9].*");
+  private static final Pattern LETTERS_NUMBERS_SPACES_PATTERN =
+      Pattern.compile("[^A-Za-z0-9\\-\\s&]+");
+  private static final Pattern VA_PATTERN = Pattern.compile("((VA)|(va))(-|_-).*");
+  private static final Pattern DECIMAL_PATTERN = Pattern.compile("[^\\d.]");
   @Inject FileService fileService;
 
   static void checkGenre(
-      List<String> genreList,
-      File musicFile,
-      List<String> artistList,
-      List<String> years,
-      boolean checkArtist)
+      final List<String> genreList,
+      final File musicFile,
+      final List<String> artistList,
+      final List<String> years,
+      final boolean checkArtist)
       throws CannotReadException, IOException, TagException, InvalidAudioFrameException {
     final var audioFile = AudioFileIO.read(musicFile);
-    final Tag tag = audioFile.getTag().orNull();
+    final var tag = audioFile.getTag().orNull();
     if (null != tag && !tag.getFirst(FieldKey.GENRE).isEmpty()) {
       final var genre = tag.getFirst(FieldKey.GENRE);
       /*check if genre is in a numeric format e.g. (043)*/
-      if (genre.matches(".*[0-9].*")) {
+      if (AudioFileServiceImpl.ZERO_TO_NINE_PATTERN.matcher(genre).matches()) {
         /*if so -- extract numbers and get genre value for it*/
-        final var genreNumericalConvert = extractNumber(genre);
+        final var genreNumericalConvert = AudioFileServiceImpl.extractNumber(genre);
         final var finalGenre =
             GenreTypes.getInstanceOf().getValue(Integer.parseInt(genreNumericalConvert));
         genreList.add(finalGenre);
@@ -56,8 +62,8 @@ public class AudioFileServiceImpl implements AudioFileService {
   }
 
   public static String genreToOneStyle(final String genre) {
-    final var words = genre.split("\\s");
-    final List<String> o = new ArrayList<>();
+    final var words = AudioFileServiceImpl.SPACE_PATTERN.split(genre);
+    final List<String> o = new ArrayList<>(words.length);
     for (final var word : words) {
       final var chars = word.toCharArray();
       final var charsOut = new char[genre.length()];
@@ -79,14 +85,16 @@ public class AudioFileServiceImpl implements AudioFileService {
     return output;
   }
 
-  public static String sanitizeString(String sourceString, boolean isGenre) {
+  public static String sanitizeString(String sourceString, final boolean isGenre) {
     sourceString =
-        sourceString == null || sourceString.isEmpty()
+        null == sourceString || sourceString.isEmpty()
             ? UNKNOWN
-            : sourceString.replaceAll("[^A-Za-z0-9\\-\\s&]+", "");
+            : AudioFileServiceImpl.LETTERS_NUMBERS_SPACES_PATTERN
+                .matcher(sourceString)
+                .replaceAll("");
     if (isGenre) {
-      sourceString = genreToOneStyle(sourceString);
-      sourceString = checkGenreForPredictedMatches(sourceString);
+      sourceString = AudioFileServiceImpl.genreToOneStyle(sourceString);
+      sourceString = AudioFileServiceImpl.checkGenreForPredictedMatches(sourceString);
     }
     if (sourceString.contains("\u0000")) {
       sourceString = sourceString.replace("\u0000", "");
@@ -112,7 +120,7 @@ public class AudioFileServiceImpl implements AudioFileService {
   }
 
   public static String findMostRepeatedString(final List<String> list) {
-    final Map<String, Integer> stringsCount = new HashMap<>();
+    final Map<String, Integer> stringsCount = new HashMap<>(list.size());
     for (final var string : list) {
       var counter = stringsCount.get(string);
       if (null == counter) {
@@ -121,12 +129,8 @@ public class AudioFileServiceImpl implements AudioFileService {
       counter++;
       stringsCount.put(string, counter);
     }
-    Map.Entry<String, Integer> mostRepeated = null;
-    for (final var e : stringsCount.entrySet()) {
-      if (null == mostRepeated || mostRepeated.getValue() < e.getValue()) {
-        mostRepeated = e;
-      }
-    }
+    final var mostRepeated =
+        stringsCount.entrySet().stream().max(Entry.comparingByValue()).orElse(null);
     if (null != mostRepeated) {
       return mostRepeated.getKey();
     } else {
@@ -138,9 +142,9 @@ public class AudioFileServiceImpl implements AudioFileService {
     if (null == str || str.isEmpty()) {
       return "";
     }
-    final var sb = new StringBuilder();
     var found = false;
     final var charArray = str.toCharArray();
+    final var sb = new StringBuilder(charArray.length);
     for (final var c : charArray) {
       if (Character.isDigit(c)) {
         sb.append(c);
@@ -154,33 +158,40 @@ public class AudioFileServiceImpl implements AudioFileService {
   }
 
   public Metadata getMetadata(final String path) {
-    final var listing = fileService.createFileListForEachDir(path);
-    final List<String> genreList = new ArrayList<>();
-    String artist = "";
-    if (new File(path).getName().matches("((VA)|(va))(-|_-).*")) {
+    final var listing = this.fileService.createFileListForEachDir(path);
+    var artist = "";
+    if (AudioFileServiceImpl.VA_PATTERN.matcher(new File(path).getName()).matches()) {
       artist = "va";
     }
     final List<String> artistList = new ArrayList<>(listing.getFileList().size());
     final List<String> years = new ArrayList<>(listing.getFileList().size());
     if (!listing.getFileList().isEmpty()) {
+      final List<String> genreList = new ArrayList<>(listing.getFileList().size());
       for (final var string : listing.getFileList()) {
-        getMetadataForFile(genreList, artist, artistList, years, string);
+        AudioFileServiceImpl.getMetadataForFile(genreList, artist, artistList, years, string);
       }
-      String mostRepeatedGenre = sanitizeString(findMostRepeatedString(genreList), true);
-      String mostRepeatedArtist = artist;
-      if (!artist.equals("va")) {
-        mostRepeatedArtist = sanitizeString(findMostRepeatedString(artistList), false);
+      final var mostRepeatedGenre =
+          AudioFileServiceImpl.sanitizeString(
+              AudioFileServiceImpl.findMostRepeatedString(genreList), true);
+      var mostRepeatedArtist = artist;
+      if (!"va".equals(artist)) {
+        mostRepeatedArtist =
+            AudioFileServiceImpl.sanitizeString(
+                AudioFileServiceImpl.findMostRepeatedString(artistList), false);
       }
 
-      String mostRepeatedYear = findMostRepeatedString(years);
+      var mostRepeatedYear = AudioFileServiceImpl.findMostRepeatedString(years);
 
-      int year = 1990;
+      var year = 1990;
       if (null != mostRepeatedYear && !mostRepeatedYear.isEmpty()) {
-        mostRepeatedYear = mostRepeatedYear.replaceAll("[^\\d.]", "");
-        if (mostRepeatedYear.length() < 4) { // in case we have something like: 199x
+        mostRepeatedYear =
+            AudioFileServiceImpl.DECIMAL_PATTERN.matcher(mostRepeatedYear).replaceAll("");
+        if (4 > mostRepeatedYear.length()) { // in case we have something like: 199x
           mostRepeatedYear =
               String.format("%1$-" + 4 + "s", mostRepeatedYear)
                   .replace(' ', '0'); // for left pad use "%1$" + ...
+        } else if (4 < mostRepeatedYear.length()) { //in case we have something like: 20201106231346
+          mostRepeatedYear = mostRepeatedYear.substring(0, 4);
         }
         year = Integer.parseInt(mostRepeatedYear);
       }
@@ -196,19 +207,19 @@ public class AudioFileServiceImpl implements AudioFileService {
     }
   }
 
-  private void getMetadataForFile(
-      List<String> genreList,
-      String artist,
-      List<String> artistList,
-      List<String> years,
-      String string) {
+  private static void getMetadataForFile(
+      final List<String> genreList,
+      final String artist,
+      final List<String> artistList,
+      final List<String> years,
+      final String string) {
     final var musicFile = new File(string);
     Try.of(
             () -> {
-              if (artist.equals("va")) {
-                checkGenre(genreList, musicFile, null, years, false);
+              if ("va".equals(artist)) {
+                AudioFileServiceImpl.checkGenre(genreList, musicFile, null, years, false);
               } else {
-                checkGenre(genreList, musicFile, artistList, years, true);
+                AudioFileServiceImpl.checkGenre(genreList, musicFile, artistList, years, true);
               }
               return null;
             })

@@ -11,11 +11,11 @@ public class ApplicationModules extends AbstractModule {
 
   @Override
   protected void configure() {
-    bind(PropertiesService.class).to(PropertiesServiceImpl.class).in(Singleton.class);
-    bind(FileService.class).to(FileServiceImpl.class).in(Singleton.class);
-    bind(CleanUpService.class).to(CleanUpServiceImpl.class).in(Singleton.class);
-    bind(AudioFileService.class).to(AudioFileServiceImpl.class).in(Singleton.class);
-    bind(ReleaseDao.class).to(ReleaseDaoImpl.class).in(Singleton.class);
-    bind(NitriteInstance.class).to(NitriteInstanceImp.class).in(Singleton.class);
+    this.bind(PropertiesService.class).to(PropertiesServiceImpl.class).in(Singleton.class);
+    this.bind(FileService.class).to(FileServiceImpl.class).in(Singleton.class);
+    this.bind(CleanUpService.class).to(CleanUpServiceImpl.class).in(Singleton.class);
+    this.bind(AudioFileService.class).to(AudioFileServiceImpl.class).in(Singleton.class);
+    this.bind(ReleaseDao.class).to(ReleaseDaoImpl.class).in(Singleton.class);
+    this.bind(NitriteInstance.class).to(NitriteInstanceImp.class).in(Singleton.class);
   }
 }

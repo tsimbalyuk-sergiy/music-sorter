@@ -18,16 +18,16 @@ public class CleanUpServiceImpl implements CleanUpService {
 
   private static boolean isEmptyDirectory(final Path path) {
     return Try.withResources(() -> Files.list(path))
-        .of(stream -> stream.count() <= 0)
+        .of(stream -> 0 >= stream.count())
         .onFailure(e -> error("Error listing directory: {}, {}", path, e.getMessage()))
         .getOrElse(false);
   }
 
   public void cleanUpParentDirectory() {
-    AtomicReference<List<Path>> listOfEmptyDirectories =
+    final var listOfEmptyDirectories =
         new AtomicReference<>(
-            getListOfEmptyDirectories(
-                Paths.get(propertiesService.getProperties().getSourceFolder())));
+            CleanUpServiceImpl.getListOfEmptyDirectories(
+                Paths.get(this.propertiesService.getProperties().getSourceFolder())));
     while (!listOfEmptyDirectories.get().isEmpty()) {
       Try.of(
               () -> {
@@ -42,21 +42,21 @@ public class CleanUpServiceImpl implements CleanUpService {
                           }
                         });
                 listOfEmptyDirectories.set(
-                    getListOfEmptyDirectories(
-                        Paths.get(propertiesService.getProperties().getSourceFolder())));
+                    CleanUpServiceImpl.getListOfEmptyDirectories(
+                        Paths.get(this.propertiesService.getProperties().getSourceFolder())));
                 return null;
               })
           .onFailure(
               e ->
                   error(
                       "Error while walking directory: {}, {}",
-                      propertiesService.getProperties().getSourceFolder(),
+                      this.propertiesService.getProperties().getSourceFolder(),
                       e.getMessage(),
                       e));
     }
   }
 
-  private List<Path> getListOfEmptyDirectories(Path directory) {
+  private static List<Path> getListOfEmptyDirectories(final Path directory) {
     return Try.withResources(() -> Files.walk(directory, Integer.MAX_VALUE))
         .of(
             stream ->
