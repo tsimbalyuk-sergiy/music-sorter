@@ -12,7 +12,6 @@ import static org.pmw.tinylog.Logger.info;
 
 import dev.tsvinc.music.sort.domain.AppProperties;
 import dev.tsvinc.music.sort.domain.ListingWithFormat;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.vavr.control.Try;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -89,7 +88,6 @@ public class FileServiceImpl implements FileService {
         .onFailure(e -> error("Failed to create a directory: {}", e.getMessage(), e));
   }
 
-  @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
   private static List<String> listFiles(final String folderName, final String glob) {
     final List<String> resultList = new ArrayList<>(100);
     try (final var stream = Files.newDirectoryStream(Paths.get(folderName), glob)) {
@@ -235,7 +233,6 @@ public class FileServiceImpl implements FileService {
         .getOrElse(new HashSet<>(0));
   }
 
-  @SuppressFBWarnings("DM_EXIT")
   @Override
   public void processDirectories() {
     final var folderList = this.listAlbums();
