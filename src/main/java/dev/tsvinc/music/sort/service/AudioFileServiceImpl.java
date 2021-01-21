@@ -62,8 +62,11 @@ public class AudioFileServiceImpl implements AudioFileService {
   }
 
   public static String genreToOneStyle(final String genre) {
+    if (genre.isEmpty() || genre.isBlank()) {
+      return genre;
+    }
     final var words = AudioFileServiceImpl.SPACE_PATTERN.split(genre);
-    final List<String> o = new ArrayList<>(words.length);
+    final List<String> out = new ArrayList<>(words.length);
     for (final var word : words) {
       final var chars = word.toCharArray();
       final var charsOut = new char[genre.length()];
@@ -74,13 +77,13 @@ public class AudioFileServiceImpl implements AudioFileService {
           charsOut[i] = Character.toLowerCase(chars[i]);
         }
       }
-      o.add(new String(charsOut));
+      out.add(new String(charsOut));
     }
     final String output;
-    if (1 < o.size()) {
-      output = String.join(" ", o);
+    if (1 < out.size()) {
+      output = String.join(" ", out);
     } else {
-      output = o.get(0);
+      output = out.get(0);
     }
     return output;
   }
@@ -157,6 +160,26 @@ public class AudioFileServiceImpl implements AudioFileService {
     return sb.toString();
   }
 
+  private static void getMetadataForFile(
+      final List<String> genreList,
+      final String artist,
+      final List<String> artistList,
+      final List<String> years,
+      final String string) {
+    final var musicFile = new File(string);
+    Try.of(
+            () -> {
+              if ("va".equals(artist)) {
+                AudioFileServiceImpl.checkGenre(genreList, musicFile, null, years, false);
+              } else {
+                AudioFileServiceImpl.checkGenre(genreList, musicFile, artistList, years, true);
+              }
+              return null;
+            })
+        .onFailure(
+            e -> error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e));
+  }
+
   public Metadata getMetadata(final String path) {
     final var listing = this.fileService.createFileListForEachDir(path);
     var artist = "";
@@ -190,7 +213,8 @@ public class AudioFileServiceImpl implements AudioFileService {
           mostRepeatedYear =
               String.format("%1$-" + 4 + "s", mostRepeatedYear)
                   .replace(' ', '0'); // for left pad use "%1$" + ...
-        } else if (4 < mostRepeatedYear.length()) { //in case we have something like: 20201106231346
+        } else if (4
+            < mostRepeatedYear.length()) { // in case we have something like: 20201106231346
           mostRepeatedYear = mostRepeatedYear.substring(0, 4);
         }
         year = Integer.parseInt(mostRepeatedYear);
@@ -205,25 +229,5 @@ public class AudioFileServiceImpl implements AudioFileService {
     } else {
       return Metadata.builder().invalid(true).build();
     }
-  }
-
-  private static void getMetadataForFile(
-      final List<String> genreList,
-      final String artist,
-      final List<String> artistList,
-      final List<String> years,
-      final String string) {
-    final var musicFile = new File(string);
-    Try.of(
-            () -> {
-              if ("va".equals(artist)) {
-                AudioFileServiceImpl.checkGenre(genreList, musicFile, null, years, false);
-              } else {
-                AudioFileServiceImpl.checkGenre(genreList, musicFile, artistList, years, true);
-              }
-              return null;
-            })
-        .onFailure(
-            e -> error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e));
   }
 }

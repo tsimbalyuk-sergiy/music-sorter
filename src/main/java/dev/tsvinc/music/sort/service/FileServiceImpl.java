@@ -5,6 +5,7 @@ import static dev.tsvinc.music.sort.util.Constants.FLAC;
 import static dev.tsvinc.music.sort.util.Constants.FLAC_FORMAT;
 import static dev.tsvinc.music.sort.util.Constants.MP3;
 import static dev.tsvinc.music.sort.util.Constants.MP_3_FORMAT;
+import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
 import static dev.tsvinc.music.sort.util.Predicates.IS_MUSIC_FILE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.pmw.tinylog.Logger.error;
@@ -146,8 +147,10 @@ public class FileServiceImpl implements FileService {
     if (properties.isSortByArtist()) {
       outWithGenreAndFormat =
           Path.of(outWithFormat, metadata.getGenre(), metadata.getArtist().trim()).toString();
+    } else if (!metadata.getGenre().strip().isEmpty()){
+      outWithGenreAndFormat = Path.of(outWithFormat, metadata.getGenre().strip()).toString();
     } else {
-      outWithGenreAndFormat = Path.of(outWithFormat, metadata.getGenre()).toString();
+      outWithGenreAndFormat = Path.of(outWithFormat, UNKNOWN).toString();
     }
     final var genreDir = new File(outWithGenreAndFormat);
     final var finalDestination = outWithGenreAndFormat + File.separator;
