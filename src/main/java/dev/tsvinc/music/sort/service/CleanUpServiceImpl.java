@@ -7,61 +7,70 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 public class CleanUpServiceImpl implements CleanUpService {
   @Inject PropertiesService propertiesService;
 
+  private static boolean isEmptyDirectory(final Path path) {
+    return Try.withResources(() -> Files.list(path))
+        .of(stream -> 0 >= stream.count())
+        .onFailure(e -> error("Error listing directory: {}, {}", path, e.getMessage()))
+        .getOrElse(false);
+  }
+
   public void cleanUpParentDirectory() {
-    while (!directoryIsEmpty(Paths.get(propertiesService.getProperties().getSourceFolder()))) {
-      Try.withResources(
-              () ->
-                  Files.walk(
-                      Paths.get(propertiesService.getProperties().getSourceFolder()),
-                      Integer.MAX_VALUE))
-          .of(
-              stream -> {
-                stream
-                    .filter(path -> path.toFile().isDirectory())
-                    .filter(CleanUpServiceImpl::directoryIsEmpty)
-                    .collect(Collectors.toList())
-                    .forEach(
-                        dir -> {
-                          try {
-                            Files.delete(dir);
-                          } catch (final IOException ioe) {
-                            error("Error deleting folder: {} {}\n{}", dir, ioe.getMessage(), ioe);
-                          }
-                        });
+    final var listOfEmptyDirectories =
+        new AtomicReference<>(
+            CleanUpServiceImpl.getListOfEmptyDirectories(
+                Paths.get(this.propertiesService.getProperties().getSourceFolder())));
+    while (!listOfEmptyDirectories.get().isEmpty()) {
+      Try.of(
+              () -> {
+                CleanUpServiceImpl.deleteEachEmptyDirectory(listOfEmptyDirectories);
+                listOfEmptyDirectories.set(
+                    CleanUpServiceImpl.getListOfEmptyDirectories(
+                        Paths.get(this.propertiesService.getProperties().getSourceFolder())));
                 return null;
               })
-          .onFailure(
-              e ->
-                  error(
-                      "Error while walking directory: {}, {}",
-                      propertiesService.getProperties().getSourceFolder(),
-                      e.getMessage(),
-                      e));
+          .onFailure(this::logErrorWhileWalkingDirectory);
     }
   }
 
-  /**
-   * Checks given directory for being empty
-   *
-   * @param directory {@link Path} path that represents actual directory
-   * @return {@link Boolean}
-   */
-  private static boolean directoryIsEmpty(final Path directory) {
-    return Try.withResources(() -> Files.newDirectoryStream(directory))
-        .of(paths -> !paths.iterator().hasNext())
-        .onFailure(
-            e ->
-                error(
-                    "Error checking if directory is empty: {}, {}, {}",
-                    directory,
-                    e.getMessage(),
-                    e))
-        .getOrElse(false);
+  private void logErrorWhileWalkingDirectory(final Throwable e) {
+    error(
+        "Error while walking directory: {}, {}",
+        this.propertiesService.getProperties().getSourceFolder(),
+        e.getMessage(),
+        e);
+  }
+
+  private static void deleteEachEmptyDirectory(
+      final AtomicReference<List<Path>> listOfEmptyDirectories) {
+    listOfEmptyDirectories.get().forEach(CleanUpServiceImpl::safelyDeleteDirectory);
+  }
+
+  private static void safelyDeleteDirectory(final Path dir) {
+    try {
+      Files.delete(dir);
+    } catch (final IOException ioe) {
+      error("Error deleting folder: {} {}\n{}", dir, ioe.getMessage(), ioe);
+    }
+  }
+
+  private static List<Path> getListOfEmptyDirectories(final Path directory) {
+    return Try.withResources(() -> Files.walk(directory, Integer.MAX_VALUE))
+        .of(
+            stream ->
+                stream
+                    .filter(Files::isDirectory)
+                    .filter(CleanUpServiceImpl::isEmptyDirectory)
+                    .collect(Collectors.toList()))
+        .onFailure(e -> error("Error walking directory: {}, {}", directory, e.getMessage(), e))
+        .getOrElse(Collections.emptyList());
   }
 }

@@ -26,7 +26,7 @@ public class App {
   @Inject private FileService fileService;
 
   public static void main(final String[] args) {
-    App app = new App();
+    final var app = new App();
     Guice.createInjector(new ApplicationModules()).injectMembers(app);
 
     app.fileService.processDirectories();

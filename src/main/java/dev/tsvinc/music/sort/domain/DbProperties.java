@@ -7,7 +7,7 @@ public class DbProperties {
   private String dbUsername;
   private String dbPassword;
 
-  public DbProperties(String dbLocation, String dbUsername, String dbPassword) {
+  public DbProperties(final String dbLocation, final String dbUsername, final String dbPassword) {
     this.dbLocation = dbLocation;
     this.dbUsername = dbUsername;
     this.dbPassword = dbPassword;
@@ -23,7 +23,7 @@ public class DbProperties {
     return this.dbLocation;
   }
 
-  public void setDbLocation(String dbLocation) {
+  public void setDbLocation(final String dbLocation) {
     this.dbLocation = dbLocation;
   }
 
@@ -31,7 +31,7 @@ public class DbProperties {
     return this.dbUsername;
   }
 
-  public void setDbUsername(String dbUsername) {
+  public void setDbUsername(final String dbUsername) {
     this.dbUsername = dbUsername;
   }
 
@@ -39,34 +39,34 @@ public class DbProperties {
     return this.dbPassword;
   }
 
-  public void setDbPassword(String dbPassword) {
+  public void setDbPassword(final String dbPassword) {
     this.dbPassword = dbPassword;
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(final Object o) {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (null == o || this.getClass() != o.getClass()) {
       return false;
     }
-    DbProperties that = (DbProperties) o;
-    return Objects.equals(dbLocation, that.dbLocation)
-        && Objects.equals(dbUsername, that.dbUsername)
-        && Objects.equals(dbPassword, that.dbPassword);
+    final var that = (DbProperties) o;
+    return Objects.equals(this.dbLocation, that.dbLocation)
+        && Objects.equals(this.dbUsername, that.dbUsername)
+        && Objects.equals(this.dbPassword, that.dbPassword);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(dbLocation, dbUsername, dbPassword);
+    return Objects.hash(this.dbLocation, this.dbUsername, this.dbPassword);
   }
 
   @Override
   public String toString() {
     return "DbProperties{"
         + "dbLocation='"
-        + dbLocation
+        + this.dbLocation
         + '\''
         + ", dbUsername='"
         + '\''
@@ -83,23 +83,23 @@ public class DbProperties {
 
     DbPropertiesBuilder() {}
 
-    public DbProperties.DbPropertiesBuilder dbLocation(String dbLocation) {
+    public DbProperties.DbPropertiesBuilder dbLocation(final String dbLocation) {
       this.dbLocation = dbLocation;
       return this;
     }
 
-    public DbProperties.DbPropertiesBuilder dbUsername(String dbUsername) {
+    public DbProperties.DbPropertiesBuilder dbUsername(final String dbUsername) {
       this.dbUsername = dbUsername;
       return this;
     }
 
-    public DbProperties.DbPropertiesBuilder dbPassword(String dbPassword) {
+    public DbProperties.DbPropertiesBuilder dbPassword(final String dbPassword) {
       this.dbPassword = dbPassword;
       return this;
     }
 
     public DbProperties build() {
-      return new DbProperties(dbLocation, dbUsername, dbPassword);
+      return new DbProperties(this.dbLocation, this.dbUsername, this.dbPassword);
     }
   }
 }

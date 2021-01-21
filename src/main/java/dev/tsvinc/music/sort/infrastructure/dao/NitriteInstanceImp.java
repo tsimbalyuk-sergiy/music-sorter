@@ -16,7 +16,7 @@ public class NitriteInstanceImp implements NitriteInstance {
 
   @Override
   public Nitrite instance() {
-    final JacksonMapper jacksonMapper = new JacksonMapper();
+    final var jacksonMapper = new JacksonMapper();
     jacksonMapper
         .getObjectMapper()
         .setSerializationInclusion(Include.NON_NULL)
@@ -28,9 +28,9 @@ public class NitriteInstanceImp implements NitriteInstance {
         .registerModule(new JavaTimeModule())
         .registerModule(new Jdk8Module())
         .compressed()
-        .filePath(propertiesService.getProperties().getDbProperties().getDbLocation())
+        .filePath(this.propertiesService.getProperties().getDbProperties().getDbLocation())
         .openOrCreate(
-            propertiesService.getProperties().getDbProperties().getDbUsername(),
-            propertiesService.getProperties().getDbProperties().getDbPassword());
+            this.propertiesService.getProperties().getDbProperties().getDbUsername(),
+            this.propertiesService.getProperties().getDbProperties().getDbPassword());
   }
 }

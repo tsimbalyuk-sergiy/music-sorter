@@ -5,11 +5,11 @@ public enum Format {
   MP3("mp3");
   private final String value;
 
-  Format(String value) {
+  Format(final String value) {
     this.value = value;
   }
 
   public String getValue() {
-    return value;
+    return this.value;
   }
 }
