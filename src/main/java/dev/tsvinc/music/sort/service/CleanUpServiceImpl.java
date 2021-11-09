@@ -18,7 +18,7 @@ public class CleanUpServiceImpl implements CleanUpService {
 
   private static boolean isEmptyDirectory(final Path path) {
     return Try.withResources(() -> Files.list(path))
-        .of(stream -> 0 >= stream.count())
+        .of(stream -> stream.findAny().isEmpty())
         .onFailure(e -> error("Error listing directory: {}, {}", path, e.getMessage()))
         .getOrElse(false);
   }
