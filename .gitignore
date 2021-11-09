@@ -27,6 +27,10 @@
 .externalToolBuilders/
 .factorypath
 .gradle/
+.classpath
+.project
+.vscode/**
+target/**
 .idea/
 .idea/**/dataSources.ids
 .idea/**/dataSources.local.xml
