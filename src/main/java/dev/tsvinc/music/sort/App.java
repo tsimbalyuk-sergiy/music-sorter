@@ -23,7 +23,8 @@ public class App {
         .activate();
   }
 
-  @Inject private FileService fileService;
+  @Inject
+  private FileService fileService;
 
   public static void main(final String[] args) {
     final var app = new App();

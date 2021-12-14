@@ -12,7 +12,8 @@ import org.dizitart.no2.mapper.JacksonMapper;
 
 public class NitriteInstanceImp implements NitriteInstance {
 
-  @Inject private PropertiesService propertiesService;
+  @Inject
+  private PropertiesService propertiesService;
 
   @Override
   public Nitrite instance() {

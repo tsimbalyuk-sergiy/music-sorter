@@ -10,7 +10,8 @@ public class ListingWithFormat {
   private String format;
   private List<String> fileList;
 
-  public ListingWithFormat() {}
+  public ListingWithFormat() {
+  }
 
   public ListingWithFormat(final String format, final List<String> fileList) {
     this.format = format;
@@ -90,7 +91,8 @@ public class ListingWithFormat {
     private String format;
     private List<String> fileList;
 
-    ListingWithFormatBuilder() {}
+    ListingWithFormatBuilder() {
+    }
 
     public ListingWithFormat.ListingWithFormatBuilder format(final String format) {
       this.format = format;

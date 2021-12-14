@@ -13,7 +13,8 @@ import org.pmw.tinylog.Logger;
 
 public class ReleaseDaoImpl implements ReleaseDao {
 
-  @Inject private NitriteInstanceImp nitrite;
+  @Inject
+  private NitriteInstanceImp nitrite;
 
   @Override
   public Optional<Release> findByReleaseName(final String name) {

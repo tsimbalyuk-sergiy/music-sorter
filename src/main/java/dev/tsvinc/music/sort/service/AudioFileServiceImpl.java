@@ -29,7 +29,8 @@ public class AudioFileServiceImpl implements AudioFileService {
       Pattern.compile("[^A-Za-z0-9\\-\\s&]+");
   private static final Pattern VA_PATTERN = Pattern.compile("((VA)|(va))(-|_-).*");
   private static final Pattern DECIMAL_PATTERN = Pattern.compile("[^\\d.]");
-  @Inject FileService fileService;
+  @Inject
+  FileService fileService;
 
   static void checkGenre(
       final List<String> genreList,

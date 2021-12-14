@@ -27,7 +27,8 @@ public class AppProperties {
     this.dbProperties = dbProperties;
   }
 
-  public AppProperties() {}
+  public AppProperties() {
+  }
 
   public static AppPropertiesBuilder builder() {
     return new AppPropertiesBuilder();
@@ -138,7 +139,8 @@ public class AppProperties {
     private List<String> liveReleasesPatterns;
     private DbProperties dbProperties;
 
-    AppPropertiesBuilder() {}
+    AppPropertiesBuilder() {
+    }
 
     public AppProperties.AppPropertiesBuilder sourceFolder(final String sourceFolder) {
       this.sourceFolder = sourceFolder;
