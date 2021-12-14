@@ -14,11 +14,13 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 public class CleanUpServiceImpl implements CleanUpService {
-  @Inject PropertiesService propertiesService;
+
+  @Inject
+  PropertiesService propertiesService;
 
   private static boolean isEmptyDirectory(final Path path) {
     return Try.withResources(() -> Files.list(path))
-        .of(stream -> 0 >= stream.count())
+        .of(stream -> stream.findAny().isEmpty())
         .onFailure(e -> error("Error listing directory: {}, {}", path, e.getMessage()))
         .getOrElse(false);
   }

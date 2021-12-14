@@ -35,5 +35,6 @@ public class Constants {
   public static final String DB_USERNAME = "db_username";
   public static final String CHECKSUM = "checksum";
 
-  private Constants() {}
+  private Constants() {
+  }
 }

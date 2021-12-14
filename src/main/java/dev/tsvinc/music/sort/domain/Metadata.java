@@ -29,7 +29,8 @@ public class Metadata {
     this.format = format;
   }
 
-  public Metadata() {}
+  public Metadata() {
+  }
 
   public static GenreWithFormatBuilder builder() {
     return new GenreWithFormatBuilder();
@@ -92,7 +93,8 @@ public class Metadata {
     private int audioFilesCount;
     private boolean invalid;
 
-    GenreWithFormatBuilder() {}
+    GenreWithFormatBuilder() {
+    }
 
     public Metadata.GenreWithFormatBuilder genre(final String genre) {
       this.genre = genre;

@@ -5,7 +5,8 @@ import java.util.function.Predicate;
 
 public class Predicates {
 
-  private Predicates() {}
+  private Predicates() {
+  }
 
   public static final Predicate<Path> IS_MUSIC_FILE =
       path ->

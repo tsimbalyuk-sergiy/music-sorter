@@ -3,6 +3,7 @@ package dev.tsvinc.music.sort.domain;
 import java.util.Objects;
 
 public class DbProperties {
+
   private String dbLocation;
   private String dbUsername;
   private String dbPassword;
@@ -13,7 +14,8 @@ public class DbProperties {
     this.dbPassword = dbPassword;
   }
 
-  public DbProperties() {}
+  public DbProperties() {
+  }
 
   public static DbPropertiesBuilder builder() {
     return new DbPropertiesBuilder();
@@ -81,7 +83,8 @@ public class DbProperties {
     private String dbUsername;
     private String dbPassword;
 
-    DbPropertiesBuilder() {}
+    DbPropertiesBuilder() {
+    }
 
     public DbProperties.DbPropertiesBuilder dbLocation(final String dbLocation) {
       this.dbLocation = dbLocation;

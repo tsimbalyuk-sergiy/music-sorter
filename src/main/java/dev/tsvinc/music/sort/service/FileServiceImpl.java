@@ -34,9 +34,12 @@ import me.tongfei.progressbar.ProgressBarStyle;
 
 public class FileServiceImpl implements FileService {
 
-  @Inject private PropertiesService propertiesService;
-  @Inject private CleanUpService cleanUpService;
-  @Inject private AudioFileService audioFileService;
+  @Inject
+  private PropertiesService propertiesService;
+  @Inject
+  private CleanUpService cleanUpService;
+  @Inject
+  private AudioFileService audioFileService;
   //  @Inject private DbService dbService;
 
   private static boolean isNotLiveRelease(final String folderName, final AppProperties properties) {
@@ -147,7 +150,7 @@ public class FileServiceImpl implements FileService {
     if (properties.isSortByArtist()) {
       outWithGenreAndFormat =
           Path.of(outWithFormat, metadata.getGenre(), metadata.getArtist().trim()).toString();
-    } else if (!metadata.getGenre().strip().isEmpty()){
+    } else if (!metadata.getGenre().isBlank()) {
       outWithGenreAndFormat = Path.of(outWithFormat, metadata.getGenre().strip()).toString();
     } else {
       outWithGenreAndFormat = Path.of(outWithFormat, UNKNOWN).toString();
