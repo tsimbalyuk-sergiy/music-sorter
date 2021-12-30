@@ -44,7 +44,7 @@
     <dependency>
       <groupId>org.tinylog</groupId>
       <artifactId>tinylog-jul</artifactId>
-      <version>2.3.2</version>
+      <version>2.4.0</version>
     </dependency>
     <dependency>
       <groupId>me.tongfei</groupId>
@@ -147,8 +147,7 @@
             <configuration>
               <transformers>
                 <!-- add Main-Class to manifest file -->
-                <transformer
-                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <mainClass>dev.tsvinc.music.sort.App</mainClass>
                 </transformer>
               </transformers>
