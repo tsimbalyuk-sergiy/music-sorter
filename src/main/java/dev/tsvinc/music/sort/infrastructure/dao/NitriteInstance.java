@@ -4,5 +4,5 @@ import org.dizitart.no2.Nitrite;
 
 public interface NitriteInstance {
 
-  Nitrite instance();
+    Nitrite instance();
 }

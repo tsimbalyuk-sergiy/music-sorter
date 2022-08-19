@@ -6,15 +6,15 @@ import java.util.Optional;
 
 public interface ReleaseDao {
 
-  Optional<Release> findByReleaseName(String name);
+    Optional<Release> findByReleaseName(String name);
 
-  List<Release> findAll();
+    List<Release> findAll();
 
-  Release findOne(String releaseName);
+    Release findOne(String releaseName);
 
-  Release update(Release release);
+    Release update(Release release);
 
-  boolean delete(Release release);
+    boolean delete(Release release);
 
-  Number save(Release release);
+    Number save(Release release);
 }

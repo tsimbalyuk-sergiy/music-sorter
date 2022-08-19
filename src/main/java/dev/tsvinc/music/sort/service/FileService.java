@@ -4,7 +4,7 @@ import dev.tsvinc.music.sort.domain.ListingWithFormat;
 
 public interface FileService {
 
-  void processDirectories();
+    void processDirectories();
 
-  ListingWithFormat createFileListForEachDir(final String folderName);
+    ListingWithFormat createFileListForEachDir(final String folderName);
 }
