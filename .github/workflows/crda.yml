@@ -121,6 +121,6 @@ jobs:
         id: scan
         uses: redhat-actions/crda@v1
         with:
-          crda_key: ${{ secrets.CRDA_KEY }}           # Either use crda_key or snyk_token
-          # snyk_token: ${{ secrets.SNYK_TOKEN }}
+          #crda_key: ${{ secrets.CRDA_KEY }}           # Either use crda_key or snyk_token
+          snyk_token: ${{ secret.SNYK_TOKEN }}
           # upload_artifact: false                    # Set this to false to skip artifact upload
