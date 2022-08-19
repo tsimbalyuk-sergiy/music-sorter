@@ -32,6 +32,15 @@ public class AudioFileServiceImpl implements AudioFileService {
     @Inject
     FileService fileService;
 
+    /**
+     * It reads the genre of a music file and adds it to a list of genres
+     *
+     * @param genreList a list of genres that will be populated with the genres of the files in the directory
+     * @param musicFile the file to be checked
+     * @param artistList a list of artists
+     * @param years a list of years that will be used to determine the oldest and newest songs in the library
+     * @param checkArtist if true, the artist name will be added to the artistList
+     */
     static void checkGenre(
             final List<String> genreList,
             final File musicFile,
@@ -61,6 +70,13 @@ public class AudioFileServiceImpl implements AudioFileService {
         }
     }
 
+    /**
+     * It takes a string, splits it into words, capitalizes the first letter of each word, and then joins the words back
+     * together
+     *
+     * @param genre The genre to be converted.
+     * @return A string with the first letter of each word capitalized.
+     */
     public static String genreToOneStyle(final String genre) {
         if (genre.isEmpty() || genre.isBlank()) {
             return genre;
@@ -88,6 +104,13 @@ public class AudioFileServiceImpl implements AudioFileService {
         return output;
     }
 
+    /**
+     * It takes a string, removes all non-alphanumeric characters, and returns the result
+     *
+     * @param sourceString The string to be sanitized
+     * @param isGenre boolean
+     * @return A string that has been sanitized.
+     */
     public static String sanitizeString(String sourceString, final boolean isGenre) {
         sourceString = null == sourceString || sourceString.isEmpty()
                 ? UNKNOWN
@@ -104,6 +127,13 @@ public class AudioFileServiceImpl implements AudioFileService {
         return sourceString;
     }
 
+    /**
+     * If the genre contains "hip", "alt", "psy", "gangs", "gangz", "electro", or "Lo-Fi", then replace the genre with the
+     * corresponding genre
+     *
+     * @param genre The genre of the song.
+     * @return A string that is the genre of the song.
+     */
     private static String checkGenreForPredictedMatches(String genre) {
         if (Pattern.compile("hip.*hop").matcher(genre.toLowerCase()).find()) {
             genre = "Hip-Hop";
@@ -125,6 +155,12 @@ public class AudioFileServiceImpl implements AudioFileService {
         return genre;
     }
 
+    /**
+     * It takes a list of strings and returns the most repeated string in the list
+     *
+     * @param list The list of strings to search for the most repeated string.
+     * @return The most repeated string in the list.
+     */
     public static String findMostRepeatedString(final List<String> list) {
         final Map<String, Integer> stringsCount = new HashMap<>(list.size());
         for (final var string : list) {
@@ -144,6 +180,13 @@ public class AudioFileServiceImpl implements AudioFileService {
         }
     }
 
+    /**
+     * If the input string is null or empty, return an empty string. Otherwise, loop through the string and append the
+     * first sequence of digits to a StringBuilder
+     *
+     * @param str The string to extract the number from
+     * @return The first sequence of digits in the string.
+     */
     public static String extractNumber(final String str) {
         if (null == str || str.isEmpty()) {
             return "";
@@ -163,6 +206,16 @@ public class AudioFileServiceImpl implements AudioFileService {
         return sb.toString();
     }
 
+    /**
+     * > If the artist is "va" (various artists), then check the genre of the file against the list of genres, and if it
+     * matches, add the file to the list of files to be copied
+     *
+     * @param genreList a list of genres to check for
+     * @param artist the artist name
+     * @param artistList a list of artists to check for. If the artist is "va" then this list is ignored.
+     * @param years a list of years to check for
+     * @param string the path to the file
+     */
     private static void getMetadataForFile(
             final List<String> genreList,
             final String artist,
@@ -181,6 +234,13 @@ public class AudioFileServiceImpl implements AudioFileService {
                 .onFailure(e -> error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e));
     }
 
+    /**
+     * It takes a path, creates a list of files in that path, then it iterates over the list of files, and for each file it
+     * extracts the metadata (genre, artist, year) and then it finds the most repeated metadata for each of those fields
+     *
+     * @param path the path to the directory
+     * @return A Metadata object
+     */
     public Metadata getMetadata(final String path) {
         final var listing = this.fileService.createFileListForEachDir(path);
         var artist = "";
