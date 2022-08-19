@@ -11,25 +11,24 @@ import org.pmw.tinylog.writers.ConsoleWriter;
 
 public class App {
 
-  static {
-    java.util.logging.Logger.getLogger("org.jaudiotagger").setLevel(Level.SEVERE);
+    static {
+        java.util.logging.Logger.getLogger("org.jaudiotagger").setLevel(Level.SEVERE);
 
-    Configurator.defaultConfig()
-        .writer(new ConsoleWriter())
-        .level(org.pmw.tinylog.Level.INFO)
-        .locale(Locale.US)
-        .formatPattern(
-            "[{level}:{class_name}:{line}] {message}") /*https://tinylog.org/configuration*/
-        .activate();
-  }
+        Configurator.defaultConfig()
+                .writer(new ConsoleWriter())
+                .level(org.pmw.tinylog.Level.INFO)
+                .locale(Locale.US)
+                .formatPattern("[{level}:{class_name}:{line}] {message}") /*https://tinylog.org/configuration*/
+                .activate();
+    }
 
-  @Inject
-  private FileService fileService;
+    @Inject
+    private FileService fileService;
 
-  public static void main(final String[] args) {
-    final var app = new App();
-    Guice.createInjector(new ApplicationModules()).injectMembers(app);
+    public static void main(final String[] args) {
+        final var app = new App();
+        Guice.createInjector(new ApplicationModules()).injectMembers(app);
 
-    app.fileService.processDirectories();
-  }
+        app.fileService.processDirectories();
+    }
 }

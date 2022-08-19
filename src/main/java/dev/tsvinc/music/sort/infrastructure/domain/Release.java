@@ -23,17 +23,18 @@ import org.dizitart.no2.objects.Indices;
 })
 public class Release {
 
-  @Id
-  private NitriteId id;
-  private Format format;
-  private String genre;
-  private String artist;
-  private int year;
-  private int numberOfAudioFiles;
+    @Id
+    private NitriteId id;
 
-  private String releaseName;
-  private long releaseSize;
-  private boolean hasNfo;
-  private boolean hasChecksum;
-  private boolean checksumValid;
+    private Format format;
+    private String genre;
+    private String artist;
+    private int year;
+    private int numberOfAudioFiles;
+
+    private String releaseName;
+    private long releaseSize;
+    private boolean hasNfo;
+    private boolean hasChecksum;
+    private boolean checksumValid;
 }

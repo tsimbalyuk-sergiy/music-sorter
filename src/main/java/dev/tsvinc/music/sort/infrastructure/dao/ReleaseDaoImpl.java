@@ -13,43 +13,44 @@ import org.pmw.tinylog.Logger;
 
 public class ReleaseDaoImpl implements ReleaseDao {
 
-  @Inject
-  private NitriteInstanceImp nitrite;
+    @Inject
+    private NitriteInstanceImp nitrite;
 
-  @Override
-  public Optional<Release> findByReleaseName(final String name) {
-    return Optional.ofNullable(
-        this.getNitriteRepository().find(eq("release_name", name)).firstOrDefault());
-  }
+    @Override
+    public Optional<Release> findByReleaseName(final String name) {
+        return Optional.ofNullable(
+                this.getNitriteRepository().find(eq("release_name", name)).firstOrDefault());
+    }
 
-  @Override
-  public List<Release> findAll() {
-    return this.getNitriteRepository().find(ObjectFilters.ALL).toList();
-  }
+    @Override
+    public List<Release> findAll() {
+        return this.getNitriteRepository().find(ObjectFilters.ALL).toList();
+    }
 
-  @Override
-  public Release findOne(final String releaseName) {
-    return null;
-  }
+    @Override
+    public Release findOne(final String releaseName) {
+        return null;
+    }
 
-  @Override
-  public Release update(final Release release) {
-    Logger.info("update TBD");
-    return null;
-  }
+    @Override
+    public Release update(final Release release) {
+        Logger.info("update TBD");
+        return null;
+    }
 
-  @Override
-  public boolean delete(final Release release) {
-    Logger.info("delete TBD");
-    return false;
-  }
+    @Override
+    public boolean delete(final Release release) {
+        Logger.info("delete TBD");
+        return false;
+    }
 
-  @Override
-  public Number save(final Release release) {
-    return Iterables.firstOrDefault(this.getNitriteRepository().insert(release)).getIdValue();
-  }
+    @Override
+    public Number save(final Release release) {
+        return Iterables.firstOrDefault(this.getNitriteRepository().insert(release))
+                .getIdValue();
+    }
 
-  private ObjectRepository<Release> getNitriteRepository() {
-    return this.nitrite.instance().getRepository(Release.class);
-  }
+    private ObjectRepository<Release> getNitriteRepository() {
+        return this.nitrite.instance().getRepository(Release.class);
+    }
 }

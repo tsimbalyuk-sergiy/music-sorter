@@ -4,7 +4,7 @@ import dev.tsvinc.music.sort.domain.AppProperties;
 
 public interface PropertiesService {
 
-  boolean initProperties();
+    boolean initProperties();
 
-  AppProperties getProperties();
+    AppProperties getProperties();
 }

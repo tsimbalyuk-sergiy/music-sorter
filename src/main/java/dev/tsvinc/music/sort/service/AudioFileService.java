@@ -4,5 +4,5 @@ import dev.tsvinc.music.sort.domain.Metadata;
 
 public interface AudioFileService {
 
-  Metadata getMetadata(String sourceDirectory);
+    Metadata getMetadata(String sourceDirectory);
 }

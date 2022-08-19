@@ -12,26 +12,27 @@ import org.dizitart.no2.mapper.JacksonMapper;
 
 public class NitriteInstanceImp implements NitriteInstance {
 
-  @Inject
-  private PropertiesService propertiesService;
+    @Inject
+    private PropertiesService propertiesService;
 
-  @Override
-  public Nitrite instance() {
-    final var jacksonMapper = new JacksonMapper();
-    jacksonMapper
-        .getObjectMapper()
-        .setSerializationInclusion(Include.NON_NULL)
-        .setSerializationInclusion(Include.NON_EMPTY)
-        .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    return Nitrite.builder()
-        .nitriteMapper(jacksonMapper)
-        .registerModule(new JavaTimeModule())
-        .registerModule(new Jdk8Module())
-        .compressed()
-        .filePath(this.propertiesService.getProperties().getDbProperties().getDbLocation())
-        .openOrCreate(
-            this.propertiesService.getProperties().getDbProperties().getDbUsername(),
-            this.propertiesService.getProperties().getDbProperties().getDbPassword());
-  }
+    @Override
+    public Nitrite instance() {
+        final var jacksonMapper = new JacksonMapper();
+        jacksonMapper
+                .getObjectMapper()
+                .setSerializationInclusion(Include.NON_NULL)
+                .setSerializationInclusion(Include.NON_EMPTY)
+                .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return Nitrite.builder()
+                .nitriteMapper(jacksonMapper)
+                .registerModule(new JavaTimeModule())
+                .registerModule(new Jdk8Module())
+                .compressed()
+                .filePath(
+                        this.propertiesService.getProperties().getDbProperties().getDbLocation())
+                .openOrCreate(
+                        this.propertiesService.getProperties().getDbProperties().getDbUsername(),
+                        this.propertiesService.getProperties().getDbProperties().getDbPassword());
+    }
 }
