@@ -35,10 +35,10 @@ public class AudioFileServiceImpl implements AudioFileService {
     /**
      * It reads the genre of a music file and adds it to a list of genres
      *
-     * @param genreList a list of genres that will be populated with the genres of the files in the directory
-     * @param musicFile the file to be checked
-     * @param artistList a list of artists
-     * @param years a list of years that will be used to determine the oldest and newest songs in the library
+     * @param genreList   a list of genres that will be populated with the genres of the files in the directory
+     * @param musicFile   the file to be checked
+     * @param artistList  a list of artists
+     * @param years       a list of years that will be used to determine the oldest and newest songs in the library
      * @param checkArtist if true, the artist name will be added to the artistList
      */
     static void checkGenre(
@@ -53,9 +53,9 @@ public class AudioFileServiceImpl implements AudioFileService {
         if (null != tag && !tag.getFirst(FieldKey.GENRE).isEmpty()) {
             final var genre = tag.getFirst(FieldKey.GENRE);
             /*check if genre is in a numeric format e.g. (043)*/
-            if (AudioFileServiceImpl.ZERO_TO_NINE_PATTERN.matcher(genre).matches()) {
+            if (ZERO_TO_NINE_PATTERN.matcher(genre).matches()) {
                 /*if so -- extract numbers and get genre value for it*/
-                final var genreNumericalConvert = AudioFileServiceImpl.extractNumber(genre);
+                final var genreNumericalConvert = extractNumber(genre);
                 final var finalGenre = GenreTypes.getInstanceOf().getValue(Integer.parseInt(genreNumericalConvert));
                 genreList.add(finalGenre);
             } else {
@@ -81,7 +81,7 @@ public class AudioFileServiceImpl implements AudioFileService {
         if (genre.isEmpty() || genre.isBlank()) {
             return genre;
         }
-        final var words = AudioFileServiceImpl.SPACE_PATTERN.split(genre);
+        final var words = SPACE_PATTERN.split(genre);
         final List<String> out = new ArrayList<>(words.length);
         for (final var word : words) {
             final var chars = word.toCharArray();
@@ -108,18 +108,16 @@ public class AudioFileServiceImpl implements AudioFileService {
      * It takes a string, removes all non-alphanumeric characters, and returns the result
      *
      * @param sourceString The string to be sanitized
-     * @param isGenre boolean
+     * @param isGenre      boolean
      * @return A string that has been sanitized.
      */
     public static String sanitizeString(String sourceString, final boolean isGenre) {
         sourceString = null == sourceString || sourceString.isEmpty()
                 ? UNKNOWN
-                : AudioFileServiceImpl.LETTERS_NUMBERS_SPACES_PATTERN
-                        .matcher(sourceString)
-                        .replaceAll("");
+                : LETTERS_NUMBERS_SPACES_PATTERN.matcher(sourceString).replaceAll("");
         if (isGenre) {
-            sourceString = AudioFileServiceImpl.genreToOneStyle(sourceString);
-            sourceString = AudioFileServiceImpl.checkGenreForPredictedMatches(sourceString);
+            sourceString = genreToOneStyle(sourceString);
+            sourceString = checkGenreForPredictedMatches(sourceString);
         }
         if (sourceString.contains("\u0000")) {
             sourceString = sourceString.replace("\u0000", "");
@@ -128,8 +126,8 @@ public class AudioFileServiceImpl implements AudioFileService {
     }
 
     /**
-     * If the genre contains "hip", "alt", "psy", "gangs", "gangz", "electro", or "Lo-Fi", then replace the genre with the
-     * corresponding genre
+     * If the genre contains "hip", "alt", "psy", "gangs", "gangz", "electro", or "Lo-Fi", then replace the genre with
+     * the corresponding genre
      *
      * @param genre The genre of the song.
      * @return A string that is the genre of the song.
@@ -210,11 +208,11 @@ public class AudioFileServiceImpl implements AudioFileService {
      * > If the artist is "va" (various artists), then check the genre of the file against the list of genres, and if it
      * matches, add the file to the list of files to be copied
      *
-     * @param genreList a list of genres to check for
-     * @param artist the artist name
+     * @param genreList  a list of genres to check for
+     * @param artist     the artist name
      * @param artistList a list of artists to check for. If the artist is "va" then this list is ignored.
-     * @param years a list of years to check for
-     * @param string the path to the file
+     * @param years      a list of years to check for
+     * @param string     the path to the file
      */
     private static void getMetadataForFile(
             final List<String> genreList,
@@ -225,9 +223,9 @@ public class AudioFileServiceImpl implements AudioFileService {
         final var musicFile = new File(string);
         Try.of(() -> {
                     if ("va".equals(artist)) {
-                        AudioFileServiceImpl.checkGenre(genreList, musicFile, null, years, false);
+                        checkGenre(genreList, musicFile, null, years, false);
                     } else {
-                        AudioFileServiceImpl.checkGenre(genreList, musicFile, artistList, years, true);
+                        checkGenre(genreList, musicFile, artistList, years, true);
                     }
                     return null;
                 })
@@ -235,8 +233,9 @@ public class AudioFileServiceImpl implements AudioFileService {
     }
 
     /**
-     * It takes a path, creates a list of files in that path, then it iterates over the list of files, and for each file it
-     * extracts the metadata (genre, artist, year) and then it finds the most repeated metadata for each of those fields
+     * It takes a path, creates a list of files in that path, then it iterates over the list of files, and for each file
+     * it extracts the metadata (genre, artist, year) and then it finds the most repeated metadata for each of those
+     * fields
      *
      * @param path the path to the directory
      * @return A Metadata object
@@ -244,7 +243,7 @@ public class AudioFileServiceImpl implements AudioFileService {
     public Metadata getMetadata(final String path) {
         final var listing = this.fileService.createFileListForEachDir(path);
         var artist = "";
-        if (AudioFileServiceImpl.VA_PATTERN.matcher(new File(path).getName()).matches()) {
+        if (VA_PATTERN.matcher(new File(path).getName()).matches()) {
             artist = "va";
         }
         final List<String> artistList = new ArrayList<>(listing.getFileList().size());
@@ -252,23 +251,19 @@ public class AudioFileServiceImpl implements AudioFileService {
         if (!listing.getFileList().isEmpty()) {
             final List<String> genreList = new ArrayList<>(listing.getFileList().size());
             for (final var string : listing.getFileList()) {
-                AudioFileServiceImpl.getMetadataForFile(genreList, artist, artistList, years, string);
+                getMetadataForFile(genreList, artist, artistList, years, string);
             }
-            final var mostRepeatedGenre =
-                    AudioFileServiceImpl.sanitizeString(AudioFileServiceImpl.findMostRepeatedString(genreList), true);
+            final var mostRepeatedGenre = sanitizeString(findMostRepeatedString(genreList), true);
             var mostRepeatedArtist = artist;
             if (!"va".equals(artist)) {
-                mostRepeatedArtist = AudioFileServiceImpl.sanitizeString(
-                        AudioFileServiceImpl.findMostRepeatedString(artistList), false);
+                mostRepeatedArtist = sanitizeString(findMostRepeatedString(artistList), false);
             }
 
-            var mostRepeatedYear = AudioFileServiceImpl.findMostRepeatedString(years);
+            var mostRepeatedYear = findMostRepeatedString(years);
 
             var year = 1990;
             if (null != mostRepeatedYear && !mostRepeatedYear.isEmpty()) {
-                mostRepeatedYear = AudioFileServiceImpl.DECIMAL_PATTERN
-                        .matcher(mostRepeatedYear)
-                        .replaceAll("");
+                mostRepeatedYear = DECIMAL_PATTERN.matcher(mostRepeatedYear).replaceAll("");
                 if (4 > mostRepeatedYear.length()) { // in case we have something like: 199x
                     mostRepeatedYear = String.format("%1$-" + 4 + "s", mostRepeatedYear)
                             .replace(' ', '0'); // for left pad use "%1$" + ...
