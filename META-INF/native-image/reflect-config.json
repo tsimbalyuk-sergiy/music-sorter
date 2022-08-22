@@ -1,589 +1,179 @@
 [
-  {
-    "name": "java.lang.ProcessHandle",
-    "methods": [
-      {
-        "name": "current",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "java.lang.Throwable",
-    "methods": [
-      {
-        "name": "getSuppressed",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "java.nio.ByteBuffer"
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.ContentBrandingReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.ContentDescriptionReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.EncodingChunkReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.EncryptionChunkReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.FileHeaderReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.LanguageListReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.MetadataReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.StreamBitratePropertiesReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.StreamChunkReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.ByteArraySizeTerminated",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.ByteArraySizeTerminated"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.NumberHashMap",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.NumberHashMap"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.PartOfSet",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.PartOfSet"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.StringHashMap",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.StringHashMap"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.StringNullTerminated",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.StringNullTerminated"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.StringSizeTerminated",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.StringSizeTerminated"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.TCONString",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.TCONString"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.TextEncodedStringNullTerminated",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.TextEncodedStringNullTerminated"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.TextEncodedStringSizeTerminated",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.TextEncodedStringSizeTerminated"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyAPIC",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyAPIC"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyCOMM",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyCOMM"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyMCDI",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyMCDI"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyPRIV",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyPRIV"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTALB",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTALB"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTCON",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTCON"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTDAT",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTDRC",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTDAT"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTYER"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTENC",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTENC"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTIT2",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTIT2"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTLAN",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTLAN"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTPE1",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTPE1"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTPE2",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTPE2"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTPOS",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTPOS"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTPUB",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTPUB"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTRCK",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTRCK"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTSSE",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTSSE"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTYER",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyUnsupported",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyWXXX",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
-        ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyWXXX"
-        ]
-      }
-    ]
-  },
-  {
-    "name": "org.tinylog.core.TinylogLoggingProvider",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.tinylog.writers.ConsoleWriter",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.util.Map"
-        ]
-      }
-    ]
-  }
+{
+  "name":"com.google.common.collect.ImmutableMapEntry[]"
+},
+{
+  "name":"com.google.common.util.concurrent.AbstractFuture",
+  "fields":[
+    {"name":"listeners", "allowUnsafeAccess":true}, 
+    {"name":"value", "allowUnsafeAccess":true}, 
+    {"name":"waiters", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.google.common.util.concurrent.AbstractFuture$Waiter",
+  "fields":[
+    {"name":"next", "allowUnsafeAccess":true}, 
+    {"name":"thread", "allowUnsafeAccess":true}
+  ]
+},
+{
+  "name":"com.google.inject.AbstractModule",
+  "allDeclaredMethods":true
+},
+{
+  "name":"com.google.inject.internal.Annotations",
+  "methods":[{"name":"determineWhetherToQuote","parameterTypes":[] }]
+},
+{
+  "name":"com.google.inject.internal.InjectorShell$RootModule",
+  "allDeclaredMethods":true
+},
+{
+  "name":"com.google.inject.util.Modules$EmptyModule",
+  "allDeclaredMethods":true
+},
+{
+  "name":"dev.tsvinc.music.sort.App",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
+},
+{
+  "name":"dev.tsvinc.music.sort.infrastructure.dao.NitriteInstanceImp",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"dev.tsvinc.music.sort.infrastructure.dao.NitriteInstanceImp$$FastClassByGuice$$4258734",
+  "fields":[{"name":"GUICE$INVOKERS"}]
+},
+{
+  "name":"dev.tsvinc.music.sort.infrastructure.dao.ReleaseDaoImpl",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"dev.tsvinc.music.sort.infrastructure.dao.ReleaseDaoImpl$$FastClassByGuice$$5437729",
+  "fields":[{"name":"GUICE$INVOKERS"}]
+},
+{
+  "name":"dev.tsvinc.music.sort.service.ApplicationModules",
+  "allDeclaredMethods":true
+},
+{
+  "name":"dev.tsvinc.music.sort.service.AudioFileServiceImpl",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"dev.tsvinc.music.sort.service.AudioFileServiceImpl$$FastClassByGuice$$3159965",
+  "fields":[{"name":"GUICE$INVOKERS"}]
+},
+{
+  "name":"dev.tsvinc.music.sort.service.CleanUpServiceImpl",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"dev.tsvinc.music.sort.service.CleanUpServiceImpl$$FastClassByGuice$$2343373",
+  "fields":[{"name":"GUICE$INVOKERS"}]
+},
+{
+  "name":"dev.tsvinc.music.sort.service.FileServiceImpl",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"dev.tsvinc.music.sort.service.FileServiceImpl$$FastClassByGuice$$1324232",
+  "fields":[{"name":"GUICE$INVOKERS"}]
+},
+{
+  "name":"dev.tsvinc.music.sort.service.PropertiesServiceImpl",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"dev.tsvinc.music.sort.service.PropertiesServiceImpl$$FastClassByGuice$$900933",
+  "fields":[{"name":"GUICE$INVOKERS"}]
+},
+{
+  "name":"java.io.File",
+  "methods":[{"name":"toPath","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.Boolean",
+  "methods":[{"name":"parseBoolean","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.Byte",
+  "methods":[{"name":"parseByte","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.ClassLoader$$DefineAccessByGuice$$/0x0000000840106840",
+  "methods":[{"name":"defineClass","parameterTypes":["java.lang.ClassLoader","byte[]"] }]
+},
+{
+  "name":"java.lang.Double",
+  "methods":[{"name":"parseDouble","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.Float",
+  "methods":[{"name":"parseFloat","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.Integer",
+  "methods":[{"name":"parseInt","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.Long",
+  "methods":[{"name":"parseLong","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.Object",
+  "allDeclaredMethods":true
+},
+{
+  "name":"java.lang.Object[]"
+},
+{
+  "name":"java.lang.ProcessHandle",
+  "methods":[{"name":"current","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.Short",
+  "methods":[{"name":"parseShort","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.nio.file.Files",
+  "methods":[{"name":"setPosixFilePermissions","parameterTypes":["java.nio.file.Path","java.util.Set"] }]
+},
+{
+  "name":"java.nio.file.attribute.PosixFilePermissions",
+  "methods":[{"name":"fromString","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.security.MessageDigestSpi"
+},
+{
+  "name":"java.security.SecureRandomParameters"
+},
+{
+  "name":"sun.misc.Unsafe",
+  "allDeclaredFields":true,
+  "methods":[{"name":"defineAnonymousClass","parameterTypes":["java.lang.Class","byte[]","java.lang.Object[]"] }]
+},
+{
+  "name":"sun.security.provider.NativePRNG",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.SHA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+}
 ]

@@ -4,7 +4,6 @@ GRAAL=${JAVA_HOME}
 UPX=/usr/bin/upx
 
 mvn clean package
-CP=$(mvn -q exec:exec -Dexec.executable=echo -Dexec.args="%classpath")
 
 rm -rf ./build/
 
@@ -13,7 +12,7 @@ cp -f ./target/music-sorter.jar ./build/
 cd ./build/
 
 echo GRAAL native-image
-${GRAAL}/bin/native-image -H:+ReportExceptionStackTraces \
+"${GRAAL}"/bin/native-image -H:+ReportExceptionStackTraces \
   --no-server \
   --no-fallback \
   --language:llvm \

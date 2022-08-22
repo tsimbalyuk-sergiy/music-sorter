@@ -34,7 +34,17 @@
     <dependency>
       <groupId>com.ealva</groupId>
       <artifactId>ealvatag</artifactId>
-      <version>0.4.3</version>
+      <version>0.4.6</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>annotations</artifactId>
+          <groupId>org.jetbrains</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.tinylog</groupId>
@@ -49,7 +59,7 @@
     <dependency>
       <groupId>me.tongfei</groupId>
       <artifactId>progressbar</artifactId>
-      <version>0.8.1</version>
+      <version>0.9.0</version>
     </dependency>
 
     <dependency>
@@ -58,15 +68,20 @@
       <version>0.10.3</version>
     </dependency>
     <dependency>
-      <groupId>com.guicedee.services</groupId>
+      <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
-      <version>1.0.13.2</version>
+      <version>5.0.0-BETA-1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.12</version>
-      <scope>provided</scope>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>30.0-jre</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -83,6 +98,30 @@
           <groupId>org.apache.logging.log4j</groupId>
           <artifactId>log4j-core</artifactId>
         </exclusion>
+        <exclusion>
+          <artifactId>okio</artifactId>
+          <groupId>com.squareup.okio</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>kotlin-stdlib</artifactId>
+          <groupId>org.jetbrains.kotlin</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-core</artifactId>
+          <groupId>com.fasterxml.jackson.core</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-annotations</artifactId>
+          <groupId>com.fasterxml.jackson.core</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jackson-databind</artifactId>
+          <groupId>com.fasterxml.jackson.core</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -94,6 +133,12 @@
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-parameter-names</artifactId>
       <version>2.11.1</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>jackson-core</artifactId>
+          <groupId>com.fasterxml.jackson.core</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -118,6 +163,13 @@
         <configuration>
           <source>${jdk.version}</source>
           <target>${jdk.version}</target>
+          <release>${jdk.version}</release>
+          <annotationProcessorPaths>
+          </annotationProcessorPaths>
+          <compilerArguments>
+            <AaddGeneratedAnnotation>false</AaddGeneratedAnnotation>
+            <Adebug>true</Adebug>
+          </compilerArguments>
         </configuration>
       </plugin>
       <!--Make this jar executable-->

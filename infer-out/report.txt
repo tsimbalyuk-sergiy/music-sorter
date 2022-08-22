@@ -1,0 +1,13 @@
+#0
+src/main/java/dev/tsvinc/music/sort/service/PropertiesServiceImpl.java:167: error: Resource Leak
+  resource of type `java.io.FileInputStream` acquired by call to `FileInputStream(...)` at line 131 is not released after line 167.
+**Note**: potential exception at line 133
+  165.         this.dbPassword =
+  166.             prop.containsKey(DB_PASSWORD) ? prop.getProperty(DB_PASSWORD) : DB_DEFAULT_PASSWORD;
+  167. >     } catch (final IOException ex) {
+  168.         error("Error loading properties: {}", ex.getMessage(), ex);
+  169.       }
+
+Found 1 issue
+    Issue Type(ISSUED_TYPE_ID): #
+  Resource Leak(RESOURCE_LEAK): 1

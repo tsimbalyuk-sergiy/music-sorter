@@ -1,0 +1,218 @@
+[214614][      debug] Loading models took 19.101ms
+[214615][      debug] Sqlite write daemon: starting up
+[214615][      debug] Sqlite write daemon: set up complete, waiting for connections
+[214614][environment] CWD = /home/tsv/work/java/music-sorter
+[214614][environment] No .inferconfig file found
+[214614][environment] Project root = /home/tsv/work/java/music-sorter
+[214614][environment] INFER_ARGS =   
+[214614][environment] command line arguments:   infer -- mvn package
+[214614][environment] Available memory at startup: 13488 MB
+[214614][environment] Active checkers: self-in-block (C/C++/ObjC), starvation (C/C++/ObjC, Java), uninit (C/C++/ObjC), siof (C/C++/ObjC), dotnet-resource-leak (C#/.Net), racerd (C/C++/ObjC, Java), liveness (C/C++/ObjC), inefficient-keyset-iterator (Java), fragment-retains-view (Java), biabduction (C/C++/ObjC, Java, C#/.Net)
+[214614][environment] Scheduler: file
+[214614][environment] Cores used: 8
+[214614][environment] Infer version v1.1.0
+[214614][environment] Copyright 2009 - present Facebook. All Rights Reserved.
+[214614][environment] 
+[214614][   progress] Capturing in maven mode...
+[214614][      debug] Running maven capture:
+[214614][      debug] mvn 'package' '-P' 'infer-capture'
+
+[214670][environment] CWD = /home/tsv/work/java/music-sorter
+[214670][environment] No .inferconfig file found
+[214670][environment] Project root = /home/tsv/work/java/music-sorter
+[214670][environment] INFER_ARGS =   @/tmp/args.tmp.4eb472
+[214670][environment] command line arguments:   /opt/infer-linux64-v1.1.0/lib/infer/infer/bin/infer
+[214670][environment]                           @/tmp/org.codehaus.plexus.compiler.javac.JavacCompiler65265418200962740arguments
+[214670][environment] Available memory at startup: 13251 MB
+[214670][environment] Active checkers: self-in-block (C/C++/ObjC), starvation (C/C++/ObjC, Java), uninit (C/C++/ObjC), siof (C/C++/ObjC), dotnet-resource-leak (C#/.Net), racerd (C/C++/ObjC, Java), liveness (C/C++/ObjC), inefficient-keyset-iterator (Java), fragment-retains-view (Java), biabduction (C/C++/ObjC, Java, C#/.Net)
+[214670][      debug] Current working directory: '/home/tsv/work/java/music-sorter'
+[214670][      debug] Trying to execute: javac '-J-Duser.language=en' '@/tmp/org.codehaus.plexus.compiler.javac.JavacCompiler65265418200962740arguments' '@/home/tsv/work/java/music-sorter/infer-out/tmp/javac_args.tmp.5a5763' 2>'/home/tsv/work/java/music-sorter/infer-out/tmp/javac.tmp.759fbc.out'
+[214670][      debug] *** Success. Logs:
+[214670][      debug] Translating 34 source files (41 classes)
+[214670][      debug] done capturing all files
+[214670][      debug] GC stats for capture:
+[214670][      debug]   minor_words: 1.90282e+07
+[214670][      debug]   promoted_words: 1.40652e+06
+[214670][      debug]   major_words: 1.63035e+06
+[214670][      debug]   minor_collections: 29
+[214670][      debug]   major_collections: 5
+[214670][      debug]   compactions: 0
+[214670][      debug]   top_heap_words: 1531904
+[214670][      debug]   
+[214670][      debug] GC stats for main_process_full:
+[214670][      debug]   minor_words: 2.04651e+07
+[214670][      debug]   promoted_words: 1.57574e+06
+[214670][      debug]   major_words: 1.82083e+06
+[214670][      debug]   minor_collections: 55
+[214670][      debug]   major_collections: 11
+[214670][      debug]   compactions: 1
+[214670][      debug]   top_heap_words: 1531904
+[214670][      debug]   
+[214670][environment] Scheduler: file
+[214670][environment] Cores used: 8
+[214670][environment] [214614][      debug] GC stats for capture:
+[214614][      debug]   minor_words: 34677
+[214614][      debug]   promoted_words: 0
+[214614][      debug]   major_words: 0
+[214614][      debug]   minor_collections: 0
+[214614][      debug]   major_collections: 0
+[214614][      debug]   compactions: 0
+[214614][      debug]   top_heap_words: 760832
+[214614][      debug]   
+[214614][environment] Parallel jobs: 8
+[214614][   progress] Found 37 source files to analyze in /home/tsv/work/java/music-sorter/infer-out
+[214736][   progress] src/main/java/dev/tsvinc/music/sort/util/Temp.java starting
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/infrastructure/dao/NitriteInstanceImp.java starting
+[214740][   progress] src/main/java/dev/tsvinc/music/sort/configuration/Settings.java starting
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/ProcessDirectory.java starting
+[214735][   progress] src/main/java/dev/tsvinc/music/sort/ListingWithFormat.java starting
+[214737][   progress] src/main/java/dev/tsvinc/music/sort/App.java starting
+[214741][   progress] src/main/java/dev/tsvinc/music/sort/service/PropertiesServiceImpl.java starting
+[214739][   progress] src/main/java/dev/tsvinc/music/sort/service/DbService.java starting
+[214740][   progress] src/main/java/dev/tsvinc/music/sort/configuration/Settings.java DONE
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/ProcessDirectory.java DONE
+[214735][   progress] src/main/java/dev/tsvinc/music/sort/ListingWithFormat.java DONE
+[214739][   progress] src/main/java/dev/tsvinc/music/sort/service/DbService.java DONE
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/service/ApplicationModules.java starting
+[214735][   progress] src/main/java/dev/tsvinc/music/sort/service/FileService.java starting
+[214740][   progress] src/main/java/dev/tsvinc/music/sort/service/AudioFileServiceImpl.java starting
+[214739][   progress] src/main/java/dev/tsvinc/music/sort/service/FileServiceImpl.java starting
+[214735][   progress] src/main/java/dev/tsvinc/music/sort/service/FileService.java DONE
+[214735][   progress] src/main/java/dev/tsvinc/music/sort/Constants.java starting
+[214735][   progress] src/main/java/dev/tsvinc/music/sort/Constants.java DONE
+[214735][   progress] src/main/java/dev/tsvinc/music/sort/util/SfvNio2.java starting
+[214737][   progress] src/main/java/dev/tsvinc/music/sort/App.java DONE
+[214737][   progress] src/main/java/dev/tsvinc/music/sort/service/CleanUpServiceImpl.java starting
+[214736][   progress] src/main/java/dev/tsvinc/music/sort/util/Temp.java DONE
+[214736][   progress] src/main/java/dev/tsvinc/music/sort/util/Constants.java starting
+[214736][   progress] src/main/java/dev/tsvinc/music/sort/util/Constants.java DONE
+[214736][   progress] src/main/java/dev/tsvinc/music/sort/service/AudioFileService.java starting
+[214736][   progress] src/main/java/dev/tsvinc/music/sort/service/AudioFileService.java DONE
+[214736][   progress] src/main/java/dev/tsvinc/music/sort/util/SfvChecker.java starting
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/service/ApplicationModules.java DONE
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/domain/Metadata.java starting
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/infrastructure/dao/NitriteInstanceImp.java DONE
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/service/CleanUpService.java starting
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/service/CleanUpService.java DONE
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/util/FileUtils.java starting
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/domain/Metadata.java DONE
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/domain/AppProperties.java starting
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/domain/AppProperties.java DONE
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/infrastructure/dao/ReleaseDao.java starting
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/infrastructure/dao/ReleaseDao.java DONE
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/domain/AlbumListing.java starting
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/domain/AlbumListing.java DONE
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/infrastructure/dao/NitriteInstance.java starting
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/infrastructure/dao/NitriteInstance.java DONE
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/infrastructure/domain/Format.java starting
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/infrastructure/domain/Format.java DONE
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/domain/DbProperties.java starting
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/util/FileUtils.java DONE
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/service/DbServiceImpl.java starting
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/service/DbServiceImpl.java DONE
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/service/PropertiesService.java starting
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/service/PropertiesService.java DONE
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/GenreWithFormat.java starting
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/domain/DbProperties.java DONE
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/infrastructure/domain/Release.java starting
+[214736][   progress] src/main/java/dev/tsvinc/music/sort/util/SfvChecker.java DONE
+[214736][   progress] src/main/java/module-info.java starting
+[214736][   progress] src/main/java/module-info.java DONE
+[214736][   progress] src/main/java/dev/tsvinc/music/sort/infrastructure/dao/ReleaseDaoImpl.java starting
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/GenreWithFormat.java DONE
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/util/Predicates.java starting
+[214736][   progress] src/main/java/dev/tsvinc/music/sort/infrastructure/dao/ReleaseDaoImpl.java DONE
+[214736][   progress] src/main/java/dev/tsvinc/music/sort/domain/ChecksumVerificationResult.java starting
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/util/Predicates.java DONE
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/configuration/Temp.java starting
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/configuration/Temp.java DONE
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/domain/ListingWithFormat.java starting
+[214735][   progress] src/main/java/dev/tsvinc/music/sort/util/SfvNio2.java DONE
+[214734][   progress] src/main/java/dev/tsvinc/music/sort/domain/ListingWithFormat.java DONE
+[214736][   progress] src/main/java/dev/tsvinc/music/sort/domain/ChecksumVerificationResult.java DONE
+[214741][   progress] src/main/java/dev/tsvinc/music/sort/service/PropertiesServiceImpl.java DONE
+[214737][   progress] src/main/java/dev/tsvinc/music/sort/service/CleanUpServiceImpl.java DONE
+[214738][   progress] src/main/java/dev/tsvinc/music/sort/infrastructure/domain/Release.java DONE
+[214740][   progress] src/main/java/dev/tsvinc/music/sort/service/AudioFileServiceImpl.java DONE
+[214739][   progress] src/main/java/dev/tsvinc/music/sort/service/FileServiceImpl.java DONE
+[214614][      debug] Backend stats:
+[214614][      debug]   summary_file_try_load= 8298
+[214614][      debug]   summary_read_from_disk= 52
+[214614][      debug]   summary_cache_hits= 9842 (54%)
+[214614][      debug]   summary_cache_misses= 8298
+[214614][      debug]   ondemand_procs_analyzed= 485
+[214614][      debug]   ondemand_local_cache_hits= 6918 (86%)
+[214614][      debug]   ondemand_local_cache_misses= 1067
+[214614][      debug]   proc_locker_lock_time_user= 0.00000000
+[214614][      debug]   proc_locker_lock_time_sys= 0.00000000
+[214614][      debug]   proc_locker_lock_time_wall= 0.00000000
+[214614][      debug]   proc_locker_unlock_time_user= 0.00000000
+[214614][      debug]   proc_locker_unlock_time_sys= 0.00000000
+[214614][      debug]   proc_locker_unlock_time_wall= 0.00000000
+[214614][      debug]   restart_scheduler_useful_time_user= 0.00000000
+[214614][      debug]   restart_scheduler_useful_time_sys= 0.00000000
+[214614][      debug]   restart_scheduler_useful_time_wall= 0.00000000
+[214614][      debug]   restart_scheduler_total_time_user= 0.00000000
+[214614][      debug]   restart_scheduler_total_time_sys= 0.00000000
+[214614][      debug]   restart_scheduler_total_time_wall= 0.00000000
+[214614][      debug]   
+[214614][      debug] GC stats for backend_stats.gc_stats_add.:
+[214614][      debug]   minor_words: 4.06391e+09
+[214614][      debug]   promoted_words: 2.403e+07
+[214614][      debug]   major_words: 2.63322e+07
+[214614][      debug]   minor_collections: 3915
+[214614][      debug]   major_collections: 87
+[214614][      debug]   compactions: 0
+[214614][      debug]   top_heap_words: 12643840
+[214614][      debug]   
+[214614][      debug] GC stats for backend_stats.gc_stats_max.:
+[214614][      debug]   minor_words: 1.07337e+09
+[214614][      debug]   promoted_words: 9.13933e+06
+[214614][      debug]   major_words: 9.69952e+06
+[214614][      debug]   minor_collections: 1033
+[214614][      debug]   major_collections: 19
+[214614][      debug]   compactions: 0
+[214614][      debug]   top_heap_words: 3545600
+[214614][      debug]   
+[214614][      debug] Average over 8 processes
+[214614][      debug] GC stats for backend_stats.gc_stats_average.:
+[214614][      debug]   minor_words: 5.07989e+08
+[214614][      debug]   promoted_words: 3.00375e+06
+[214614][      debug]   major_words: 3.29152e+06
+[214614][      debug]   minor_collections: 489
+[214614][      debug]   major_collections: 10
+[214614][      debug]   compactions: 0
+[214614][      debug]   top_heap_words: 1580480
+[214614][      debug]   
+[214614][      debug] Analysis phase finished in 2.714s
+[214614][      debug] backend_stats.scheduler_process_analysis_time_user= 0.18925800
+[214614][      debug] backend_stats.scheduler_process_analysis_time_sys= 0.06071900
+[214614][      debug] backend_stats.scheduler_process_analysis_time_wall= 2.71432326
+[214614][      debug] GC stats for analysis_scheduler:
+[214614][      debug]   minor_words: 1.91813e+07
+[214614][      debug]   promoted_words: 162321
+[214614][      debug]   major_words: 171027
+[214614][      debug]   minor_collections: 22
+[214614][      debug]   major_collections: 7
+[214614][      debug]   compactions: 1
+[214614][      debug]   top_heap_words: 875008
+[214614][      debug]   
+[214614][      debug] GC stats for report:
+[214614][      debug]   minor_words: 255235
+[214614][      debug]   promoted_words: 15795
+[214614][      debug]   major_words: 19367
+[214614][      debug]   minor_collections: 1
+[214614][      debug]   major_collections: 0
+[214614][      debug]   compactions: 0
+[214614][      debug]   top_heap_words: 875008
+[214614][      debug]   
+[214614][      debug] GC stats for main_process_full:
+[214614][      debug]   minor_words: 2.11658e+07
+[214614][      debug]   promoted_words: 347224
+[214614][      debug]   major_words: 885543
+[214614][      debug]   minor_collections: 49
+[214614][      debug]   major_collections: 13
+[214614][      debug]   compactions: 2
+[214614][      debug]   top_heap_words: 875008
+[214614][      debug]   
+[214615][      debug] Sqlite write daemon: terminating

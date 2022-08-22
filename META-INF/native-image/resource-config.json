@@ -1,13 +1,11 @@
 {
-  "resources": [
-    {
-      "pattern": "META-INF/services/org.tinylog.provider.LoggingProvider"
-    },
-    {
-      "pattern": "META-INF/services/org.tinylog.writers.Writer"
-    },
-    {
-      "pattern": "tinylog.properties"
-    }
-  ]
+  "resources":[
+    {"pattern":"\\QMETA-INF/native/linux64/libjansi.so\\E"}, 
+    {"pattern":"\\QMETA-INF/services/org.jline.terminal.spi.JansiSupport\\E"}, 
+    {"pattern":"\\QMETA-INF/services/org.jline.terminal.spi.JnaSupport\\E"}, 
+    {"pattern":"\\Qorg/fusesource/jansi/jansi.properties\\E"}, 
+    {"pattern":"\\Qorg/jline/utils/capabilities.txt\\E"}, 
+    {"pattern":"\\Qorg/jline/utils/xterm-256color.caps\\E"}
+  ],
+  "bundles":[]
 }
