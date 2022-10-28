@@ -1,8 +1,5 @@
 package dev.tsvinc.music.sort.service;
 
-import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
-import static org.pmw.tinylog.Logger.error;
-
 import dev.tsvinc.music.sort.domain.Metadata;
 import io.vavr.control.Try;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -12,6 +9,7 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.reference.GenreTypes;
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,12 +18,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-import javax.inject.Inject;
+
+import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
+import static org.tinylog.Logger.error;
 
 public class AudioFileServiceImpl implements AudioFileService {
 
     public static final Pattern SPACE_PATTERN = Pattern.compile("\\s");
-    private static final Pattern ZERO_TO_NINE_PATTERN = Pattern.compile(".*[0-9].*");
+    private static final Pattern ZERO_TO_NINE_PATTERN = Pattern.compile(".*\\d.*");
     private static final Pattern LETTERS_NUMBERS_SPACES_PATTERN = Pattern.compile("[^A-Za-z0-9\\-\\s&]+");
     private static final Pattern VA_PATTERN = Pattern.compile("((VA)|(va))(-|_-).*");
     private static final Pattern DECIMAL_PATTERN = Pattern.compile("[^\\d.]");
@@ -48,7 +48,8 @@ public class AudioFileServiceImpl implements AudioFileService {
             if (AudioFileServiceImpl.ZERO_TO_NINE_PATTERN.matcher(genre).matches()) {
                 /*if so -- extract numbers and get genre value for it*/
                 final var genreNumericalConvert = AudioFileServiceImpl.extractNumber(genre);
-                final var finalGenre = GenreTypes.getInstanceOf().getValueForId(Integer.parseInt(genreNumericalConvert));
+                final var finalGenre =
+                        GenreTypes.getInstanceOf().getValueForId(Integer.parseInt(genreNumericalConvert));
                 genreList.add(finalGenre);
             } else {
                 genreList.add(genre);
@@ -188,11 +189,11 @@ public class AudioFileServiceImpl implements AudioFileService {
         if (AudioFileServiceImpl.VA_PATTERN.matcher(new File(path).getName()).matches()) {
             artist = "va";
         }
-        final List<String> artistList = new ArrayList<>(listing.getFileList().size());
-        final List<String> years = new ArrayList<>(listing.getFileList().size());
-        if (!listing.getFileList().isEmpty()) {
-            final List<String> genreList = new ArrayList<>(listing.getFileList().size());
-            for (final var string : listing.getFileList()) {
+        final List<String> artistList = new ArrayList<>(listing.fileList().size());
+        final List<String> years = new ArrayList<>(listing.fileList().size());
+        if (!listing.fileList().isEmpty()) {
+            final List<String> genreList = new ArrayList<>(listing.fileList().size());
+            for (final var string : listing.fileList()) {
                 AudioFileServiceImpl.getMetadataForFile(genreList, artist, artistList, years, string);
             }
             final var mostRepeatedGenre =
@@ -218,13 +219,13 @@ public class AudioFileServiceImpl implements AudioFileService {
                 }
                 year = Integer.parseInt(mostRepeatedYear);
             }
-            return Metadata.builder()
-                    .genre(mostRepeatedGenre)
-                    .format(listing.getFormat())
-                    .artist(mostRepeatedArtist)
-                    .year(year)
-                    .audioFilesCount(listing.getFileList().size())
-                    .build();
+            return new Metadata(
+                    mostRepeatedGenre,
+                    listing.format(),
+                    mostRepeatedArtist,
+                    year,
+                    listing.fileList().size(),
+                    false);
         } else {
             return Metadata.builder().invalid(true).build();
         }

@@ -1,7 +1,16 @@
 package dev.tsvinc.music.sort.service;
 
+import static dev.tsvinc.music.sort.util.Constants.ERROR_CREATING_DIRECTORY;
+import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_PATTERNS;
+import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_PATTERNS_DEFAULT;
+import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_SKIP;
+import static dev.tsvinc.music.sort.util.Constants.SORT_BY_ARTIST;
+import static dev.tsvinc.music.sort.util.Constants.SOURCE_FOLDER;
+import static dev.tsvinc.music.sort.util.Constants.TARGET_FOLDER;
+import static org.tinylog.Logger.error;
+import static org.tinylog.Logger.info;
+
 import dev.tsvinc.music.sort.domain.AppProperties;
-import dev.tsvinc.music.sort.domain.DbProperties;
 import io.vavr.control.Try;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,22 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
-import static dev.tsvinc.music.sort.util.Constants.DB_DEFAULT_FILE_NAME;
-import static dev.tsvinc.music.sort.util.Constants.DB_DEFAULT_PASSWORD;
-import static dev.tsvinc.music.sort.util.Constants.DB_DEFAULT_USERNAME;
-import static dev.tsvinc.music.sort.util.Constants.DB_LOCATION;
-import static dev.tsvinc.music.sort.util.Constants.DB_PASSWORD;
-import static dev.tsvinc.music.sort.util.Constants.DB_USERNAME;
-import static dev.tsvinc.music.sort.util.Constants.ERROR_CREATING_DIRECTORY;
-import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_PATTERNS;
-import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_PATTERNS_DEFAULT;
-import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_SKIP;
-import static dev.tsvinc.music.sort.util.Constants.SORT_BY_ARTIST;
-import static dev.tsvinc.music.sort.util.Constants.SOURCE_FOLDER;
-import static dev.tsvinc.music.sort.util.Constants.TARGET_FOLDER;
-import static org.pmw.tinylog.Logger.error;
-import static org.pmw.tinylog.Logger.info;
-
 public class PropertiesServiceImpl implements PropertiesService {
 
     private static final String CONFIG_PATH = System.getProperty("user.home") + File.separator + ".config";
@@ -39,13 +32,11 @@ public class PropertiesServiceImpl implements PropertiesService {
     private final String appPropertiesLocation = PropertiesServiceImpl.appPropertiesLocation();
     private boolean skipLiveReleases;
     private boolean sortByArtist;
-    private String dbLocation;
+
     private List<String> liveReleasesPatterns;
 
     private String sourceFolderValue;
     private String targetFolderValue;
-    private String dbUsername;
-    private String dbPassword;
 
     @Override
     public boolean initProperties() {
@@ -80,11 +71,6 @@ public class PropertiesServiceImpl implements PropertiesService {
                     .liveReleasesPatterns(this.liveReleasesPatterns)
                     .skipLiveReleases(this.skipLiveReleases)
                     .sortByArtist(this.sortByArtist)
-                    .dbProperties(DbProperties.builder()
-                            .dbLocation(this.dbLocation)
-                            .dbUsername(this.dbUsername)
-                            .dbPassword(this.dbPassword)
-                            .build())
                     .build();
         }
         return null;
@@ -134,13 +120,6 @@ public class PropertiesServiceImpl implements PropertiesService {
                 info("\"live_releases_patterns\" option is empty. using defaults: ");
                 info("{}", LIVE_RELEASES_PATTERNS_DEFAULT);
             }
-
-            /*DB*/
-            this.dbLocation = prop.containsKey(DB_LOCATION)
-                    ? String.valueOf(prop.getProperty(DB_LOCATION))
-                    : PropertiesServiceImpl.APP_CONFIG_DIR_PATH + File.separator + DB_DEFAULT_FILE_NAME;
-            this.dbUsername = prop.containsKey(DB_USERNAME) ? prop.getProperty(DB_USERNAME) : DB_DEFAULT_USERNAME;
-            this.dbPassword = prop.containsKey(DB_PASSWORD) ? prop.getProperty(DB_PASSWORD) : DB_DEFAULT_PASSWORD;
         } catch (final IOException ex) {
             error("Error loading properties: {}", ex.getMessage(), ex);
         }

@@ -10,9 +10,8 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
-import static org.pmw.tinylog.Logger.error;
+import static org.tinylog.Logger.error;
 
 public class CleanUpServiceImpl implements CleanUpService {
     @Inject
@@ -27,12 +26,12 @@ public class CleanUpServiceImpl implements CleanUpService {
 
     public void cleanUpParentDirectory() {
         final var listOfEmptyDirectories = new AtomicReference<>(CleanUpServiceImpl.getListOfEmptyDirectories(
-                Paths.get(this.propertiesService.getProperties().getSourceFolder())));
+                Paths.get(this.propertiesService.getProperties().sourceFolder())));
         while (!listOfEmptyDirectories.get().isEmpty()) {
             Try.of(() -> {
                         CleanUpServiceImpl.deleteEachEmptyDirectory(listOfEmptyDirectories);
                         listOfEmptyDirectories.set(CleanUpServiceImpl.getListOfEmptyDirectories(
-                                Paths.get(this.propertiesService.getProperties().getSourceFolder())));
+                                Paths.get(this.propertiesService.getProperties().sourceFolder())));
                         return null;
                     })
                     .onFailure(this::logErrorWhileWalkingDirectory);
@@ -42,7 +41,7 @@ public class CleanUpServiceImpl implements CleanUpService {
     private void logErrorWhileWalkingDirectory(final Throwable e) {
         error(
                 "Error while walking directory: {}, {}",
-                this.propertiesService.getProperties().getSourceFolder(),
+                this.propertiesService.getProperties().sourceFolder(),
                 e.getMessage(),
                 e);
     }
@@ -62,8 +61,9 @@ public class CleanUpServiceImpl implements CleanUpService {
     private static List<Path> getListOfEmptyDirectories(final Path directory) {
         return Try.withResources(() -> Files.walk(directory, Integer.MAX_VALUE))
                 .of(stream -> stream.filter(Files::isDirectory)
+                        .filter(path -> !path.equals(directory))
                         .filter(CleanUpServiceImpl::isEmptyDirectory)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .onFailure(e -> error("Error walking directory: {}, {}", directory, e.getMessage(), e))
                 .getOrElse(Collections.emptyList());
     }
