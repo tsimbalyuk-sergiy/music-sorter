@@ -1,5 +1,20 @@
 package dev.tsvinc.music.sort.service;
 
+import dev.tsvinc.music.sort.domain.AppProperties;
+import dev.tsvinc.music.sort.domain.DbProperties;
+import io.vavr.control.Try;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+
 import static dev.tsvinc.music.sort.util.Constants.DB_DEFAULT_FILE_NAME;
 import static dev.tsvinc.music.sort.util.Constants.DB_DEFAULT_PASSWORD;
 import static dev.tsvinc.music.sort.util.Constants.DB_DEFAULT_USERNAME;
@@ -15,21 +30,6 @@ import static dev.tsvinc.music.sort.util.Constants.SOURCE_FOLDER;
 import static dev.tsvinc.music.sort.util.Constants.TARGET_FOLDER;
 import static org.pmw.tinylog.Logger.error;
 import static org.pmw.tinylog.Logger.info;
-
-import dev.tsvinc.music.sort.domain.AppProperties;
-import dev.tsvinc.music.sort.domain.DbProperties;
-import io.vavr.control.Try;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
 
 public class PropertiesServiceImpl implements PropertiesService {
 

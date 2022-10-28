@@ -4,13 +4,14 @@ import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
 import static org.pmw.tinylog.Logger.error;
 
 import dev.tsvinc.music.sort.domain.Metadata;
-import ealvatag.audio.AudioFileIO;
-import ealvatag.audio.exceptions.CannotReadException;
-import ealvatag.audio.exceptions.InvalidAudioFrameException;
-import ealvatag.tag.FieldKey;
-import ealvatag.tag.TagException;
-import ealvatag.tag.reference.GenreTypes;
 import io.vavr.control.Try;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.TagException;
+import org.jaudiotagger.tag.reference.GenreTypes;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,16 +39,16 @@ public class AudioFileServiceImpl implements AudioFileService {
             final List<String> artistList,
             final List<String> years,
             final boolean checkArtist)
-            throws CannotReadException, IOException, TagException, InvalidAudioFrameException {
+            throws CannotReadException, IOException, TagException, InvalidAudioFrameException, ReadOnlyFileException {
         final var audioFile = AudioFileIO.read(musicFile);
-        final var tag = audioFile.getTag().orNull();
+        final var tag = audioFile.getTag();
         if (null != tag && !tag.getFirst(FieldKey.GENRE).isEmpty()) {
             final var genre = tag.getFirst(FieldKey.GENRE);
             /*check if genre is in a numeric format e.g. (043)*/
             if (AudioFileServiceImpl.ZERO_TO_NINE_PATTERN.matcher(genre).matches()) {
                 /*if so -- extract numbers and get genre value for it*/
                 final var genreNumericalConvert = AudioFileServiceImpl.extractNumber(genre);
-                final var finalGenre = GenreTypes.getInstanceOf().getValue(Integer.parseInt(genreNumericalConvert));
+                final var finalGenre = GenreTypes.getInstanceOf().getValueForId(Integer.parseInt(genreNumericalConvert));
                 genreList.add(finalGenre);
             } else {
                 genreList.add(genre);

@@ -3,11 +3,12 @@ package dev.tsvinc.music.sort;
 import com.google.inject.Guice;
 import dev.tsvinc.music.sort.service.ApplicationModules;
 import dev.tsvinc.music.sort.service.FileService;
-import java.util.Locale;
-import java.util.logging.Level;
-import javax.inject.Inject;
 import org.pmw.tinylog.Configurator;
 import org.pmw.tinylog.writers.ConsoleWriter;
+
+import javax.inject.Inject;
+import java.util.Locale;
+import java.util.logging.Level;
 
 public class App {
 

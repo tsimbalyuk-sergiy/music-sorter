@@ -1,8 +1,8 @@
 package dev.tsvinc.music.sort.service;
 
-import static org.pmw.tinylog.Logger.error;
-
 import io.vavr.control.Try;
+
+import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,10 +11,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
+
+import static org.pmw.tinylog.Logger.error;
 
 public class CleanUpServiceImpl implements CleanUpService {
-
     @Inject
     PropertiesService propertiesService;
 
