@@ -19,7 +19,7 @@
         <mainClass>dev.tsvinc.music.sort.App</mainClass>
         <maven.compiler.source>${java.specification.version}</maven.compiler.source>
         <maven.compiler.target>${java.specification.version}</maven.compiler.target>
-        <imageName>${artifactId}</imageName>
+        <imageName>${project.artifactId}</imageName>
 
     </properties>
 
