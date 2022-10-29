@@ -1,12 +1,19 @@
 package dev.tsvinc.music.sort.service;
 
+import static dev.tsvinc.music.sort.util.Constants.CHECKSUM;
+import static dev.tsvinc.music.sort.util.Constants.FLAC;
+import static dev.tsvinc.music.sort.util.Constants.FLAC_FORMAT;
+import static dev.tsvinc.music.sort.util.Constants.MP3;
+import static dev.tsvinc.music.sort.util.Constants.MP_3_FORMAT;
+import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
+import static dev.tsvinc.music.sort.util.Predicates.IS_MUSIC_FILE;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.tinylog.Logger.error;
+import static org.tinylog.Logger.info;
+
 import dev.tsvinc.music.sort.domain.AppProperties;
 import dev.tsvinc.music.sort.domain.ListingWithFormat;
 import io.vavr.control.Try;
-import me.tongfei.progressbar.ProgressBar;
-import me.tongfei.progressbar.ProgressBarBuilder;
-import me.tongfei.progressbar.ProgressBarStyle;
-import javax.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,17 +28,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static dev.tsvinc.music.sort.util.Constants.CHECKSUM;
-import static dev.tsvinc.music.sort.util.Constants.FLAC;
-import static dev.tsvinc.music.sort.util.Constants.FLAC_FORMAT;
-import static dev.tsvinc.music.sort.util.Constants.MP3;
-import static dev.tsvinc.music.sort.util.Constants.MP_3_FORMAT;
-import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
-import static dev.tsvinc.music.sort.util.Predicates.IS_MUSIC_FILE;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static org.tinylog.Logger.error;
-import static org.tinylog.Logger.info;
+import javax.inject.Inject;
+import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarBuilder;
+import me.tongfei.progressbar.ProgressBarStyle;
 
 public class FileServiceImpl implements FileService {
 
