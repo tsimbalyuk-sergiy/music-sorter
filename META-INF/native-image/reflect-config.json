@@ -1,589 +1,1315 @@
 [
-  {
-    "name": "java.lang.ProcessHandle",
-    "methods": [
-      {
-        "name": "current",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "java.lang.Throwable",
-    "methods": [
-      {
-        "name": "getSuppressed",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "java.nio.ByteBuffer"
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.ContentBrandingReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.ContentDescriptionReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.EncodingChunkReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.EncryptionChunkReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.FileHeaderReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.LanguageListReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.MetadataReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.StreamBitratePropertiesReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.audio.asf.io.StreamChunkReader",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.ByteArraySizeTerminated",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.ByteArraySizeTerminated"
+    {
+        "name" : "java.lang.ProcessHandle",
+        "methods" : [
+            {
+                "name" : "current",
+                "parameterTypes" : []
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.NumberHashMap",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.NumberHashMap"
+    },
+    {
+        "name" : "java.lang.Throwable",
+        "methods" : [
+            {
+                "name" : "getSuppressed",
+                "parameterTypes" : []
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.PartOfSet",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.PartOfSet"
+    },
+    {
+        "name" : "java.nio.ByteBuffer"
+    },
+    {
+        "name" : "org.jaudiotagger.audio.asf.io.ContentBrandingReader",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : []
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.StringHashMap",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.StringHashMap"
+    },
+    {
+        "name" : "org.jaudiotagger.audio.asf.io.ContentDescriptionReader",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : []
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.StringNullTerminated",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.StringNullTerminated"
+    },
+    {
+        "name" : "org.jaudiotagger.audio.asf.io.EncodingChunkReader",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : []
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.StringSizeTerminated",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.StringSizeTerminated"
+    },
+    {
+        "name" : "org.jaudiotagger.audio.asf.io.EncryptionChunkReader",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : []
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.TCONString",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.TCONString"
+    },
+    {
+        "name" : "org.jaudiotagger.audio.asf.io.FileHeaderReader",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : []
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.TextEncodedStringNullTerminated",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.TextEncodedStringNullTerminated"
+    },
+    {
+        "name" : "org.jaudiotagger.audio.asf.io.LanguageListReader",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : []
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.datatype.TextEncodedStringSizeTerminated",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.datatype.TextEncodedStringSizeTerminated"
+    },
+    {
+        "name" : "org.jaudiotagger.audio.asf.io.MetadataReader",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : []
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyAPIC",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.audio.asf.io.StreamBitratePropertiesReader",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : []
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyAPIC"
+    },
+    {
+        "name" : "org.jaudiotagger.audio.asf.io.StreamChunkReader",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : []
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyCOMM",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.datatype.ByteArraySizeTerminated",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.datatype.ByteArraySizeTerminated"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyCOMM"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.datatype.NumberHashMap",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.datatype.NumberHashMap"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyMCDI",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.datatype.PartOfSet",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.datatype.PartOfSet"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyMCDI"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.datatype.StringHashMap",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.datatype.StringHashMap"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyPRIV",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.datatype.StringNullTerminated",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.datatype.StringNullTerminated"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyPRIV"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.datatype.StringSizeTerminated",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.datatype.StringSizeTerminated"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTALB",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.datatype.TCONString",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.datatype.TCONString"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTALB"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.datatype.TextEncodedStringNullTerminated",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.datatype.TextEncodedStringNullTerminated"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTCON",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.datatype.TextEncodedStringSizeTerminated",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.datatype.TextEncodedStringSizeTerminated"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTCON"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyAENC",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyAENC"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTDAT",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyAPIC",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyAPIC"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTDRC",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyASPI",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyASPI"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTDAT"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyCHAP",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyCHAP"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTYER"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyCOMM",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyCOMM"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTENC",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyCOMR",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyCOMR"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTENC"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyMCDI",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyMCDI"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTIT2",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyCRM",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyCRM"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTIT2"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyPRIV",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyPRIV"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTLAN",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyCTOC",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyCTOC"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTLAN"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyDeprecated",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyDeprecated"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTPE1",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyENCR",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyENCR"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTPE1"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyEncrypted",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyEncrypted"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTPE2",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyEQU2",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyEQU2"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTPE2"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyEQUA",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyEQUA"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTPOS",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyETCO",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyETCO"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTPOS"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyGEOB",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyGEOB"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTPUB",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyGRID",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyGRID"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTPUB"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyGRP1",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyGRP1"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTRCK",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyIPLS",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyIPLS"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTRCK"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyLINK",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyLINK"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTSSE",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyMCDI",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyMCDI"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTSSE"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyMLLT",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyMLLT"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyMVIN",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyMVIN"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyMVNM",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyMVNM"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyTYER",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyOWNE",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyOWNE"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyUnsupported",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyPCNT",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyPCNT"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.jaudiotagger.tag.id3.framebody.FrameBodyWXXX",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.nio.ByteBuffer",
-          "int"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyPIC",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyPIC"
+                ]
+            }
         ]
-      },
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "org.jaudiotagger.tag.id3.framebody.FrameBodyWXXX"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyPOPM",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyPOPM"
+                ]
+            }
         ]
-      }
-    ]
-  },
-  {
-    "name": "org.tinylog.core.TinylogLoggingProvider",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": []
-      }
-    ]
-  },
-  {
-    "name": "org.tinylog.writers.ConsoleWriter",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [
-          "java.util.Map"
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyPOSS",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyPOSS"
+                ]
+            }
         ]
-      }
-    ]
-  }
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyPRIV",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyPRIV"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyRBUF",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyRBUF"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyRVA2",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyRVA2"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyRVAD",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyRVAD"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyRVRB",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyRVRB"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodySEEK",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodySEEK"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodySIGN",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodySIGN"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodySYLT",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodySYLT"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodySYTC",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodySYTC"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTALB",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTALB"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTBPM",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTBPM"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTCMP",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTCMP"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTCOM",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTCOM"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTCON",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTCON"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTCOP",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTCOP"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTDEN",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTDLY",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTDAT",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTDRC",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTDAT"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTYER"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTENC",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTENC"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTIT2",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTIT2"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTLAN",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTLAN"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTPE1",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTPE1"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTPE2",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTPE2"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTPOS",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTPOS"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTPUB",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTPUB"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTRCK",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTRCK"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTSSE",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTSSE"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyTXXX"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyTYER",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyUnsupported",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.jaudiotagger.tag.id3.framebody.FrameBodyWXXX",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.nio.ByteBuffer",
+                    "int"
+                ]
+            },
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "org.jaudiotagger.tag.id3.framebody.FrameBodyWXXX"
+                ]
+            }
+        ]
+    },
+    {
+        "name" : "org.tinylog.core.TinylogLoggingProvider",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : []
+            }
+        ]
+    },
+    {
+        "name" : "org.tinylog.writers.ConsoleWriter",
+        "methods" : [
+            {
+                "name" : "<init>",
+                "parameterTypes" : [
+                    "java.util.Map"
+                ]
+            }
+        ]
+    }
 ]
