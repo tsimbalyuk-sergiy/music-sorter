@@ -239,12 +239,12 @@
                             <fallback>false</fallback>
                             <buildArgs combine.children="append">
                                 <arg>-H:DashboardDump=fortune -H:+DashboardAll -H:+ReportExceptionStackTraces</arg>
-                                <arg>-H:CompilerBackend=llvm -H:+BitcodeOptimizations</arg>
                                 <arg>-H:TraceClassInitialization=true</arg>
                                 <arg>--no-fallback -H:DashboardDump=dumpfileoversized -H:+DashboardAll
-                                    --initialize-at-build-time
+                                    --initialize-at-build-time --link-at-build-time
+                                    --report-unsupported-elements-at-runtime
                                 </arg>
-                                <arg>--language:llvm --link-at-build-time --report-unsupported-elements-at-runtime</arg>
+                                <!--                                <arg>-H:CompilerBackend=llvm -H:+BitcodeOptimizations</arg>-->
                             </buildArgs>
                             <agent>
                                 <enabled>true</enabled>
