@@ -271,14 +271,12 @@
                             <fallback>false</fallback>
                             <buildArgs combine.children="append">
                                 <arg>-H:DashboardDump=fortune -H:+DashboardAll</arg>
-                                <arg>-H:-AllowVMInspection</arg>
                                 <arg>-H:+BitcodeOptimizations</arg>
+                                <arg>-H:+TraceClassInitialization</arg>
                                 <arg>--no-fallback -H:DashboardDump=dumpfileoversized -H:+DashboardAll
                                     --initialize-at-build-time
                                 </arg>
-                                <arg>--language:llvm --allow-incomplete-classpath
-                                    --report-unsupported-elements-at-runtime
-                                </arg>
+                                <arg>--language:llvm --link-at-build-time --report-unsupported-elements-at-runtime</arg>
                             </buildArgs>
                             <agent>
                                 <enabled>true</enabled>
