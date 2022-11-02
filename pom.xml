@@ -246,7 +246,7 @@
                             <buildArgs combine.children="append">
                                 <arg>-H:DashboardDump=fortune -H:+DashboardAll</arg>
                                 <arg>-H:+BitcodeOptimizations</arg>
-                                <arg>-H:+TraceClassInitialization</arg>
+                                <arg>-H:TraceClassInitialization=true</arg>
                                 <arg>--no-fallback -H:DashboardDump=dumpfileoversized -H:+DashboardAll
                                     --initialize-at-build-time
                                 </arg>
