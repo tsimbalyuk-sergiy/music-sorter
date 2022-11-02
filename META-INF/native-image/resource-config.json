@@ -1,13 +1,34 @@
 {
-  "resources": [
-    {
-      "pattern": "META-INF/services/org.tinylog.provider.LoggingProvider"
+    "resources" : {
+        "includes" : [
+            {
+                "pattern" : "\\QMETA-INF/services/org.jline.terminal.spi.JansiSupport\\E"
+            },
+            {
+                "pattern" : "\\QMETA-INF/services/org.jline.terminal.spi.JnaSupport\\E"
+            },
+            {
+                "pattern" : "\\QMETA-INF/services/org.tinylog.configuration.ConfigurationLoader\\E"
+            },
+            {
+                "pattern" : "\\QMETA-INF/services/org.tinylog.provider.LoggingProvider\\E"
+            },
+            {
+                "pattern" : "\\QMETA-INF/services/org.tinylog.throwable.ThrowableFilter\\E"
+            },
+            {
+                "pattern" : "\\QMETA-INF/services/org.tinylog.writers.Writer\\E"
+            },
+            {
+                "pattern" : "\\Qorg/jline/utils/capabilities.txt\\E"
+            },
+            {
+                "pattern" : "\\Qorg/jline/utils/dumb.caps\\E"
+            },
+            {
+                "pattern" : "\\Qtinylog.properties\\E"
+            }
+        ]
     },
-    {
-      "pattern": "META-INF/services/org.tinylog.writers.Writer"
-    },
-    {
-      "pattern": "tinylog.properties"
-    }
-  ]
+    "bundles" : []
 }
