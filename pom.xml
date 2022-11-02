@@ -245,7 +245,7 @@
                             <fallback>false</fallback>
                             <buildArgs combine.children="append">
                                 <arg>-H:DashboardDump=fortune -H:+DashboardAll</arg>
-                                <arg>-H:+BitcodeOptimizations</arg>
+                                <arg>-H:CompilerBackend=llvm -H:+BitcodeOptimizations</arg>
                                 <arg>-H:TraceClassInitialization=true</arg>
                                 <arg>--no-fallback -H:DashboardDump=dumpfileoversized -H:+DashboardAll
                                     --initialize-at-build-time
