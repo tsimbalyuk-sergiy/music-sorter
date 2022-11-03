@@ -72,17 +72,15 @@ public class PropertiesService {
     public AppProperties getProperties() {
         if (!this.initProperties()) {
             error("Error loading properties");
-            System.exit(-1);
+            throw new UnsupportedOperationException("Error loading properties");
         } else {
-            return AppProperties.builder()
-                    .sourceFolder(this.sourceFolderValue)
-                    .targetFolder(this.targetFolderValue)
-                    .liveReleasesPatterns(this.liveReleasesPatterns)
-                    .skipLiveReleases(this.skipLiveReleases)
-                    .sortByArtist(this.sortByArtist)
-                    .build();
+            return new AppProperties(
+                    this.sourceFolderValue,
+                    this.targetFolderValue,
+                    this.sortByArtist,
+                    this.skipLiveReleases,
+                    this.liveReleasesPatterns);
         }
-        return null;
     }
 
     private void createPropertiesExample() {

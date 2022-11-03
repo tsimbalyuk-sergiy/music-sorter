@@ -26,7 +26,8 @@ import java.util.stream.Stream;
 
 public class FileService {
 
-    private static FileService fileServiceInstance;
+    private static final ThreadLocal<FileService> fileServiceInstance = new ThreadLocal<>();
+
     private FileService() {}
 
     private static boolean isNotLiveRelease(final String folderName, final AppProperties properties) {
@@ -57,10 +58,18 @@ public class FileService {
     }
 
     public static FileService getInstance() {
-        if (fileServiceInstance == null) {
-            fileServiceInstance = new FileService();
+        if (fileServiceInstance.get() == null) {
+            synchronized (FileService.class) { // declare a private static Object to use for mutex
+                if (fileServiceInstance.get() == null) {
+                    fileServiceInstance.set(new FileService());
+                }
+            }
         }
-        return fileServiceInstance;
+        return fileServiceInstance.get();
+    }
+
+    public static void disposeInstance() {
+        fileServiceInstance.remove();
     }
 
     public List<String> listFiles(final String folderName, final String glob) {
@@ -93,7 +102,7 @@ public class FileService {
     private void moveRelease(final String sourceDirectory, final AppProperties properties) {
         final var source = new File(sourceDirectory);
         final var metadata = AudioFileService.getInstance().getMetadata(sourceDirectory);
-
+        AudioFileService.getInstance().disposeInstance();
         final var outWithFormat = properties.targetFolder() + File.separator + metadata.format();
         final var outWithFormatDir = new File(outWithFormat);
         if (!outWithFormatDir.exists()) {
@@ -124,17 +133,20 @@ public class FileService {
 
     private Set<String> listAlbums() {
         return Try.withResources(() -> Files.walk(
-                        Paths.get(PropertiesService.getInstance().getProperties().sourceFolder()), Integer.MAX_VALUE))
+                        Paths.get(
+                                PropertiesService.getInstance().getProperties().sourceFolder()),
+                        Integer.MAX_VALUE))
                 .of(stream -> {
                     final var dirs = stream.parallel().filter(IS_MUSIC_FILE).collect(Collectors.toSet()).stream()
                             .parallel()
-                            .map(o -> o.getParent().toString())
+                            .map(path -> path.getParent().toString())
                             .collect(Collectors.toSet());
                     if (PropertiesService.getInstance().getProperties().skipLiveReleases()) {
                         return dirs.stream()
                                 .parallel()
                                 .filter(folderName -> FileService.isNotLiveRelease(
-                                        folderName, PropertiesService.getInstance().getProperties()))
+                                        folderName,
+                                        PropertiesService.getInstance().getProperties()))
                                 .collect(Collectors.toSet());
                     } else {
                         return dirs;
@@ -156,11 +168,12 @@ public class FileService {
         }
 
         info("folders list created. size: {}", folderList.size());
-        final var result = this.moveReleases(folderList, PropertiesService.getInstance().getProperties());
+        final var result =
+                this.moveReleases(folderList, PropertiesService.getInstance().getProperties());
         if (result) {
             info("Finished. Cleaning empty directories ...");
             CleanUpService.getInstance().cleanUpParentDirectory();
-            System.exit(0);
+            CleanUpService.disposeInstance();
         }
     }
 

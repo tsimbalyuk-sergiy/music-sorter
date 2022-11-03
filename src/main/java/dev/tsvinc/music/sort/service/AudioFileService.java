@@ -28,8 +28,18 @@ import org.jaudiotagger.tag.reference.GenreTypes;
 
 public class AudioFileService {
 
-    private static AudioFileService audioFileServiceInstance;
+    private static final ThreadLocal<AudioFileService> audioFileServiceInstance = new ThreadLocal<>();
 
+    public static AudioFileService getInstance() {
+        if (audioFileServiceInstance.get() == null) {
+            synchronized (AudioFileService.class) {
+                if (audioFileServiceInstance.get() == null) {
+                    audioFileServiceInstance.set(new AudioFileService());
+                }
+            }
+        }
+        return audioFileServiceInstance.get();
+    }
     private AudioFileService() {}
 
     static void checkGenre(
@@ -182,11 +192,8 @@ public class AudioFileService {
                 .onFailure(e -> error("error reading file: {}\n{}", musicFile.getName(), e.getMessage(), e));
     }
 
-    public static AudioFileService getInstance() {
-        if (audioFileServiceInstance == null) {
-            audioFileServiceInstance = new AudioFileService();
-        }
-        return audioFileServiceInstance;
+    public void disposeInstance() {
+        audioFileServiceInstance.remove();
     }
 
     public Metadata getMetadata(final String path) {
@@ -231,7 +238,7 @@ public class AudioFileService {
                     listing.fileList().size(),
                     false);
         } else {
-            return Metadata.builder().invalid(true).build();
+            return new Metadata(null, null, null, 0, 0, true);
         }
     }
 }

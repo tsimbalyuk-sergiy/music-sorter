@@ -10,5 +10,6 @@ public class App {
         LogManager.getLogManager().getLogger("").setLevel(java.util.logging.Level.OFF);
         Logger.info("Starting application ...");
         FileService.getInstance().processDirectories();
+        FileService.disposeInstance();
     }
 }

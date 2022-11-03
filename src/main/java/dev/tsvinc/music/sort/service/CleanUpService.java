@@ -13,7 +13,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class CleanUpService {
 
-    private static CleanUpService cleanUpServiceInstance;
+    private static final ThreadLocal<CleanUpService> cleanUpServiceInstance = new ThreadLocal<>();
+
+    public static void disposeInstance() {
+        cleanUpServiceInstance.remove();
+    }
 
     private CleanUpService() {}
 
@@ -26,13 +30,6 @@ public class CleanUpService {
 
     private static void deleteEachEmptyDirectory(final AtomicReference<List<Path>> listOfEmptyDirectories) {
         listOfEmptyDirectories.get().stream().parallel().forEach(CleanUpService::safelyDeleteDirectory);
-    }
-
-    public static CleanUpService getInstance() {
-        if (cleanUpServiceInstance == null) {
-            cleanUpServiceInstance = new CleanUpService();
-        }
-        return cleanUpServiceInstance;
     }
 
     private static List<Path> getListOfEmptyDirectories(final Path directory) {
@@ -52,6 +49,17 @@ public class CleanUpService {
         } catch (final IOException ioe) {
             error("Error deleting folder: {} {}\n{}", dir, ioe.getMessage(), ioe);
         }
+    }
+
+    public static CleanUpService getInstance() {
+        if (cleanUpServiceInstance.get() == null) {
+            synchronized (CleanUpService.class) { // declare a private static Object to use for mutex
+                if (cleanUpServiceInstance.get() == null) {
+                    cleanUpServiceInstance.set(new CleanUpService());
+                }
+            }
+        }
+        return cleanUpServiceInstance.get();
     }
 
     private void logErrorWhileWalkingDirectory(final Throwable e) {
