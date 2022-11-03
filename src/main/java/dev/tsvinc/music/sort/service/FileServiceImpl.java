@@ -50,7 +50,7 @@ public class FileServiceImpl implements FileService {
     private static ProgressBar buildProgressBar(final Set<String> folderList) {
         return new ProgressBarBuilder()
                 .setInitialMax(folderList.size())
-                .setStyle(ProgressBarStyle.COLORFUL_UNICODE_BLOCK)
+                .setStyle(ProgressBarStyle.ASCII)
                 .setTaskName("Working ...")
                 .showSpeed()
                 .build();
