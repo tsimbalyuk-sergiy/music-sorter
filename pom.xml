@@ -240,9 +240,8 @@
                             <buildArgs combine.children="append">
                                 <arg>-H:DashboardDump=fortune -H:+DashboardAll -H:+ReportExceptionStackTraces</arg>
                                 <arg>-H:TraceClassInitialization=true</arg>
-                                <arg>--no-fallback --initialize-at-run-time --link-at-build-time
-                                    --report-unsupported-elements-at-runtime
-                                </arg>
+                                <arg>--no-fallback --initialize-at-run-time --link-at-build-time</arg>
+                                <arg>--report-unsupported-elements-at-runtime</arg>
                                 <!--                                <arg>-H:CompilerBackend=llvm -H:+BitcodeOptimizations</arg>-->
                             </buildArgs>
                             <agent>

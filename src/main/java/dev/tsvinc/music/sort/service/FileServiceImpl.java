@@ -1,19 +1,12 @@
 package dev.tsvinc.music.sort.service;
 
-import static dev.tsvinc.music.sort.util.Constants.CHECKSUM;
-import static dev.tsvinc.music.sort.util.Constants.FLAC;
-import static dev.tsvinc.music.sort.util.Constants.FLAC_FORMAT;
-import static dev.tsvinc.music.sort.util.Constants.MP3;
-import static dev.tsvinc.music.sort.util.Constants.MP_3_FORMAT;
-import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
-import static dev.tsvinc.music.sort.util.Predicates.IS_MUSIC_FILE;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static org.tinylog.Logger.error;
-import static org.tinylog.Logger.info;
-
 import dev.tsvinc.music.sort.domain.AppProperties;
 import dev.tsvinc.music.sort.domain.ListingWithFormat;
 import io.vavr.control.Try;
+import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarBuilder;
+import me.tongfei.progressbar.ProgressBarStyle;
+import javax.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,11 +20,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.inject.Inject;
-import me.tongfei.progressbar.ProgressBar;
-import me.tongfei.progressbar.ProgressBarBuilder;
-import me.tongfei.progressbar.ProgressBarStyle;
+
+import static dev.tsvinc.music.sort.util.Constants.CHECKSUM;
+import static dev.tsvinc.music.sort.util.Constants.FLAC;
+import static dev.tsvinc.music.sort.util.Constants.FLAC_FORMAT;
+import static dev.tsvinc.music.sort.util.Constants.MP3;
+import static dev.tsvinc.music.sort.util.Constants.MP_3_FORMAT;
+import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
+import static dev.tsvinc.music.sort.util.Predicates.IS_MUSIC_FILE;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.tinylog.Logger.error;
+import static org.tinylog.Logger.info;
 
 public class FileServiceImpl implements FileService {
 
@@ -82,6 +81,12 @@ public class FileServiceImpl implements FileService {
 
     private static List<String> listFiles(final String folderName, final String glob) {
         final List<String> resultList = new ArrayList<>(100);
+        /*
+        TODO
+        Files.list(Paths.get(folderName)).parallel()
+                .filter(IS_MUSIC_FILE)
+                .filter(path -> path.toString().endsWith(glob))
+                .forEach(path -> resultList.add(path.toString()));*/
         try (final var stream = Files.newDirectoryStream(Paths.get(folderName), glob)) {
             stream.forEach(o -> resultList.add(folderName + File.separator + o.getFileName()));
         } catch (final IOException e) {
@@ -104,14 +109,34 @@ public class FileServiceImpl implements FileService {
                 .get();
     }
 
+    private static void verifyCheckSum(final File source) {
+        final var paths = Try.withResources(() -> Files.list(source.toPath()))
+                .of(pathStream -> pathStream.parallel().toList())
+                .get();
+
+        final var sfv =
+                paths.parallelStream().filter(path -> path.endsWith("sfv")).findFirst();
+
+        final var strings = Try.of(() -> Files.readAllLines(sfv.orElseThrow(FileNotFoundException::new)))
+                .onFailure(t -> error("Error reading lines: {}, {}", sfv.toString(), t.getMessage(), t))
+                .get();
+        final var collect = strings.parallelStream()
+                .map(s -> s.split(" "))
+                .collect(Collectors.toMap(res -> res[0], res -> 1 < res.length ? res[1] : ""));
+
+        for (final var path : paths) {
+            // TODO calc crc, get by key from map, compare calculated crc and crc from sfv file
+        }
+    }
+
     private void moveRelease(final String sourceDirectory, final AppProperties properties) {
         final var source = new File(sourceDirectory);
         final var metadata = this.audioFileService.getMetadata(sourceDirectory);
-        var containsCheckSum = false;
-        if (FileServiceImpl.hasCheckSum(source).containsKey(CHECKSUM)) {
-            containsCheckSum = true;
-            FileServiceImpl.verifyCheckSum(source); // TODO
-        }
+//        var containsCheckSum = false;
+//        if (FileServiceImpl.hasCheckSum(source).containsKey(CHECKSUM)) {
+//            containsCheckSum = true;
+//            FileServiceImpl.verifyCheckSum(source); // TODO
+//        }
 
         /*private String releaseName;
         private long releaseSize;
@@ -153,26 +178,6 @@ public class FileServiceImpl implements FileService {
         FileServiceImpl.moveDirectory(sourceDirectory, source, destination);
     }
 
-    private static void verifyCheckSum(final File source) {
-        final var paths = Try.withResources(() -> Files.list(source.toPath()))
-                .of(Stream::toList)
-                .get();
-
-        final var sfv =
-                paths.parallelStream().filter(path -> path.endsWith("sfv")).findFirst();
-
-        final var strings = Try.of(() -> Files.readAllLines(sfv.orElseThrow(FileNotFoundException::new)))
-                .onFailure(t -> error("Error reading lines: {}, {}", sfv.toString(), t.getMessage(), t))
-                .get();
-        final var collect = strings.parallelStream()
-                .map(s -> s.split(" "))
-                .collect(Collectors.toMap(res -> res[0], res -> 1 < res.length ? res[1] : ""));
-
-        for (final var path : paths) {
-            // TODO calc crc, get by key from map, compare calculated crc and crc from sfv file
-        }
-    }
-
     private static Map<?, ?> hasCheckSum(final File source) {
         final var sfv = Try.withResources(() -> Files.list(source.toPath()))
                 .of(pathStream -> pathStream
@@ -191,7 +196,7 @@ public class FileServiceImpl implements FileService {
         return Try.withResources(() -> Files.walk(
                         Paths.get(this.propertiesService.getProperties().sourceFolder()), Integer.MAX_VALUE))
                 .of(stream -> {
-                    final var dirs = stream.filter(IS_MUSIC_FILE).collect(Collectors.toSet()).stream()
+                    final var dirs = stream.parallel().filter(IS_MUSIC_FILE).collect(Collectors.toSet()).stream()
                             .map(o -> o.getParent().toString())
                             .collect(Collectors.toSet());
                     if (this.propertiesService.getProperties().skipLiveReleases()) {
