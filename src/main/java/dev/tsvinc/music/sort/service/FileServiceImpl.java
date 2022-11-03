@@ -90,7 +90,7 @@ public class FileServiceImpl implements FileService {
         try (final var stream = Files.newDirectoryStream(Paths.get(folderName), glob)) {
             stream.forEach(o -> resultList.add(folderName + File.separator + o.getFileName()));
         } catch (final IOException e) {
-            error("Error listing directory: {} with a filter: {}, {}", folderName, FLAC, e.getMessage(), e);
+            error("Error listing directory: {} with a filter: {}, {}", folderName, glob, e.getMessage(), e);
         }
         return resultList;
     }
