@@ -3,26 +3,23 @@ package dev.tsvinc.music.sort.service;
 import dev.tsvinc.music.sort.domain.AppProperties;
 import dev.tsvinc.music.sort.domain.ListingWithFormat;
 import io.vavr.control.Try;
+
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static dev.tsvinc.music.sort.util.Constants.CHECKSUM;
-import static dev.tsvinc.music.sort.util.Constants.FLAC;
 import static dev.tsvinc.music.sort.util.Constants.FLAC_FORMAT;
-import static dev.tsvinc.music.sort.util.Constants.MP3;
-import static dev.tsvinc.music.sort.util.Constants.MP_3_FORMAT;
+import static dev.tsvinc.music.sort.util.Constants.MP3_FORMAT;
 import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
 import static dev.tsvinc.music.sort.util.Predicates.IS_MUSIC_FILE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -43,16 +40,6 @@ public class FileServiceImpl implements FileService {
     private static boolean isNotLiveRelease(final String folderName, final AppProperties properties) {
         return properties.liveReleasesPatterns().parallelStream().noneMatch(folderName::contains);
     }
-
-    //    private static ProgressBar buildProgressBar(final Set<String> folderList) {
-    //        return new ProgressBarBuilder()
-    //                .setInitialMax(folderList.size())
-    //                .setStyle(ProgressBarStyle.ASCII)
-    //                .setTaskName("Working ...")
-    //                .showSpeed()
-    //                .setConsumer(new DelegatingProgressBarConsumer(Logger::info))
-    //                .build();
-    //    }
 
     private static void moveDirectory(final String sourceDirectory, final File source, final File destination) {
         Try.withResources(() -> Files.newDirectoryStream(Paths.get(sourceDirectory)))
@@ -77,20 +64,16 @@ public class FileServiceImpl implements FileService {
                 .onFailure(e -> error("Failed to create a directory: {}", e.getMessage(), e));
     }
 
-    private static List<String> listFiles(final String folderName, final String glob) {
-        final List<String> resultList = new ArrayList<>(100);
-        /*
-        TODO
-        Files.list(Paths.get(folderName)).parallel()
-                .filter(IS_MUSIC_FILE)
-                .filter(path -> path.toString().endsWith(glob))
-                .forEach(path -> resultList.add(path.toString()));*/
-        try (final var stream = Files.newDirectoryStream(Paths.get(folderName), glob)) {
-            stream.forEach(o -> resultList.add(folderName + File.separator + o.getFileName()));
+    public List<String> listFiles(final String folderName, final String glob) {
+        try (Stream<Path> list = Files.walk(Paths.get(folderName))) {
+            return list.filter(Files::isRegularFile)
+                    .filter(path -> path.getFileName().toString().endsWith(glob))
+                    .map(path -> folderName + File.separator + path.getFileName())
+                    .toList();
         } catch (final IOException e) {
             error("Error listing directory: {} with a filter: {}, {}", folderName, glob, e.getMessage(), e);
         }
-        return resultList;
+        return Collections.emptyList();
     }
 
     private boolean moveReleases(final Set<String> folderList, final AppProperties properties) {
@@ -107,46 +90,9 @@ public class FileServiceImpl implements FileService {
                 .get();
     }
 
-    //    private static void verifyCheckSum(final File source) {
-    //        final var paths = Try.withResources(() -> Files.list(source.toPath()))
-    //                .of(pathStream -> pathStream.parallel().toList())
-    //                .get();
-    //
-    //        final var sfv =
-    //                paths.parallelStream().filter(path -> path.endsWith("sfv")).findFirst();
-    //
-    //        final var strings = Try.of(() -> Files.readAllLines(sfv.orElseThrow(FileNotFoundException::new)))
-    //                .onFailure(t -> error("Error reading lines: {}, {}", sfv.toString(), t.getMessage(), t))
-    //                .get();
-    //        final var collect = strings.parallelStream()
-    //                .map(s -> s.split(" "))
-    //                .collect(Collectors.toMap(res -> res[0], res -> 1 < res.length ? res[1] : ""));
-    //
-    //        for (final var path : paths) {
-    //            // TODO calc crc, get by key from map, compare calculated crc and crc from sfv file
-    //        }
-    //    }
-
     private void moveRelease(final String sourceDirectory, final AppProperties properties) {
         final var source = new File(sourceDirectory);
         final var metadata = this.audioFileService.getMetadata(sourceDirectory);
-        //        var containsCheckSum = false;
-        //        if (FileServiceImpl.hasCheckSum(source).containsKey(CHECKSUM)) {
-        //            containsCheckSum = true;
-        //            FileServiceImpl.verifyCheckSum(source); // TODO
-        //        }
-
-        /*private String releaseName;
-        private long releaseSize;
-        private boolean hasNfo;
-        private boolean hasChecksum;
-        private boolean checksumValid;*/
-
-        /*Release.builder()
-        .artist(metadata.getArtist())
-        .releaseName(source.getName())
-        .hasChecksum(containsCheckSum)
-        .build();*/
 
         final var outWithFormat = properties.targetFolder() + File.separator + metadata.format();
         final var outWithFormatDir = new File(outWithFormat);
@@ -174,20 +120,6 @@ public class FileServiceImpl implements FileService {
             FileServiceImpl.createDirectory(destination);
         }
         FileServiceImpl.moveDirectory(sourceDirectory, source, destination);
-    }
-
-    private static Map<?, ?> hasCheckSum(final File source) {
-        final var sfv = Try.withResources(() -> Files.list(source.toPath()))
-                .of(pathStream -> pathStream
-                        .filter(path -> path.getFileName().endsWith("sfv"))
-                        .toList())
-                .onFailure(throwable -> info("No Checksum file for {}", source.toString()))
-                .getOrElse(Collections.emptyList());
-        if (sfv.isEmpty()) {
-            return Collections.emptyMap();
-        } else {
-            return Map.of(CHECKSUM, sfv.get(0));
-        }
     }
 
     private Set<String> listAlbums() {
@@ -235,10 +167,10 @@ public class FileServiceImpl implements FileService {
     @Override
     public ListingWithFormat createFileListForEachDir(final String folderName) {
         /*creating filter for musical files*/
-        final var resultMp3 = FileServiceImpl.listFiles(folderName, MP3);
-        final var resultFlac = FileServiceImpl.listFiles(folderName, FLAC);
+        final var resultMp3 = listFiles(folderName, MP3_FORMAT);
+        final var resultFlac = listFiles(folderName, FLAC_FORMAT);
         if (!resultMp3.isEmpty()) {
-            return new ListingWithFormat(MP_3_FORMAT, resultMp3);
+            return new ListingWithFormat(MP3_FORMAT, resultMp3);
         } else if (!resultFlac.isEmpty()) {
             return new ListingWithFormat(FLAC_FORMAT, resultFlac);
         } else {
