@@ -59,11 +59,11 @@
             <artifactId>jul-tinylog</artifactId>
             <version>2.5.0</version>
         </dependency>
-        <dependency>
-            <groupId>me.tongfei</groupId>
-            <artifactId>progressbar</artifactId>
-            <version>0.9.5</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>me.tongfei</groupId>-->
+        <!--            <artifactId>progressbar</artifactId>-->
+        <!--            <version>0.9.5</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>io.vavr</groupId>

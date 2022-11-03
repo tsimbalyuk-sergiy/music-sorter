@@ -3,14 +3,9 @@ package dev.tsvinc.music.sort.service;
 import dev.tsvinc.music.sort.domain.AppProperties;
 import dev.tsvinc.music.sort.domain.ListingWithFormat;
 import io.vavr.control.Try;
-import me.tongfei.progressbar.DelegatingProgressBarConsumer;
-import me.tongfei.progressbar.ProgressBar;
-import me.tongfei.progressbar.ProgressBarBuilder;
-import me.tongfei.progressbar.ProgressBarStyle;
 import org.tinylog.Logger;
 import javax.inject.Inject;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -49,15 +44,15 @@ public class FileServiceImpl implements FileService {
         return properties.liveReleasesPatterns().parallelStream().noneMatch(folderName::contains);
     }
 
-    private static ProgressBar buildProgressBar(final Set<String> folderList) {
-        return new ProgressBarBuilder()
-                .setInitialMax(folderList.size())
-                .setStyle(ProgressBarStyle.ASCII)
-                .setTaskName("Working ...")
-                .showSpeed()
-                .setConsumer(new DelegatingProgressBarConsumer(Logger::info))
-                .build();
-    }
+    //    private static ProgressBar buildProgressBar(final Set<String> folderList) {
+    //        return new ProgressBarBuilder()
+    //                .setInitialMax(folderList.size())
+    //                .setStyle(ProgressBarStyle.ASCII)
+    //                .setTaskName("Working ...")
+    //                .showSpeed()
+    //                .setConsumer(new DelegatingProgressBarConsumer(Logger::info))
+    //                .build();
+    //    }
 
     private static void moveDirectory(final String sourceDirectory, final File source, final File destination) {
         Try.withResources(() -> Files.newDirectoryStream(Paths.get(sourceDirectory)))
@@ -98,12 +93,11 @@ public class FileServiceImpl implements FileService {
         return resultList;
     }
 
-    private boolean tryWithProgressBar(final Set<String> folderList, final AppProperties properties) {
-        return Try.withResources(() -> FileServiceImpl.buildProgressBar(folderList))
-                .of(progressBar -> {
-                    folderList.forEach(release -> {
+    private boolean moveReleases(final Set<String> folderList, final AppProperties properties) {
+        return Try.of(() -> {
+                    folderList.parallelStream().forEach(release -> {
                         this.moveRelease(release, properties);
-                        progressBar.step();
+                        Logger.info("moved: {}", release);
                     });
                     return true;
                 })
@@ -112,25 +106,25 @@ public class FileServiceImpl implements FileService {
                 .get();
     }
 
-    private static void verifyCheckSum(final File source) {
-        final var paths = Try.withResources(() -> Files.list(source.toPath()))
-                .of(pathStream -> pathStream.parallel().toList())
-                .get();
-
-        final var sfv =
-                paths.parallelStream().filter(path -> path.endsWith("sfv")).findFirst();
-
-        final var strings = Try.of(() -> Files.readAllLines(sfv.orElseThrow(FileNotFoundException::new)))
-                .onFailure(t -> error("Error reading lines: {}, {}", sfv.toString(), t.getMessage(), t))
-                .get();
-        final var collect = strings.parallelStream()
-                .map(s -> s.split(" "))
-                .collect(Collectors.toMap(res -> res[0], res -> 1 < res.length ? res[1] : ""));
-
-        for (final var path : paths) {
-            // TODO calc crc, get by key from map, compare calculated crc and crc from sfv file
-        }
-    }
+    //    private static void verifyCheckSum(final File source) {
+    //        final var paths = Try.withResources(() -> Files.list(source.toPath()))
+    //                .of(pathStream -> pathStream.parallel().toList())
+    //                .get();
+    //
+    //        final var sfv =
+    //                paths.parallelStream().filter(path -> path.endsWith("sfv")).findFirst();
+    //
+    //        final var strings = Try.of(() -> Files.readAllLines(sfv.orElseThrow(FileNotFoundException::new)))
+    //                .onFailure(t -> error("Error reading lines: {}, {}", sfv.toString(), t.getMessage(), t))
+    //                .get();
+    //        final var collect = strings.parallelStream()
+    //                .map(s -> s.split(" "))
+    //                .collect(Collectors.toMap(res -> res[0], res -> 1 < res.length ? res[1] : ""));
+    //
+    //        for (final var path : paths) {
+    //            // TODO calc crc, get by key from map, compare calculated crc and crc from sfv file
+    //        }
+    //    }
 
     private void moveRelease(final String sourceDirectory, final AppProperties properties) {
         final var source = new File(sourceDirectory);
@@ -228,7 +222,7 @@ public class FileServiceImpl implements FileService {
         }
 
         info("folders list created. size: {}", folderList.size());
-        final var result = this.tryWithProgressBar(folderList, this.propertiesService.getProperties());
+        final var result = this.moveReleases(folderList, this.propertiesService.getProperties());
         if (result) {
             info("Finished. Cleaning empty directories ...");
             this.cleanUpService.cleanUpParentDirectory();
