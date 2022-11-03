@@ -10,7 +10,7 @@
     <url>https://tsvinc.dev</url>
 
     <properties>
-        <native.maven.plugin.version>0.9.16</native.maven.plugin.version>
+<!--        <native.maven.plugin.version>0.9.16</native.maven.plugin.version>-->
         <junit.jupiter.version>5.8.1</junit.jupiter.version>
 
         <jdk.version>17</jdk.version>
@@ -54,43 +54,15 @@
             <artifactId>tinylog-impl</artifactId>
             <version>2.5.0</version>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.tinylog</groupId>-->
-        <!--            <artifactId>jul-tinylog</artifactId>-->
-        <!--            <version>2.5.0</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>me.tongfei</groupId>-->
-        <!--            <artifactId>progressbar</artifactId>-->
-        <!--            <version>0.9.5</version>-->
-        <!--        </dependency>-->
-
         <dependency>
             <groupId>io.vavr</groupId>
             <artifactId>vavr</artifactId>
             <version>0.10.4</version>
         </dependency>
         <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>5.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.9.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -193,6 +165,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.4.2</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -223,7 +196,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>${native.maven.plugin.version}</version>
+                        <version>0.9.16</version>
                         <extensions>true</extensions>
                         <executions>
                             <execution>

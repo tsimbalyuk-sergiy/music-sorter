@@ -1,20 +1,20 @@
 package dev.tsvinc.music.sort.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import dev.tsvinc.music.sort.util.Constants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-class FileServiceImplTest {
+class FileServiceTest {
 
     private FileService fileService;
 
     @BeforeEach
     void setUp() {
-        fileService = new FileServiceImpl();
+        fileService = FileService.getInstance();
     }
 
     @Test
