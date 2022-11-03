@@ -3,7 +3,6 @@ package dev.tsvinc.music.sort.service;
 import dev.tsvinc.music.sort.domain.AppProperties;
 import dev.tsvinc.music.sort.domain.ListingWithFormat;
 import io.vavr.control.Try;
-import org.tinylog.Logger;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import static dev.tsvinc.music.sort.util.Constants.CHECKSUM;
@@ -95,9 +95,10 @@ public class FileServiceImpl implements FileService {
 
     private boolean moveReleases(final Set<String> folderList, final AppProperties properties) {
         return Try.of(() -> {
+                    var folderListSize = new AtomicLong(folderList.size());
                     folderList.parallelStream().forEach(release -> {
                         this.moveRelease(release, properties);
-                        Logger.info("moved: {}", release);
+                        info("[folders left to process: {}]\tmoved: {}", folderListSize.decrementAndGet(), release);
                     });
                     return true;
                 })
