@@ -55,7 +55,6 @@ public class FileServiceImpl implements FileService {
                 .setStyle(ProgressBarStyle.ASCII)
                 .setTaskName("Working ...")
                 .showSpeed()
-                .continuousUpdate()
                 .setConsumer(new DelegatingProgressBarConsumer(Logger::info))
                 .build();
     }
