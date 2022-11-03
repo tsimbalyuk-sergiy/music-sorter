@@ -3,9 +3,11 @@ package dev.tsvinc.music.sort.service;
 import dev.tsvinc.music.sort.domain.AppProperties;
 import dev.tsvinc.music.sort.domain.ListingWithFormat;
 import io.vavr.control.Try;
+import me.tongfei.progressbar.DelegatingProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
 import me.tongfei.progressbar.ProgressBarStyle;
+import org.tinylog.Logger;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,6 +55,8 @@ public class FileServiceImpl implements FileService {
                 .setStyle(ProgressBarStyle.ASCII)
                 .setTaskName("Working ...")
                 .showSpeed()
+                .continuousUpdate()
+                .setConsumer(new DelegatingProgressBarConsumer(Logger::info))
                 .build();
     }
 
@@ -132,11 +136,11 @@ public class FileServiceImpl implements FileService {
     private void moveRelease(final String sourceDirectory, final AppProperties properties) {
         final var source = new File(sourceDirectory);
         final var metadata = this.audioFileService.getMetadata(sourceDirectory);
-//        var containsCheckSum = false;
-//        if (FileServiceImpl.hasCheckSum(source).containsKey(CHECKSUM)) {
-//            containsCheckSum = true;
-//            FileServiceImpl.verifyCheckSum(source); // TODO
-//        }
+        //        var containsCheckSum = false;
+        //        if (FileServiceImpl.hasCheckSum(source).containsKey(CHECKSUM)) {
+        //            containsCheckSum = true;
+        //            FileServiceImpl.verifyCheckSum(source); // TODO
+        //        }
 
         /*private String releaseName;
         private long releaseSize;
