@@ -1,8 +1,7 @@
 package dev.tsvinc.music.sort.domain;
 
-import lombok.Builder;
-
 import java.util.List;
+import lombok.Builder;
 
 public record AppProperties(
         String sourceFolder,

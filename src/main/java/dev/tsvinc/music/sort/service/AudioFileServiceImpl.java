@@ -1,10 +1,16 @@
 package dev.tsvinc.music.sort.service;
 
-import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
-import static org.tinylog.Logger.error;
-
 import dev.tsvinc.music.sort.domain.Metadata;
 import io.vavr.control.Try;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.TagException;
+import org.jaudiotagger.tag.reference.GenreTypes;
+
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,14 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-import javax.inject.Inject;
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.TagException;
-import org.jaudiotagger.tag.reference.GenreTypes;
+
+import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
+import static org.tinylog.Logger.error;
 
 public class AudioFileServiceImpl implements AudioFileService {
 
@@ -106,7 +107,7 @@ public class AudioFileServiceImpl implements AudioFileService {
         return sourceString;
     }
 
-    private static String checkGenreForPredictedMatches(String genre) {
+    public static String checkGenreForPredictedMatches(String genre) {
         if (Pattern.compile("hip.*hop").matcher(genre.toLowerCase()).find()) {
             genre = "Hip-Hop";
         } else if (Pattern.compile("(alt.*rock)").matcher(genre.toLowerCase()).find()) {
