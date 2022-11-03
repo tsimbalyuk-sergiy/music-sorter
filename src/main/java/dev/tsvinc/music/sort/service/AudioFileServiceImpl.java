@@ -138,8 +138,10 @@ public class AudioFileServiceImpl implements AudioFileService {
             counter++;
             stringsCount.put(string, counter);
         }
-        final var mostRepeated =
-                stringsCount.entrySet().stream().max(Entry.comparingByValue()).orElse(null);
+        final var mostRepeated = stringsCount.entrySet().stream()
+                .parallel()
+                .max(Entry.comparingByValue())
+                .orElse(null);
         if (null != mostRepeated) {
             return mostRepeated.getKey();
         } else {

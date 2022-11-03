@@ -3,7 +3,6 @@ package dev.tsvinc.music.sort.service;
 import dev.tsvinc.music.sort.domain.AppProperties;
 import dev.tsvinc.music.sort.domain.ListingWithFormat;
 import io.vavr.control.Try;
-
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +65,8 @@ public class FileServiceImpl implements FileService {
 
     public List<String> listFiles(final String folderName, final String glob) {
         try (Stream<Path> list = Files.walk(Paths.get(folderName))) {
-            return list.filter(Files::isRegularFile)
+            return list.parallel()
+                    .filter(Files::isRegularFile)
                     .filter(path -> path.getFileName().toString().endsWith(glob))
                     .map(path -> folderName + File.separator + path.getFileName())
                     .toList();
@@ -127,10 +127,11 @@ public class FileServiceImpl implements FileService {
                         Paths.get(this.propertiesService.getProperties().sourceFolder()), Integer.MAX_VALUE))
                 .of(stream -> {
                     final var dirs = stream.parallel().filter(IS_MUSIC_FILE).collect(Collectors.toSet()).stream()
+                            .parallel()
                             .map(o -> o.getParent().toString())
                             .collect(Collectors.toSet());
                     if (this.propertiesService.getProperties().skipLiveReleases()) {
-                        return dirs.stream()
+                        return dirs.stream().parallel()
                                 .filter(folderName -> FileServiceImpl.isNotLiveRelease(
                                         folderName, this.propertiesService.getProperties()))
                                 .collect(Collectors.toSet());
