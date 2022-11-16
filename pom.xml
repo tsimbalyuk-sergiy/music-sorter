@@ -216,6 +216,7 @@
                         </executions>
                         <configuration>
                             <fallback>false</fallback>
+
                             <buildArgs combine.children="append">
                                 <arg>-H:DashboardDump=fortune -H:+DashboardAll</arg>
                                 <arg>-H:+ReportExceptionStackTraces</arg>
