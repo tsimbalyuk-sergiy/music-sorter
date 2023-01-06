@@ -238,7 +238,7 @@ public class AudioFileService {
                     listing.fileList().size(),
                     false);
         } else {
-            return new Metadata(null, null, null, 0, 0, true);
+            return new Metadata("UNKNOWN", "unkn", null, 0, 0, true);
         }
     }
 }
