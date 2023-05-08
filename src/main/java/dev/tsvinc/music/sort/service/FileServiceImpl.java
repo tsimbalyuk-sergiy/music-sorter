@@ -139,7 +139,7 @@ public class FileServiceImpl implements FileService {
                             null != metadata.genre() ? metadata.genre() : UNDEFINED,
                             null != metadata.artist() ? metadata.artist().trim() : UNDEFINED)
                     .toString();
-        } else if (!metadata.genre().isBlank()) {
+        } else if (metadata.genre() != null && !metadata.genre().isBlank()) {
             outWithGenreAndFormat =
                     Path.of(outWithFormat, metadata.genre().strip()).toString();
         } else {
