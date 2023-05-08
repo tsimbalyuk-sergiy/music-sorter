@@ -35,6 +35,8 @@ import static org.tinylog.Logger.info;
 
 public class FileServiceImpl implements FileService {
 
+    public static final String UNDEFINED = "UNDEFINED";
+
     @Inject
     private PropertiesService propertiesService;
 
@@ -133,7 +135,9 @@ public class FileServiceImpl implements FileService {
         final String outWithGenreAndFormat;
         if (properties.sortByArtist()) {
             outWithGenreAndFormat = Path.of(
-                            outWithFormat, metadata.genre(), metadata.artist().trim())
+                            outWithFormat,
+                            null != metadata.genre() ? metadata.genre() : UNDEFINED,
+                            null != metadata.artist() ? metadata.artist().trim() : UNDEFINED)
                     .toString();
         } else if (!metadata.genre().isBlank()) {
             outWithGenreAndFormat =
