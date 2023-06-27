@@ -9,7 +9,9 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.reference.GenreTypes;
-import javax.inject.Inject;
+
+import com.google.inject.Inject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

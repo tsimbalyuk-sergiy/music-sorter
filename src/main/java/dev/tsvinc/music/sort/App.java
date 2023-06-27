@@ -1,10 +1,10 @@
 package dev.tsvinc.music.sort;
 
 import com.google.inject.Guice;
+import com.google.inject.Inject;
+
 import dev.tsvinc.music.sort.service.ApplicationModules;
 import dev.tsvinc.music.sort.service.FileService;
-
-import javax.inject.Inject;
 
 public class App {
 
