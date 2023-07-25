@@ -1,16 +1,7 @@
 package dev.tsvinc.music.sort.service;
 
-import static dev.tsvinc.music.sort.util.Constants.ERROR_CREATING_DIRECTORY;
-import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_PATTERNS;
-import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_PATTERNS_DEFAULT;
-import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_SKIP;
-import static dev.tsvinc.music.sort.util.Constants.SORT_BY_ARTIST;
-import static dev.tsvinc.music.sort.util.Constants.SOURCE_FOLDER;
-import static dev.tsvinc.music.sort.util.Constants.TARGET_FOLDER;
-import static org.tinylog.Logger.error;
-import static org.tinylog.Logger.info;
-
 import dev.tsvinc.music.sort.domain.AppProperties;
+import dev.tsvinc.music.sort.util.LiveReleasesPatterns;
 import io.vavr.control.Try;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +14,15 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+
+import static dev.tsvinc.music.sort.util.Constants.ERROR_CREATING_DIRECTORY;
+import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_PATTERNS;
+import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_SKIP;
+import static dev.tsvinc.music.sort.util.Constants.SORT_BY_ARTIST;
+import static dev.tsvinc.music.sort.util.Constants.SOURCE_FOLDER;
+import static dev.tsvinc.music.sort.util.Constants.TARGET_FOLDER;
+import static org.tinylog.Logger.error;
+import static org.tinylog.Logger.info;
 
 public class PropertiesServiceImpl implements PropertiesService {
 
@@ -41,12 +41,12 @@ public class PropertiesServiceImpl implements PropertiesService {
     @Override
     public boolean initProperties() {
         final var configPathExists = new File(PropertiesServiceImpl.CONFIG_PATH).exists();
-        final var appConfigPathExists = new File(PropertiesServiceImpl.APP_CONFIG_DIR_PATH).exists();
         if (!configPathExists) {
             Try.of(() -> Files.createDirectory(Paths.get(PropertiesServiceImpl.CONFIG_PATH)))
                     .onFailure(
                             e -> error(ERROR_CREATING_DIRECTORY, PropertiesServiceImpl.CONFIG_PATH, e.getMessage(), e));
         }
+        final var appConfigPathExists = new File(PropertiesServiceImpl.APP_CONFIG_DIR_PATH).exists();
         if (!appConfigPathExists) {
             Try.of(() -> Files.createDirectory(Paths.get(PropertiesServiceImpl.APP_CONFIG_DIR_PATH)))
                     .onFailure(e -> error(
@@ -64,27 +64,24 @@ public class PropertiesServiceImpl implements PropertiesService {
         if (!this.initProperties()) {
             error("Error loading properties");
             System.exit(-1);
-        } else {
-            return AppProperties.builder()
-                    .sourceFolder(this.sourceFolderValue)
-                    .targetFolder(this.targetFolderValue)
-                    .liveReleasesPatterns(this.liveReleasesPatterns)
-                    .skipLiveReleases(this.skipLiveReleases)
-                    .sortByArtist(this.sortByArtist)
-                    .build();
         }
-        return null;
+        return AppProperties.builder()
+                .sourceFolder(this.sourceFolderValue)
+                .targetFolder(this.targetFolderValue)
+                .liveReleasesPatterns(this.liveReleasesPatterns)
+                .skipLiveReleases(this.skipLiveReleases)
+                .sortByArtist(this.sortByArtist)
+                .build();
     }
 
     private void createPropertiesExample() {
-        Try.of(() -> {
+        Try.run(() -> {
                     Files.createFile(Paths.get(this.appPropertiesLocation));
                     Files.write(
                             Paths.get(this.appPropertiesLocation),
                             Arrays.asList("source=", "target="),
                             StandardCharsets.UTF_8,
                             StandardOpenOption.APPEND);
-                    return null;
                 })
                 .onFailure(e ->
                         error("Error writing to config file: {}, {}", this.appPropertiesLocation, e.getMessage(), e));
@@ -113,12 +110,14 @@ public class PropertiesServiceImpl implements PropertiesService {
             this.sortByArtist =
                     prop.containsKey(SORT_BY_ARTIST) && Boolean.parseBoolean(prop.getProperty(SORT_BY_ARTIST));
             if (this.skipLiveReleases && prop.containsKey(LIVE_RELEASES_PATTERNS)) {
-                this.liveReleasesPatterns = Arrays.asList(
-                        prop.get(LIVE_RELEASES_PATTERNS).toString().split(","));
+                this.liveReleasesPatterns =
+                        Arrays.asList(prop.getProperty(LIVE_RELEASES_PATTERNS).split(","));
             } else {
-                this.liveReleasesPatterns = LIVE_RELEASES_PATTERNS_DEFAULT;
+                this.liveReleasesPatterns = Arrays.stream(LiveReleasesPatterns.values())
+                        .map(LiveReleasesPatterns::getPattern)
+                        .toList();
                 info("\"live_releases_patterns\" option is empty. using defaults: ");
-                info("{}", LIVE_RELEASES_PATTERNS_DEFAULT);
+                info("{}", liveReleasesPatterns);
             }
         } catch (final IOException ex) {
             error("Error loading properties: {}", ex.getMessage(), ex);

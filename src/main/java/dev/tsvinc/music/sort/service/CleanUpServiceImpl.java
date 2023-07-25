@@ -1,7 +1,9 @@
 package dev.tsvinc.music.sort.service;
 
-import io.vavr.control.Try;
+import static org.tinylog.Logger.error;
 
+import com.google.inject.Inject;
+import io.vavr.control.Try;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,10 +11,6 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-
-import com.google.inject.Inject;
-
-import static org.tinylog.Logger.error;
 
 public class CleanUpServiceImpl implements CleanUpService {
     @Inject
@@ -26,17 +24,21 @@ public class CleanUpServiceImpl implements CleanUpService {
     }
 
     public void cleanUpParentDirectory() {
-        final var listOfEmptyDirectories = new AtomicReference<>(CleanUpServiceImpl.getListOfEmptyDirectories(
+        final var emptyDirsList = new AtomicReference<>(CleanUpServiceImpl.getListOfEmptyDirectories(
                 Paths.get(this.propertiesService.getProperties().sourceFolder())));
-        while (!listOfEmptyDirectories.get().isEmpty()) {
-            Try.of(() -> {
-                        CleanUpServiceImpl.deleteEachEmptyDirectory(listOfEmptyDirectories);
-                        listOfEmptyDirectories.set(CleanUpServiceImpl.getListOfEmptyDirectories(
-                                Paths.get(this.propertiesService.getProperties().sourceFolder())));
-                        return null;
-                    })
-                    .onFailure(this::logErrorWhileWalkingDirectory);
+
+        while (!emptyDirsList.get().isEmpty()) {
+            runOrLogError(emptyDirsList);
         }
+    }
+
+    private void runOrLogError(final AtomicReference<List<Path>> emptyDirsList) {
+        Try.run(() -> {
+                    CleanUpServiceImpl.deleteEachEmptyDirectory(emptyDirsList);
+                    emptyDirsList.set(CleanUpServiceImpl.getListOfEmptyDirectories(
+                            Paths.get(this.propertiesService.getProperties().sourceFolder())));
+                })
+                .onFailure(this::logErrorWhileWalkingDirectory);
     }
 
     private void logErrorWhileWalkingDirectory(final Throwable e) {
@@ -47,8 +49,8 @@ public class CleanUpServiceImpl implements CleanUpService {
                 e);
     }
 
-    private static void deleteEachEmptyDirectory(final AtomicReference<List<Path>> listOfEmptyDirectories) {
-        listOfEmptyDirectories.get().forEach(CleanUpServiceImpl::safelyDeleteDirectory);
+    private static void deleteEachEmptyDirectory(final AtomicReference<? extends List<Path>> emptyDirsList) {
+        emptyDirsList.get().forEach(CleanUpServiceImpl::safelyDeleteDirectory);
     }
 
     private static void safelyDeleteDirectory(final Path dir) {
