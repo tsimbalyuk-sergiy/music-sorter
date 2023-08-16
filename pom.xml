@@ -40,7 +40,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>32.1.1-jre</version>
+            <version>32.1.2-jre</version>
         </dependency>
         <dependency>
             <groupId>org.tinylog</groupId>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>me.tongfei</groupId>
             <artifactId>progressbar</artifactId>
-            <version>0.9.5</version>
+            <version>0.10.0</version>
         </dependency>
 
         <dependency>
@@ -82,7 +82,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.9.3</version>
+            <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
