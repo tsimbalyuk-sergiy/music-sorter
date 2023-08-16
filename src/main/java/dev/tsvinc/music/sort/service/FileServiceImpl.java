@@ -67,16 +67,14 @@ public class FileServiceImpl implements FileService {
                 .build();
     }
 
-    private static void moveDirectory(final String sourceDirectory, final File source, final File destination) {
-        Try.withResources(() -> Files.newDirectoryStream(Paths.get(sourceDirectory)))
-                .of(directoryStream -> {
-                    directoryStream.forEach(src ->
-                            FileServiceImpl.move(src, destination.toPath().resolve(src.getFileName())));
-                    Files.deleteIfExists(source.toPath());
-                    return null;
+    private static void moveDirectory(final String sourceDir, final Path source, final Path destination) {
+        Try.run(() -> {
+                    try (final var dirStream = Files.newDirectoryStream(Paths.get(sourceDir))) {
+                        dirStream.forEach(src -> move(src, destination.resolve(src.getFileName())));
+                        Files.deleteIfExists(source);
+                    }
                 })
-                .onFailure(throwable ->
-                        error("Failed to move directory: {}, {}", sourceDirectory, throwable.getMessage(), throwable));
+                .onFailure(t -> error("Failed to move directory: {}, {}", sourceDir, t.getMessage(), t));
     }
 
     private static void move(final Path src, final Path dest) {
@@ -101,7 +99,7 @@ public class FileServiceImpl implements FileService {
     }
 
     private boolean tryWithProgressBar(final Set<String> folderList, final AppProperties properties) {
-        return Try.withResources(() -> FileServiceImpl.buildProgressBar(folderList))
+        return Try.withResources(() -> buildProgressBar(folderList))
                 .of(progressBar -> {
                     folderList.forEach(release -> {
                         moveRelease(release, properties);
@@ -118,9 +116,9 @@ public class FileServiceImpl implements FileService {
         final var source = new File(sourceDirectory);
         final var metadata = audioFileService.getMetadata(sourceDirectory);
         var containsCheckSum = false;
-        if (FileServiceImpl.hasCheckSum(source).containsKey(CHECKSUM)) {
+        if (hasCheckSum(source).containsKey(CHECKSUM)) {
             containsCheckSum = true;
-            FileServiceImpl.verifyCheckSum(source); // TODO
+            verifyCheckSum(source); // TODO
         }
 
         /*
@@ -142,7 +140,7 @@ public class FileServiceImpl implements FileService {
         final var outWithFormat = properties.targetFolder() + File.separator + metadata.format();
         final var outWithFormatDir = new File(outWithFormat);
         if (!outWithFormatDir.exists()) {
-            FileServiceImpl.createDirectory(outWithFormatDir);
+            createDirectory(outWithFormatDir);
         }
         final String outWithGenreAndFormat;
         if (properties.sortByArtist()) {
@@ -159,17 +157,18 @@ public class FileServiceImpl implements FileService {
         }
         final var genreDir = new File(outWithGenreAndFormat);
         if (!genreDir.exists()) {
-            FileServiceImpl.createDirectory(genreDir);
+            createDirectory(genreDir);
         }
         final var finalDestination = outWithGenreAndFormat + File.separator;
         final var destination = new File(finalDestination + source.getName());
         if (!destination.exists()) {
-            FileServiceImpl.createDirectory(destination);
+            createDirectory(destination);
         }
-        FileServiceImpl.moveDirectory(sourceDirectory, source, destination);
+        moveDirectory(sourceDirectory, source.toPath(), destination.toPath());
     }
 
     public static void verifyCheckSum(final File source) {
+
         final var paths = Try.withResources(() -> Files.list(source.toPath()))
                 .of(Stream::toList)
                 .get();
@@ -248,8 +247,7 @@ public class FileServiceImpl implements FileService {
                             .collect(Collectors.toSet());
                     if (propertiesService.getProperties().skipLiveReleases()) {
                         return dirs.stream()
-                                .filter(folderName ->
-                                        FileServiceImpl.isNotLiveRelease(folderName, propertiesService.getProperties()))
+                                .filter(folderName -> isNotLiveRelease(folderName, propertiesService.getProperties()))
                                 .collect(Collectors.toSet());
                     } else {
                         return dirs;
@@ -284,8 +282,8 @@ public class FileServiceImpl implements FileService {
     @Override
     public ListingWithFormat createFileListForEachDir(final String folderName) {
         /* creating filter for musical files */
-        final var resultMp3 = FileServiceImpl.listFiles(folderName, MP3);
-        final var resultFlac = FileServiceImpl.listFiles(folderName, FLAC);
+        final var resultMp3 = listFiles(folderName, MP3);
+        final var resultFlac = listFiles(folderName, FLAC);
         if (!resultMp3.isEmpty()) {
             return new ListingWithFormat(MP_3_FORMAT, resultMp3);
         } else if (!resultFlac.isEmpty()) {
