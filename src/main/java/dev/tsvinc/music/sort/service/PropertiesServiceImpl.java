@@ -1,5 +1,6 @@
 package dev.tsvinc.music.sort.service;
 
+import static dev.tsvinc.music.sort.util.Constants.CHECKSUM_VALIDATION_ENABLED;
 import static dev.tsvinc.music.sort.util.Constants.ERROR_CREATING_DIRECTORY;
 import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_PATTERNS;
 import static dev.tsvinc.music.sort.util.Constants.LIVE_RELEASES_PATTERNS_DEFAULT;
@@ -10,8 +11,6 @@ import static dev.tsvinc.music.sort.util.Constants.TARGET_FOLDER;
 import static org.tinylog.Logger.error;
 import static org.tinylog.Logger.info;
 
-import dev.tsvinc.music.sort.domain.AppProperties;
-import io.vavr.control.Try;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,8 +20,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
+
+import dev.tsvinc.music.sort.domain.AppProperties;
+
+import io.vavr.collection.List;
+import io.vavr.control.Try;
 
 public class PropertiesServiceImpl implements PropertiesService {
 
@@ -32,6 +35,7 @@ public class PropertiesServiceImpl implements PropertiesService {
     private final String appPropertiesLocation = PropertiesServiceImpl.appPropertiesLocation();
     private boolean skipLiveReleases;
     private boolean sortByArtist;
+    private boolean checksumValidationEnabled;
 
     private List<String> liveReleasesPatterns;
 
@@ -62,16 +66,16 @@ public class PropertiesServiceImpl implements PropertiesService {
     @Override
     public AppProperties getProperties() {
         if (!this.initProperties()) {
-            error("Error loading properties");
+            error("[ERROR] Failed to load configuration. Please check your settings file.");
             System.exit(-1);
         } else {
-            return AppProperties.builder()
-                    .sourceFolder(this.sourceFolderValue)
-                    .targetFolder(this.targetFolderValue)
-                    .liveReleasesPatterns(this.liveReleasesPatterns)
-                    .skipLiveReleases(this.skipLiveReleases)
-                    .sortByArtist(this.sortByArtist)
-                    .build();
+            return new AppProperties(
+                    this.sourceFolderValue,
+                    this.targetFolderValue,
+                    this.sortByArtist,
+                    this.skipLiveReleases,
+                    this.liveReleasesPatterns,
+                    this.checksumValidationEnabled);
         }
         return null;
     }
@@ -81,7 +85,11 @@ public class PropertiesServiceImpl implements PropertiesService {
                     Files.createFile(Paths.get(this.appPropertiesLocation));
                     Files.write(
                             Paths.get(this.appPropertiesLocation),
-                            Arrays.asList("source=", "target="),
+                            Arrays.asList(
+                                    "source=",
+                                    "target=",
+                                    "# Optional: Enable checksum validation (disabled by default)",
+                                    "checksum_validation_enabled=false"),
                             StandardCharsets.UTF_8,
                             StandardOpenOption.APPEND);
                     return null;
@@ -112,16 +120,18 @@ public class PropertiesServiceImpl implements PropertiesService {
                     prop.containsKey(LIVE_RELEASES_SKIP) && Boolean.parseBoolean(prop.getProperty(LIVE_RELEASES_SKIP));
             this.sortByArtist =
                     prop.containsKey(SORT_BY_ARTIST) && Boolean.parseBoolean(prop.getProperty(SORT_BY_ARTIST));
+            this.checksumValidationEnabled = prop.containsKey(CHECKSUM_VALIDATION_ENABLED)
+                    && Boolean.parseBoolean(prop.getProperty(CHECKSUM_VALIDATION_ENABLED));
             if (this.skipLiveReleases && prop.containsKey(LIVE_RELEASES_PATTERNS)) {
-                this.liveReleasesPatterns = Arrays.asList(
-                        prop.get(LIVE_RELEASES_PATTERNS).toString().split(","));
+                this.liveReleasesPatterns =
+                        List.of(prop.get(LIVE_RELEASES_PATTERNS).toString().split(","));
             } else {
-                this.liveReleasesPatterns = LIVE_RELEASES_PATTERNS_DEFAULT;
-                info("\"live_releases_patterns\" option is empty. using defaults: ");
+                this.liveReleasesPatterns = List.ofAll(LIVE_RELEASES_PATTERNS_DEFAULT);
+                info("[CONFIG] 'live_releases_patterns' not configured. Using default patterns:");
                 info("{}", LIVE_RELEASES_PATTERNS_DEFAULT);
             }
         } catch (final IOException ex) {
-            error("Error loading properties: {}", ex.getMessage(), ex);
+            error("[ERROR] Configuration error: {}", ex.getMessage(), ex);
         }
         return done;
     }

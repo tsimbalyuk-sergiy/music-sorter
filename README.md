@@ -1,58 +1,69 @@
 MUSIC-SORTER
-========================
-Small tool to sort new music albums.
+============
 
-Sorting based on format(`mp3`, `flac`) and genre.
+Music library organizer with two operation modes:
 
+1. **Standard Mode**: Move and organize files by format and genre
+2. **Collection Mode**: Create organized views using links (no file moving)
 
-At first start app will create sample configuration file in directory:
+## Usage
 
-`$HOME/.config/music-sorter/music-sorter.properties`
+```bash
+# Standard mode - moves files
+java -jar music-sorter.jar
 
-### WARNING
-Application will overwrite existing files
-
-All folders with be moved to corresponding directories based on file extensions and metadata genre
-
-e.g.:
-
-```
-■ root
-├──■ flac
-│  └──■  Some Genre
-│     └──■  First Folder
-│        ├── ■ file.jpg
-│        ├── ■ file.m3u
-│        └── ■ file.flac
-└──■ mp3
-   ├──■  Another Genre
-   │  └──■  Second Folder
-   │     ├── ■ file.jpg
-   │     └── ■ file.mp3
-   └──■  Another One Genre
-      └──■  Third Folder
-         ├── ■ file.jpg
-         └── ■ file.mp3
+# Collection mode - creates organized links  
+java -jar music-sorter.jar --collection
 ```
 
-## Native binary
-To build native binary update paths in variables:
-```
-GRAAL
-UPX
-```
-or you can comment out upx part
+Creates config file on first run: `$HOME/.config/music-sorter/music-sorter.properties`
 
-### music-sorter.properties example
+## Output Structure
+
+**Standard Mode**: Organizes by format and genre  
+**Collection Mode**: Creates multiple views with help of symlinks (by-year, by-genre, by-artist, by-format)
+
+## Native Binary
+
+Build standalone executable (10ms startup, 50MB memory):
+
+```bash
+# Install GraalVM 21+
+sdk install java 21.0.2-graalce
+
+# Build native binary
+./build.sh
 ```
-source=/some/folder/in
-target=/some/folder/out                
+
+Creates: `./build/music-sorter` (26MB, no JVM required)
+
+## Development
+
+**Code Quality Tools:**
+
+```bash
+# Install Git hooks (auto-format, tests on push)
+./setup-hooks.sh
+
+# Manual formatting
+mvn spotless:apply
+```
+
+**Configuration Example:**
+
+```
+source=/music/incoming
+target=/music/sorted
 live_releases_skip=true
 live_releases_patterns=-SAT-,-DVBS-,-SBD-
+# Optional: Enable checksum validation (disabled by default)
+checksum_validation_enabled=false
 ```
 
-### TODO
+## Features
 
-- ~~clean up parent directory~~
-- if folder doesn't contain any MP3/FLAC files - move it to some specific dir?
-- check sfv/md5 (if enabled)
+- **SFV/MD5 checksum validation** - Verifies file integrity before processing (optional)
+- **Cross-platform support** - Works on Windows, macOS, and Linux
+- **Live release filtering** - Skip concert recordings and bootlegs
+- **Collection views** - Multiple organization formats (by-year, by-genre, etc.)
+

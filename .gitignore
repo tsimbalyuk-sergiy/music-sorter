@@ -87,3 +87,11 @@ proguard/
 src/test/groovy/HeyWtf.groovy
 tmp/
 target/
+
+# Test music files (don't commit downloaded test music)
+test-music/
+*.mp3
+*.flac
+*.wav
+*.ogg
+*.m4a

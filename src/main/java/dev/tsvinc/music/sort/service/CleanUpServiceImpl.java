@@ -1,6 +1,6 @@
 package dev.tsvinc.music.sort.service;
 
-import io.vavr.control.Try;
+import static org.tinylog.Logger.error;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,18 +10,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.inject.Inject;
-
-import static org.tinylog.Logger.error;
+import io.vavr.control.Try;
 
 public class CleanUpServiceImpl implements CleanUpService {
-    @Inject
-    PropertiesService propertiesService;
+    private final PropertiesService propertiesService;
+
+    public CleanUpServiceImpl(PropertiesService propertiesService) {
+        this.propertiesService = propertiesService;
+    }
 
     private static boolean isEmptyDirectory(final Path path) {
         return Try.withResources(() -> Files.list(path))
                 .of(stream -> stream.findAny().isEmpty())
-                .onFailure(e -> error("Error listing directory: {}, {}", path, e.getMessage()))
+                .onFailure(e -> error("[ERROR] Error checking if directory '{}' is empty: {}", path, e.getMessage()))
                 .getOrElse(false);
     }
 
@@ -41,7 +42,7 @@ public class CleanUpServiceImpl implements CleanUpService {
 
     private void logErrorWhileWalkingDirectory(final Throwable e) {
         error(
-                "Error while walking directory: {}, {}",
+                "[ERROR] Error scanning source directory '{}': {}",
                 this.propertiesService.getProperties().sourceFolder(),
                 e.getMessage(),
                 e);
@@ -55,7 +56,7 @@ public class CleanUpServiceImpl implements CleanUpService {
         try {
             Files.delete(dir);
         } catch (final IOException ioe) {
-            error("Error deleting folder: {} {}\n{}", dir, ioe.getMessage(), ioe);
+            error("[ERROR] Failed to delete empty directory '{}': {}", dir, ioe.getMessage(), ioe);
         }
     }
 
@@ -65,7 +66,8 @@ public class CleanUpServiceImpl implements CleanUpService {
                         .filter(path -> !path.equals(directory))
                         .filter(CleanUpServiceImpl::isEmptyDirectory)
                         .toList())
-                .onFailure(e -> error("Error walking directory: {}, {}", directory, e.getMessage(), e))
+                .onFailure(e ->
+                        error("[ERROR] Error scanning directory '{}' for cleanup: {}", directory, e.getMessage(), e))
                 .getOrElse(Collections.emptyList());
     }
 }
