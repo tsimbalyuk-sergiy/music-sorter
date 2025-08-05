@@ -2,7 +2,6 @@ package dev.tsvinc.music.sort;
 
 import com.google.inject.Guice;
 import com.google.inject.Inject;
-
 import dev.tsvinc.music.sort.service.ApplicationModules;
 import dev.tsvinc.music.sort.service.FileService;
 
@@ -18,3 +17,4 @@ public class App {
         app.fileService.processDirectories();
     }
 }
+// Simple test comment

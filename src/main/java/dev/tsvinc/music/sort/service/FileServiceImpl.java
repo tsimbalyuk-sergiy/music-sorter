@@ -1,11 +1,20 @@
 package dev.tsvinc.music.sort.service;
 
+import static dev.tsvinc.music.sort.util.Constants.CHECKSUM;
+import static dev.tsvinc.music.sort.util.Constants.FLAC;
+import static dev.tsvinc.music.sort.util.Constants.FLAC_FORMAT;
+import static dev.tsvinc.music.sort.util.Constants.MP3;
+import static dev.tsvinc.music.sort.util.Constants.MP_3_FORMAT;
+import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
+import static dev.tsvinc.music.sort.util.Predicates.IS_MUSIC_FILE;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.tinylog.Logger.error;
+import static org.tinylog.Logger.info;
+
+import com.google.inject.Inject;
 import dev.tsvinc.music.sort.domain.AppProperties;
 import dev.tsvinc.music.sort.domain.ListingWithFormat;
 import io.vavr.control.Try;
-import me.tongfei.progressbar.ProgressBar;
-import me.tongfei.progressbar.ProgressBarBuilder;
-import me.tongfei.progressbar.ProgressBarStyle;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,19 +29,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.google.inject.Inject;
-
-import static dev.tsvinc.music.sort.util.Constants.CHECKSUM;
-import static dev.tsvinc.music.sort.util.Constants.FLAC;
-import static dev.tsvinc.music.sort.util.Constants.FLAC_FORMAT;
-import static dev.tsvinc.music.sort.util.Constants.MP3;
-import static dev.tsvinc.music.sort.util.Constants.MP_3_FORMAT;
-import static dev.tsvinc.music.sort.util.Constants.UNKNOWN;
-import static dev.tsvinc.music.sort.util.Predicates.IS_MUSIC_FILE;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static org.tinylog.Logger.error;
-import static org.tinylog.Logger.info;
+import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarBuilder;
+import me.tongfei.progressbar.ProgressBarStyle;
 
 public class FileServiceImpl implements FileService {
 
@@ -63,19 +62,19 @@ public class FileServiceImpl implements FileService {
     private static void moveDirectory(final String sourceDirectory, final File source, final File destination) {
         Try.withResources(() -> Files.newDirectoryStream(Paths.get(sourceDirectory)))
                 .of(directoryStream -> {
-                    directoryStream
-                            .forEach(src -> FileServiceImpl.move(src, destination.toPath().resolve(src.getFileName())));
+                    directoryStream.forEach(src ->
+                            FileServiceImpl.move(src, destination.toPath().resolve(src.getFileName())));
                     Files.deleteIfExists(source.toPath());
                     return null;
                 })
-                .onFailure(throwable -> error("Failed to move directory: {}, {}", sourceDirectory,
-                        throwable.getMessage(), throwable));
+                .onFailure(throwable ->
+                        error("Failed to move directory: {}, {}", sourceDirectory, throwable.getMessage(), throwable));
     }
 
     private static void move(final Path src, final Path dest) {
         Try.of(() -> Files.move(src, dest, REPLACE_EXISTING))
-                .onFailure(throwable -> error("Failed to move file {} to {}, {}", src, dest, throwable.getMessage(),
-                        throwable));
+                .onFailure(throwable ->
+                        error("Failed to move file {} to {}, {}", src, dest, throwable.getMessage(), throwable));
     }
 
     private static void createDirectory(final File destination) {
@@ -140,12 +139,13 @@ public class FileServiceImpl implements FileService {
         final String outWithGenreAndFormat;
         if (properties.sortByArtist()) {
             outWithGenreAndFormat = Path.of(
-                    outWithFormat,
-                    null != metadata.genre() ? metadata.genre() : UNDEFINED,
-                    null != metadata.artist() ? metadata.artist().trim() : UNDEFINED)
+                            outWithFormat,
+                            null != metadata.genre() ? metadata.genre() : UNDEFINED,
+                            null != metadata.artist() ? metadata.artist().trim() : UNDEFINED)
                     .toString();
         } else if (metadata.genre() != null && !metadata.genre().isBlank()) {
-            outWithGenreAndFormat = Path.of(outWithFormat, metadata.genre().strip()).toString();
+            outWithGenreAndFormat =
+                    Path.of(outWithFormat, metadata.genre().strip()).toString();
         } else {
             outWithGenreAndFormat = Path.of(outWithFormat, UNKNOWN).toString();
         }
@@ -166,7 +166,8 @@ public class FileServiceImpl implements FileService {
                 .of(Stream::toList)
                 .get();
 
-        final var sfv = paths.parallelStream().filter(path -> path.endsWith("sfv")).findFirst();
+        final var sfv =
+                paths.parallelStream().filter(path -> path.endsWith("sfv")).findFirst();
 
         final var strings = Try.of(() -> Files.readAllLines(sfv.orElseThrow(FileNotFoundException::new)))
                 .onFailure(t -> error("Error reading lines: {}, {}", sfv.toString(), t.getMessage(), t))
@@ -197,7 +198,7 @@ public class FileServiceImpl implements FileService {
 
     private Set<String> listAlbums() {
         return Try.withResources(() -> Files.walk(
-                Paths.get(this.propertiesService.getProperties().sourceFolder()), Integer.MAX_VALUE))
+                        Paths.get(this.propertiesService.getProperties().sourceFolder()), Integer.MAX_VALUE))
                 .of(stream -> {
                     final var dirs = stream.filter(IS_MUSIC_FILE).collect(Collectors.toSet()).stream()
                             .map(o -> o.getParent().toString())
