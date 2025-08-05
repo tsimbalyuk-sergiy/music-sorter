@@ -1,24 +1,36 @@
 #!/usr/bin/env bash
 set -e
 
-# Configuration
 GRAAL_HOME=${GRAAL_HOME:-${JAVA_HOME}}
 UPX_PATH=${UPX_PATH:-$(which upx || echo "/usr/bin/upx")}
+
+STRIP_BINARY=true
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --no-strip)
+            STRIP_BINARY=false
+            shift
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: $0 [--no-strip]"
+            exit 1
+            ;;
+    esac
+done
 
 echo "[*] Building with GraalVM native-image..."
 echo "[*] GRAAL_HOME: ${GRAAL_HOME}"
 echo "[*] UPX_PATH: ${UPX_PATH}"
+echo "[*] Strip binary: ${STRIP_BINARY}"
 
-# Clean and build
 mvn clean package -DskipTests
 
-# Prepare build directory
 rm -rf ./build/
 mkdir -p build
 cp -f ./target/music-sorter.jar ./build/
 cd ./build/
 
-# Modern GraalVM native-image build
 echo "[*] Running native-image compilation..."
 ${GRAAL_HOME}/bin/native-image \
   --no-fallback \
@@ -39,7 +51,15 @@ ${GRAAL_HOME}/bin/native-image \
 echo "[*] Native binary created successfully!"
 ls -lh ./music-sorter
 
-# Optional UPX compression
+if [[ "${STRIP_BINARY}" == "true" ]]; then
+    echo "[*] Stripping binary..."
+    echo "  Before: $(ls -lh ./music-sorter | awk '{print $5}')"
+    strip -x ./music-sorter
+    echo "  After:  $(ls -lh ./music-sorter | awk '{print $5}')"
+else
+    echo "[*] Skipping binary stripping (--no-strip specified)"
+fi
+
 if [[ -f "${UPX_PATH}" ]]; then
     echo "[*] Compressing with UPX..."
     ${UPX_PATH} --best ./music-sorter -o music-sorter-compressed
