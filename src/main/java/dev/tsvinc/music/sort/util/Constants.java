@@ -1,6 +1,6 @@
 package dev.tsvinc.music.sort.util;
 
-import java.util.List;
+import io.vavr.collection.List;
 
 public class Constants {
 
@@ -18,6 +18,7 @@ public class Constants {
     public static final List<String> LIVE_RELEASES_PATTERNS_DEFAULT =
             List.of("-SAT-", "-DVBS-", "-SBD-", "-DAB-", "-FM-", "-CABLE-", "-DVBC-", "-DVBT-", "-LINE-", "-STREAM-");
     public static final String CHECKSUM = "checksum";
+    public static final String CHECKSUM_VALIDATION_ENABLED = "checksum_validation_enabled";
 
     private Constants() {}
 }

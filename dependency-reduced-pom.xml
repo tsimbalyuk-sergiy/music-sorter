@@ -63,14 +63,83 @@
         </executions>
         <configuration>
           <java>
+            <includes>
+              <include>src/**/*.java</include>
+            </includes>
             <palantirJavaFormat>
               <version>2.50.0</version>
             </palantirJavaFormat>
+            <importOrder>
+              <order>java|javax,org,com,dev</order>
+            </importOrder>
+            <removeUnusedImports />
+            <formatAnnotations />
           </java>
+          <pom>
+            <includes>
+              <include>pom.xml</include>
+            </includes>
+            <sortPom>
+              <expandEmptyElements>false</expandEmptyElements>
+              <sortProperties>true</sortProperties>
+              <sortDependencies>groupId,artifactId</sortDependencies>
+            </sortPom>
+          </pom>
+          <markdown>
+            <includes>
+              <include>**/*.md</include>
+            </includes>
+            <flexmark />
+          </markdown>
+          <yaml>
+            <includes>
+              <include>**/*.yml</include>
+              <include>**/*.yaml</include>
+            </includes>
+            <jackson />
+          </yaml>
         </configuration>
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>native</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.graalvm.buildtools</groupId>
+            <artifactId>native-maven-plugin</artifactId>
+            <version>0.10.3</version>
+            <extensions>true</extensions>
+            <executions>
+              <execution>
+                <id>build-native</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>compile-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <imageName>music-sorter</imageName>
+              <mainClass>dev.tsvinc.music.sort.App</mainClass>
+              <buildArgs>
+                <buildArg>--no-fallback</buildArg>
+                <buildArg>--report-unsupported-elements-at-runtime</buildArg>
+                <buildArg>-H:+ReportExceptionStackTraces</buildArg>
+                <buildArg>-H:+UnlockExperimentalVMOptions</buildArg>
+                <buildArg>-H:+UseServiceLoaderFeature</buildArg>
+                <buildArg>-H:+RemoveSaturatedTypeFlows</buildArg>
+                <buildArg>--gc=serial</buildArg>
+                <buildArg>--initialize-at-run-time=org.jaudiotagger,org.tinylog.runtime.ModernJavaRuntime</buildArg>
+              </buildArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <repositories>
     <repository>
       <id>jitpack.io</id>
@@ -78,12 +147,6 @@
     </repository>
   </repositories>
   <dependencies>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.36</version>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
@@ -100,6 +163,38 @@
         </exclusion>
         <exclusion>
           <artifactId>junit-jupiter-engine</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>5.14.2</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>byte-buddy</artifactId>
+          <groupId>net.bytebuddy</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>byte-buddy-agent</artifactId>
+          <groupId>net.bytebuddy</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>objenesis</artifactId>
+          <groupId>org.objenesis</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>5.14.2</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit-jupiter-api</artifactId>
           <groupId>org.junit.jupiter</groupId>
         </exclusion>
       </exclusions>

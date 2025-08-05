@@ -1,6 +1,5 @@
 package dev.tsvinc.music.sort.service;
 
-import static dev.tsvinc.music.sort.util.Constants.CHECKSUM;
 import static dev.tsvinc.music.sort.util.Constants.FLAC;
 import static dev.tsvinc.music.sort.util.Constants.FLAC_FORMAT;
 import static dev.tsvinc.music.sort.util.Constants.MP3;
@@ -11,12 +10,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.tinylog.Logger.error;
 import static org.tinylog.Logger.info;
 
-import com.google.inject.Inject;
-import dev.tsvinc.music.sort.domain.AppProperties;
-import dev.tsvinc.music.sort.domain.ListingWithFormat;
-import io.vavr.control.Try;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,10 +19,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import dev.tsvinc.music.sort.domain.AppProperties;
+import dev.tsvinc.music.sort.domain.ListingWithFormat;
+
+import io.vavr.control.Try;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
 import me.tongfei.progressbar.ProgressBarStyle;
@@ -36,25 +38,37 @@ import me.tongfei.progressbar.ProgressBarStyle;
 public class FileServiceImpl implements FileService {
 
     public static final String UNDEFINED = "UNDEFINED";
+    private static final int DEFAULT_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors();
+    private static final int SHUTDOWN_TIMEOUT_SECONDS = 30;
 
-    @Inject
-    private PropertiesService propertiesService;
+    private final ExecutorService processingExecutor = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
 
-    @Inject
-    private CleanUpService cleanUpService;
+    private final PropertiesService propertiesService;
+    private final CleanUpService cleanUpService;
+    private final AudioFileService audioFileService;
+    private final ChecksumService checksumService;
 
-    @Inject
-    private AudioFileService audioFileService;
+    public FileServiceImpl(
+            PropertiesService propertiesService,
+            CleanUpService cleanUpService,
+            AudioFileService audioFileService,
+            ChecksumService checksumService) {
+        this.propertiesService = propertiesService;
+        this.cleanUpService = cleanUpService;
+        this.audioFileService = audioFileService;
+        this.checksumService = checksumService;
+    }
 
     private static boolean isNotLiveRelease(final String folderName, final AppProperties properties) {
-        return properties.liveReleasesPatterns().parallelStream().noneMatch(folderName::contains);
+        return properties.liveReleasesPatterns().forAll(pattern -> !folderName.contains(pattern));
     }
 
     private static ProgressBar buildProgressBar(final Set<String> folderList) {
         return new ProgressBarBuilder()
                 .setInitialMax(folderList.size())
                 .setStyle(ProgressBarStyle.COLORFUL_UNICODE_BLOCK)
-                .setTaskName("Working ...")
+                .setTaskName("Processing albums")
+                .setUnit(" albums", 1)
                 .showSpeed()
                 .build();
     }
@@ -67,19 +81,23 @@ public class FileServiceImpl implements FileService {
                     Files.deleteIfExists(source.toPath());
                     return null;
                 })
-                .onFailure(throwable ->
-                        error("Failed to move directory: {}, {}", sourceDirectory, throwable.getMessage(), throwable));
+                .onFailure(throwable -> error(
+                        "Failed to move album directory '{}': {}", sourceDirectory, throwable.getMessage(), throwable));
     }
 
     private static void move(final Path src, final Path dest) {
         Try.of(() -> Files.move(src, dest, REPLACE_EXISTING))
-                .onFailure(throwable ->
-                        error("Failed to move file {} to {}, {}", src, dest, throwable.getMessage(), throwable));
+                .onFailure(throwable -> error(
+                        "Failed to move file '{}' to '{}': {}",
+                        src.getFileName(),
+                        dest.getFileName(),
+                        throwable.getMessage(),
+                        throwable));
     }
 
     private static void createDirectory(final File destination) {
         Try.of(() -> Files.createDirectories(destination.toPath()))
-                .onFailure(e -> error("Failed to create a directory: {}", e.getMessage(), e));
+                .onFailure(e -> error("Failed to create directory '{}': {}", destination.getPath(), e.getMessage(), e));
     }
 
     private static List<String> listFiles(final String folderName, final String glob) {
@@ -87,7 +105,7 @@ public class FileServiceImpl implements FileService {
         try (final var stream = Files.newDirectoryStream(Paths.get(folderName), glob)) {
             stream.forEach(o -> resultList.add(folderName + File.separator + o.getFileName()));
         } catch (final IOException e) {
-            error("Error listing directory: {} with a filter: {}, {}", folderName, FLAC, e.getMessage(), e);
+            error("Error scanning directory '{}' for {} files: {}", folderName, glob, e.getMessage(), e);
         }
         return resultList;
     }
@@ -95,24 +113,52 @@ public class FileServiceImpl implements FileService {
     private boolean tryWithProgressBar(final Set<String> folderList, final AppProperties properties) {
         return Try.withResources(() -> FileServiceImpl.buildProgressBar(folderList))
                 .of(progressBar -> {
-                    folderList.forEach(release -> {
-                        this.moveRelease(release, properties);
-                        progressBar.step();
-                    });
-                    return true;
+                    final var processedCount = new AtomicInteger(0);
+                    final var completableFutures = folderList.stream()
+                            .map(release -> CompletableFuture.supplyAsync(
+                                            () -> this.moveReleaseAsync(release, properties), processingExecutor)
+                                    .thenRun(() -> {
+                                        progressBar.step();
+                                        processedCount.incrementAndGet();
+                                    })
+                                    .exceptionally(throwable -> {
+                                        error(
+                                                "[ERROR] Failed to process album '{}': {}",
+                                                release,
+                                                throwable.getMessage(),
+                                                throwable);
+                                        progressBar.step();
+                                        return null;
+                                    }))
+                            .toArray(CompletableFuture[]::new);
+
+                    CompletableFuture.allOf(completableFutures).join();
+                    return processedCount.get() == folderList.size();
                 })
-                .onSuccess(status -> info("finished moving releases: {}", status))
-                .onFailure(throwable -> error("had errors moving releases: {}", throwable.getMessage(), throwable))
+                .onSuccess(allSuccessful -> {
+                    if (allSuccessful) {
+                        info("[OK] Successfully processed all {} albums", folderList.size());
+                    } else {
+                        info("[PARTIAL] Some albums failed to process. Check logs for details.");
+                    }
+                })
+                .onFailure(throwable ->
+                        error("[ERROR] Critical error during album processing: {}", throwable.getMessage(), throwable))
                 .get();
     }
 
-    private void moveRelease(final String sourceDirectory, final AppProperties properties) {
+    private boolean moveReleaseAsync(final String sourceDirectory, final AppProperties properties) {
         final var source = new File(sourceDirectory);
         final var metadata = this.audioFileService.getMetadata(sourceDirectory);
-        var containsCheckSum = false;
-        if (FileServiceImpl.hasCheckSum(source).containsKey(CHECKSUM)) {
-            containsCheckSum = true;
-            FileServiceImpl.verifyCheckSum(source); // TODO
+
+        // Checksum validation if enabled
+        if (properties.checksumValidationEnabled() && this.checksumService.hasChecksumFiles(source)) {
+            info("Validating checksums in {}", source.getName());
+            if (!this.checksumService.validateDirectory(source)) {
+                error("Checksum validation failed for {}. Skipping directory.", source.getName());
+                return false;
+            }
+            info("Checksum validation passed for {}", source.getName());
         }
 
         /*
@@ -159,41 +205,7 @@ public class FileServiceImpl implements FileService {
             FileServiceImpl.createDirectory(destination);
         }
         FileServiceImpl.moveDirectory(sourceDirectory, source, destination);
-    }
-
-    private static void verifyCheckSum(final File source) {
-        final var paths = Try.withResources(() -> Files.list(source.toPath()))
-                .of(Stream::toList)
-                .get();
-
-        final var sfv =
-                paths.parallelStream().filter(path -> path.endsWith("sfv")).findFirst();
-
-        final var strings = Try.of(() -> Files.readAllLines(sfv.orElseThrow(FileNotFoundException::new)))
-                .onFailure(t -> error("Error reading lines: {}, {}", sfv.toString(), t.getMessage(), t))
-                .get();
-        final var collect = strings.parallelStream()
-                .map(s -> s.split(" "))
-                .collect(Collectors.toMap(res -> res[0], res -> 1 < res.length ? res[1] : ""));
-
-        for (final var path : paths) {
-            // TODO calc crc, get by key from map, compare calculated crc and crc from sfv
-            // file
-        }
-    }
-
-    private static Map<?, ?> hasCheckSum(final File source) {
-        final var sfv = Try.withResources(() -> Files.list(source.toPath()))
-                .of(pathStream -> pathStream
-                        .filter(path -> path.getFileName().endsWith("sfv"))
-                        .toList())
-                .onFailure(throwable -> info("No Checksum file for {}", source.toString()))
-                .getOrElse(Collections.emptyList());
-        if (sfv.isEmpty()) {
-            return Collections.emptyMap();
-        } else {
-            return Map.of(CHECKSUM, sfv.get(0));
-        }
+        return true;
     }
 
     private Set<String> listAlbums() {
@@ -222,18 +234,37 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void processDirectories() {
-        final var folderList = this.listAlbums();
-        if (folderList.isEmpty()) {
-            info("No data to work with. Exiting.");
-            System.exit(0);
-        }
+        try {
+            final var folderList = this.listAlbums();
+            if (folderList.isEmpty()) {
+                info("[INFO] No music albums found in source directory. Please check your configuration.");
+                return;
+            }
 
-        info("folders list created. size: {}", folderList.size());
-        final var result = this.tryWithProgressBar(folderList, this.propertiesService.getProperties());
-        if (result) {
-            info("Finished. Cleaning empty directories ...");
-            this.cleanUpService.cleanUpParentDirectory();
-            System.exit(0);
+            info("[*] Found {} music albums to process", folderList.size());
+            final var result = this.tryWithProgressBar(folderList, this.propertiesService.getProperties());
+            if (result) {
+                info("[CLEANUP] Processing complete. Cleaning up empty directories...");
+                this.cleanUpService.cleanUpParentDirectory();
+            }
+        } finally {
+            shutdownExecutor();
+        }
+    }
+
+    private void shutdownExecutor() {
+        processingExecutor.shutdown();
+        try {
+            if (!processingExecutor.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                info("[WARN] Thread pool did not terminate gracefully, forcing shutdown...");
+                processingExecutor.shutdownNow();
+                if (!processingExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+                    error("[ERROR] Thread pool did not terminate after forced shutdown");
+                }
+            }
+        } catch (InterruptedException e) {
+            processingExecutor.shutdownNow();
+            Thread.currentThread().interrupt();
         }
     }
 

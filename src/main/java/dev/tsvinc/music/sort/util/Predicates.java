@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.function.Predicate;
 
 public class Predicates {
+
     private Predicates() {}
 
     public static final Predicate<Path> IS_MUSIC_FILE =
