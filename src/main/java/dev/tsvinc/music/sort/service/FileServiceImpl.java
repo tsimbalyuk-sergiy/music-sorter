@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import dev.tsvinc.music.sort.domain.AppProperties;
 import dev.tsvinc.music.sort.domain.ListingWithFormat;
+import dev.tsvinc.music.sort.domain.Metadata;
 
 import io.vavr.control.Try;
 import me.tongfei.progressbar.ProgressBar;
@@ -85,12 +86,12 @@ public class FileServiceImpl implements FileService {
                         "Failed to move album directory '{}': {}", sourceDirectory, throwable.getMessage(), throwable));
     }
 
-    private static void move(final Path src, final Path dest) {
-        Try.of(() -> Files.move(src, dest, REPLACE_EXISTING))
+    private static void move(final Path src, final Path destination) {
+        Try.of(() -> Files.move(src, destination, REPLACE_EXISTING))
                 .onFailure(throwable -> error(
                         "Failed to move file '{}' to '{}': {}",
                         src.getFileName(),
-                        dest.getFileName(),
+                        destination.getFileName(),
                         throwable.getMessage(),
                         throwable));
     }
@@ -151,7 +152,6 @@ public class FileServiceImpl implements FileService {
         final var source = new File(sourceDirectory);
         final var metadata = this.audioFileService.getMetadata(sourceDirectory);
 
-        // Checksum validation if enabled
         if (properties.checksumValidationEnabled() && this.checksumService.hasChecksumFiles(source)) {
             info("Validating checksums in {}", source.getName());
             if (!this.checksumService.validateDirectory(source)) {
@@ -160,28 +160,26 @@ public class FileServiceImpl implements FileService {
             }
             info("Checksum validation passed for {}", source.getName());
         }
-
-        /*
-         * private String releaseName;
-         * private long releaseSize;
-         * private boolean hasNfo;
-         * private boolean hasChecksum;
-         * private boolean checksumValid;
-         */
-
-        /*
-         * Release.builder()
-         * .artist(metadata.getArtist())
-         * .releaseName(source.getName())
-         * .hasChecksum(containsCheckSum)
-         * .build();
-         */
-
         final var outWithFormat = properties.targetFolder() + File.separator + metadata.format();
         final var outWithFormatDir = new File(outWithFormat);
         if (!outWithFormatDir.exists()) {
             FileServiceImpl.createDirectory(outWithFormatDir);
         }
+        final String destinationPath = createDestinationPath(properties, outWithFormat, metadata);
+        final var genreDir = new File(destinationPath);
+        final var finalDestination = destinationPath + File.separator;
+        final var destination = new File(finalDestination + source.getName());
+        if (!genreDir.exists()) {
+            FileServiceImpl.createDirectory(genreDir);
+        }
+        if (!destination.exists()) {
+            FileServiceImpl.createDirectory(destination);
+        }
+        FileServiceImpl.moveDirectory(sourceDirectory, source, destination);
+        return true;
+    }
+
+    private static String createDestinationPath(AppProperties properties, String outWithFormat, Metadata metadata) {
         final String outWithGenreAndFormat;
         if (properties.sortByArtist()) {
             outWithGenreAndFormat = Path.of(
@@ -195,17 +193,7 @@ public class FileServiceImpl implements FileService {
         } else {
             outWithGenreAndFormat = Path.of(outWithFormat, UNKNOWN).toString();
         }
-        final var genreDir = new File(outWithGenreAndFormat);
-        final var finalDestination = outWithGenreAndFormat + File.separator;
-        final var destination = new File(finalDestination + source.getName());
-        if (!genreDir.exists()) {
-            FileServiceImpl.createDirectory(genreDir);
-        }
-        if (!destination.exists()) {
-            FileServiceImpl.createDirectory(destination);
-        }
-        FileServiceImpl.moveDirectory(sourceDirectory, source, destination);
-        return true;
+        return outWithGenreAndFormat;
     }
 
     private Set<String> listAlbums() {

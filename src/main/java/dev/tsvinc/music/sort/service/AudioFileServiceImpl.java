@@ -203,7 +203,6 @@ public class AudioFileServiceImpl implements AudioFileService {
         if (!listing.fileList().isEmpty()) {
             final List<String> genreList = new CopyOnWriteArrayList<>();
 
-            // Parallel processing of metadata extraction
             listing.fileList().parallelStream()
                     .forEach(filePath ->
                             AudioFileServiceImpl.getMetadataForFile(genreList, artist, artistList, years, filePath));
