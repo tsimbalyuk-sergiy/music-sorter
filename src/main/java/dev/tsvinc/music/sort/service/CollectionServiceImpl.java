@@ -103,22 +103,22 @@ public class CollectionServiceImpl {
         final var linkPath = categoryPath.resolve(albumName);
 
         if (Files.exists(linkPath)) {
-            return; // Link already exists
+            return;
         }
 
         Try.of(() -> {
                     if (isWindows) {
-                        // Use hard links on Windows - only works for files, not directories
-                        // For directories, we'll create the directory and link individual files
+                        // use hard links on Windows - only works for files, not directories
+                        // for directories, we'll create the directory and link individual files
                         createDirectoryWithHardLinks(sourcePath, linkPath);
                     } else {
-                        // Use symbolic links on Unix systems
+                        // use symbolic links on Unix systems
                         Files.createSymbolicLink(linkPath, sourcePath);
                     }
                     return null;
                 })
                 .recover(throwable -> {
-                    // Fallback: copy directory if linking fails
+                    // fallback: copy directory if linking fails
                     info("[WARN] Linking failed for '{}', falling back to copy", albumName);
                     return copyDirectory(sourcePath, linkPath);
                 });
@@ -128,39 +128,34 @@ public class CollectionServiceImpl {
         Files.createDirectories(targetDir);
 
         try (var files = Files.walk(sourceDir)) {
-            files.filter(Files::isRegularFile).forEach(sourceFile -> {
-                Try.of(() -> {
-                            final var relativePath = sourceDir.relativize(sourceFile);
-                            final var targetFile = targetDir.resolve(relativePath);
-                            Files.createDirectories(targetFile.getParent());
-                            Files.createLink(targetFile, sourceFile);
-                            return null;
-                        })
-                        .onFailure(e ->
-                                error("[ERROR] Failed to create hard link for '{}': {}", sourceFile, e.getMessage()));
-            });
+            files.filter(Files::isRegularFile).forEach(sourceFile -> Try.of(() -> {
+                        final var relativePath = sourceDir.relativize(sourceFile);
+                        final var targetFile = targetDir.resolve(relativePath);
+                        Files.createDirectories(targetFile.getParent());
+                        Files.createLink(targetFile, sourceFile);
+                        return null;
+                    })
+                    .onFailure(
+                            e -> error("[ERROR] Failed to create hard link for '{}': {}", sourceFile, e.getMessage())));
         }
     }
 
     private Void copyDirectory(Path source, Path target) {
         Try.of(() -> {
                     try (var files = Files.walk(source)) {
-                        files.forEach(sourceFile -> {
-                            Try.of(() -> {
-                                        final var relativePath = source.relativize(sourceFile);
-                                        final var targetFile = target.resolve(relativePath);
+                        files.forEach(sourceFile -> Try.of(() -> {
+                                    final var relativePath = source.relativize(sourceFile);
+                                    final var targetFile = target.resolve(relativePath);
 
-                                        if (Files.isDirectory(sourceFile)) {
-                                            Files.createDirectories(targetFile);
-                                        } else {
-                                            Files.createDirectories(targetFile.getParent());
-                                            Files.copy(sourceFile, targetFile);
-                                        }
-                                        return null;
-                                    })
-                                    .onFailure(
-                                            e -> error("[ERROR] Failed to copy '{}': {}", sourceFile, e.getMessage()));
-                        });
+                                    if (Files.isDirectory(sourceFile)) {
+                                        Files.createDirectories(targetFile);
+                                    } else {
+                                        Files.createDirectories(targetFile.getParent());
+                                        Files.copy(sourceFile, targetFile);
+                                    }
+                                    return null;
+                                })
+                                .onFailure(e -> error("[ERROR] Failed to copy '{}': {}", sourceFile, e.getMessage())));
                     }
                     return null;
                 })

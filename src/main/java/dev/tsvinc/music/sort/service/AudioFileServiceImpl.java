@@ -134,7 +134,6 @@ public class AudioFileServiceImpl implements AudioFileService {
     }
 
     public static String findMostRepeatedString(final List<String> list) {
-        // Manual frequency counting instead of streams groupingBy for performance
         final Map<String, Integer> stringsCount = new HashMap<>(list.size());
         for (final var string : list) {
             var counter = stringsCount.get(string);
