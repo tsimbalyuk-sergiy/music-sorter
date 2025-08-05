@@ -115,7 +115,6 @@ public class PropertiesServiceImpl implements PropertiesService {
                     && !this.targetFolderValue.isEmpty()) {
                 done = true;
             }
-            /*GENERAL SORTING RULES*/
             this.skipLiveReleases =
                     prop.containsKey(LIVE_RELEASES_SKIP) && Boolean.parseBoolean(prop.getProperty(LIVE_RELEASES_SKIP));
             this.sortByArtist =

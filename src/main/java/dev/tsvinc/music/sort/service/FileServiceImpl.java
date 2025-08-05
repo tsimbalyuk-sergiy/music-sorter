@@ -256,10 +256,8 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    /* need */
     @Override
     public ListingWithFormat createFileListForEachDir(final String folderName) {
-        /* creating filter for musical files */
         final var resultMp3 = FileServiceImpl.listFiles(folderName, MP3);
         final var resultFlac = FileServiceImpl.listFiles(folderName, FLAC);
         if (!resultMp3.isEmpty()) {
